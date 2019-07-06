@@ -1,0 +1,8 @@
+[package]
+name = "machfile"
+version = "0.1.0"
+authors = ["Jake Deichert <git@jakedeichert.com>"]
+edition = "2018"
+publish = false
+
+[dependencies]
