@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+
 use std::fs::File;
 use std::io::prelude::*;
 
@@ -6,7 +8,7 @@ use pulldown_cmark::{html, Options, Parser};
 
 fn main() {
     let machfile_contents = read_machfile();
-    let mut parser = parse_machfile(&machfile_contents);
+    let mut parser = create_parser(&machfile_contents);
 
     // write_html(&mut parser);
 
@@ -22,7 +24,7 @@ fn read_machfile() -> String {
     machfile_contents
 }
 
-fn parse_machfile<'a>(machfile_contents: &'a String) -> Parser<'a> {
+fn create_parser<'a>(machfile_contents: &'a String) -> Parser<'a> {
     // Set up options and parser. Strikethroughs are not part of the CommonMark standard
     // and we therefore must enable it explicitly.
     let mut options = Options::empty();
