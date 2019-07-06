@@ -6,9 +6,9 @@ use pulldown_cmark::{html, Options, Parser};
 
 fn main() {
     let machfile_contents = read_machfile();
-    let parser = parse_machfile(&machfile_contents);
+    let mut parser = parse_machfile(&machfile_contents);
 
-    // write_html(parser);
+    // write_html(&mut parser);
 
     println!("DONE");
 }
@@ -32,7 +32,7 @@ fn parse_machfile<'a>(machfile_contents: &'a String) -> Parser<'a> {
 }
 
 
-fn write_html(parser: Parser) {
+fn write_html(parser: &mut Parser) {
     // Write to String buffer.
     let mut html_output = String::new();
     html::push_html(&mut html_output, parser);
