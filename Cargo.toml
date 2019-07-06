@@ -6,3 +6,4 @@ edition = "2018"
 publish = false
 
 [dependencies]
+pulldown-cmark = "0.5"          # https://github.com/raphlinus/pulldown-cmark
