@@ -1,0 +1,119 @@
+# An Example CLI
+
+> The cli description goes here...
+
+**IDEAS:**
+machfile, mach -- inspired by the german word for make "machen"
+markfile, mark
+mrkfile, mrk
+madefile, made
+
+<!--
+This version can be printed in 3 ways:
+$cmd -v
+$cmd --version
+$cmd version
+-->
+VERSION: 1.2.3
+
+<!-- This is how you define options for commands -->
+<!-- All child commands will have parent options in scope. -->
+OPTIONS:
+* VERBOSE <!-- NOTE: i should make verbose an automatically added flag -->
+    * flags: -v --verbose
+    * type: bool <!-- or: string -->
+    * desc: This flag will enable more verbose logging.
+* DEVMODE
+    * flags: -d --dev
+    * type: bool
+    * desc: This flag will run the service in development mode.
+
+
+
+
+
+## services
+
+<!-- Cmd description goes here. -->
+> Commands related to starting, stopping, and restarting services
+
+### services start <service_name>
+
+> Start or restart a service.
+
+~~~bash
+cd "~/projects/$service_name"
+
+if [[ "$DEVMODE" == "true" ]]; then
+    npm run dev
+else
+    npm start
+fi
+~~~
+
+### services stop <service_name>
+
+> Stop a service.
+
+~~~bash
+cd "~/projects/$service_name"
+npm run stop
+~~~
+
+
+
+
+
+## db
+
+> Commands related to the database.
+
+### db list
+
+> List database snapshots.
+
+~~~bash
+cd "~/projects/snapshots/db"
+ls -al
+~~~
+
+### db snapshot <snapshot_name>
+
+> Take a snapshot of the database.
+
+~~~bash
+cd "~/projects/snapshots/db"
+postgres snapshot cmd > $snapshot_name
+~~~
+
+### db restore <snapshot_name>
+
+> Restore the database to a snapshot.
+
+~~~bash
+cd "~/projects/snapshots/db"
+postgres restore cmd > $snapshot_name
+~~~
+
+
+
+
+<!--
+OTHER COOL THINGS...
+
+
+
+JUSTFILE
+    This cli works like a justfile in that it looks for bakefile.md
+
+
+CLI BINARY BUNDLING
+    This bake program should be able to take a bakefile.md and turn it into a standalone rust binary.
+    Basically bake + bakefile.md combined into a single binary for portability. It creates an easy way
+    to make cli programs.
+
+
+AUTOMATIC USAGE AND HELP INFO
+    The usage and help info will automatically be generated.
+    Every command will implicitly have a -h,--help option.
+-->
