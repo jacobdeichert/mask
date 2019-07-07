@@ -6,10 +6,6 @@
 <!-- This is how you define options for commands -->
 <!-- All child commands will have parent options in scope. -->
 **OPTIONS:**
-* VERBOSE <!-- NOTE: i should make verbose an automatically added flag -->
-    * flags: -v --verbose
-    * type: bool <!-- or: string -->
-    * desc: This flag will enable more verbose logging.
 * DEVMODE
     * flags: -d --dev
     * type: bool
