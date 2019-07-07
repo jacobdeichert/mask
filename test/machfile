@@ -114,6 +114,8 @@ server.listen(PORT, () => {
 
 ## input
 
+> Example of how to accept user input and sleep
+
 ~~~sh
 echo "Enter something:"
 read something
@@ -128,6 +130,8 @@ sleep 2s
 
 
 ## format
+
+> Formats files with prettier
 
 **OPTIONS:**
 * CHECK
