@@ -6,8 +6,8 @@ use pulldown_cmark::{
 use crate::command::Command;
 
 
-pub fn build_cli_structure(machfile_contents: String) {
-    let parser = create_parser(&machfile_contents);
+pub fn build_command_structure(machfile_contents: String) -> Vec<Command> {
+    let parser = create_markdown_parser(&machfile_contents);
     let mut commands = vec![];
     let mut current_command = Command::new(1);
     let mut text = "".to_string();
@@ -57,11 +57,11 @@ pub fn build_cli_structure(machfile_contents: String) {
     // Add the last command
     commands.push(current_command);
 
-    dbg!(commands);
+    commands
 }
 
 
-fn create_parser<'a>(machfile_contents: &'a String) -> Parser<'a> {
+fn create_markdown_parser<'a>(machfile_contents: &'a String) -> Parser<'a> {
     // Set up options and parser. Strikethroughs are not part of the CommonMark standard
     // and we therefore must enable it explicitly.
     let mut options = Options::empty();
