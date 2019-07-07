@@ -94,11 +94,46 @@ postgres restore cmd > $snapshot_name
 
 
 
-## logs
+## serve
 
-> Save logs to a file
+> Serve this directory
+
+**OPTIONS:**
+* PORT
+    * flags: -p --port
+    * type: string
+    * desc: Which port to serve on
 
 ~~~js
-const fs = require('fs');
-fs.writeFileSync('logs.txt', 'hello');
+const handler = require('serve-handler');
+const http = require('http');
+
+const server = http.createServer((request, response) => handler(request, response))
+
+const PORT = Number(process.env.PORT);
+server.listen(PORT, () => {
+    console.log(`Running at http://localhost:${PORT}`);
+});
+~~~
+
+
+
+
+
+## format
+
+**OPTIONS:**
+* CHECK
+    * flags: -c --check
+    * type: bool
+    * desc: Validate files are correctly formatted
+
+~~~sh
+prettier="prettier '{lib,src,test}/**/*.{js,jsx,ts,tsx,css,html}'"
+
+if [[ "$CHECK" == "true" ]]; then
+    $prettier --list-different
+else
+    $prettier --write
+fi
 ~~~
