@@ -1,9 +1,13 @@
 [package]
-name = "machfile"
+name = "mach"
 version = "0.1.0"
 authors = ["Jake Deichert <git@jakedeichert.com>"]
 edition = "2018"
 publish = false
+
+[lib]
+name = "mach"
+path = "src/lib.rs"
 
 [dependencies]
 pulldown-cmark = { version = "0.5", default-features = false }          # https://github.com/raphlinus/pulldown-cmark
