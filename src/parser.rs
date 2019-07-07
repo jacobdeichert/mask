@@ -54,6 +54,9 @@ pub fn build_cli_structure(machfile_contents: String) {
         };
     }
 
+    // Add the last command
+    commands.push(current_command);
+
     dbg!(commands);
 }
 
