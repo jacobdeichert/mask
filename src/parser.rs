@@ -26,7 +26,7 @@ pub fn build_command_structure(machfile_contents: String) -> Vec<Command> {
                             commands.push(current_command);
                         }
                         current_command = Command::new(heading_level as u8);
-                        println!("Start Header {}", heading_level);
+                        // println!("Start Header {}", heading_level);
                     }
                     Tag::CodeBlock(lang_code) => {
                         current_command.executor = lang_code.to_string();
@@ -48,7 +48,7 @@ pub fn build_command_structure(machfile_contents: String) -> Vec<Command> {
             },
             Text(body) => {
                 text += &body.to_string();
-                println!("BODY {}", body);
+                // println!("BODY {}", body);
             }
             _ => (),
         };
