@@ -3,17 +3,9 @@
 > The cli description goes here...
 
 
-<!--
-This version can be printed in 3 ways:
-$cmd -v
-$cmd --version
-$cmd version
--->
-VERSION: 1.2.3
-
 <!-- This is how you define options for commands -->
 <!-- All child commands will have parent options in scope. -->
-OPTIONS:
+**OPTIONS:**
 * VERBOSE <!-- NOTE: i should make verbose an automatically added flag -->
     * flags: -v --verbose
     * type: bool <!-- or: string -->
