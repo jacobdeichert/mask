@@ -121,11 +121,11 @@ server.listen(PORT, () => {
     * desc: Validate files are correctly formatted
 
 ~~~sh
-prettier="prettier '{lib,src,test}/**/*.{js,jsx,ts,tsx,css,html}'"
+alias prettier="./node_modules/.bin/prettier '**/*.{js,jsx,ts,tsx,css,html}'"
 
 if [[ "$CHECK" == "true" ]]; then
-    $prettier --list-different
+    prettier --list-different
 else
-    $prettier --write
+    prettier --write
 fi
 ~~~
