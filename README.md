@@ -1,2 +1,3 @@
 # machfile
-A markdown-based cli generator
+
+A markdown-based command runner
