@@ -112,6 +112,21 @@ server.listen(PORT, () => {
 
 
 
+## input
+
+~~~sh
+echo "Enter something:"
+read something
+echo "You entered: $something"
+
+echo "sleeping..."
+sleep 2s
+~~~
+
+
+
+
+
 ## format
 
 **OPTIONS:**
