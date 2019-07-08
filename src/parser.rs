@@ -37,6 +37,8 @@ pub fn build_command_structure(machfile_contents: String) -> Command {
             End(tag) => match tag {
                 Tag::Header(heading_level) => {
                     current_command.name = if heading_level > 2 {
+                        // TODO: split out <required_args> with regex
+
                         // Takes a subcommand name like this:
                         // "#### db flush postgres"
                         // and returns "postgres" as the actual name
