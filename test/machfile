@@ -60,13 +60,22 @@ cd "~/projects/snapshots/db"
 ls -al
 ~~~
 
-#### db list <db_name>
+### db flush
 
-> List snapshots for a specific database.
+#### db flush postgres
+
+> Flush the postgres database.
 
 ~~~bash
-cd "~/projects/snapshots/db/$db_name"
-ls -al
+echo "flushed postgres"
+~~~
+
+#### db flush redis
+
+> Flush the redis database.
+
+~~~bash
+echo "flushed redis"
 ~~~
 
 ### db snapshot <snapshot_name>

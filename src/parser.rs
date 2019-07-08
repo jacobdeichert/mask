@@ -35,8 +35,21 @@ pub fn build_command_structure(machfile_contents: String) -> Command {
                 }
             }
             End(tag) => match tag {
-                Tag::Header(_) => {
-                    current_command.name = text.clone();
+                Tag::Header(heading_level) => {
+                    current_command.name = if heading_level > 2 {
+                        // Takes a subcommand name like this:
+                        // "#### db flush postgres"
+                        // and returns "postgres" as the actual name
+                        text.clone()
+                            .split(" ")
+                            .collect::<Vec<&str>>()
+                            // Get subcommand after the parent command name
+                            .split_at(heading_level as usize - 2)
+                            .1
+                            .join(" ")
+                    } else {
+                        text.clone()
+                    }
                 }
                 Tag::BlockQuote => {
                     current_command.desc = text.clone();
