@@ -2,8 +2,8 @@ use clap::{crate_authors, crate_description, crate_name, crate_version, App, Arg
 
 fn main() {
     let machfile_contents = mach::loader::read_machfile();
-    let commands = mach::parser::build_command_structure(machfile_contents);
-    // dbg!(commands.clone());
+    let root_command = mach::parser::build_command_structure(machfile_contents);
+    // dbg!(root_command.clone());
 
     // println!("EXECUTING LAST COMMAND");
     // let cmd = commands.last().unwrap().clone();

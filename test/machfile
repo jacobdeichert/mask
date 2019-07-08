@@ -60,6 +60,15 @@ cd "~/projects/snapshots/db"
 ls -al
 ~~~
 
+#### db list <db_name>
+
+> List snapshots for a specific database.
+
+~~~bash
+cd "~/projects/snapshots/db/$db_name"
+ls -al
+~~~
+
 ### db snapshot <snapshot_name>
 
 > Take a snapshot of the database.
