@@ -1,4 +1,6 @@
-use clap::{crate_authors, crate_description, crate_name, crate_version, App, Arg, SubCommand};
+use clap::{
+    crate_authors, crate_description, crate_name, crate_version, App, Arg, ArgMatches, SubCommand,
+};
 
 use mach::command::Command;
 
@@ -7,15 +9,7 @@ fn main() {
     let root_command = mach::parser::build_command_structure(machfile_contents);
     // dbg!(root_command.clone());
 
-    // println!("EXECUTING LAST COMMAND");
-    // let cmd = commands.last().unwrap().clone();
-    // dbg!(cmd.clone());
-    // let result = mach::executor::execute_command(cmd);
-
-    // dbg!(result.unwrap().clone());
-    // println!("exit code {:?}", result.unwrap().code());
-
-    let mut cli_app = App::new(crate_name!())
+    let cli_app = App::new(crate_name!())
         .version(crate_version!())
         .author(crate_authors!())
         .about(crate_description!())
@@ -27,10 +21,13 @@ fn main() {
                 .help("Sets the level of verbosity"),
         );
 
-    cli_app = build_subcommands(cli_app, &root_command.subcommands);
+    let matches = build_subcommands(cli_app, &root_command.subcommands).get_matches();
 
+    let chosen_cmd =
+        find_command(&matches, &root_command.subcommands).expect("command must have been found");
 
-    let _matches = cli_app.get_matches();
+    let result = mach::executor::execute_command(chosen_cmd);
+    println!("exit code {:?}", result.unwrap().code());
 
 }
 
@@ -53,4 +50,24 @@ fn build_subcommands<'a, 'b>(
         cli_app = cli_app.subcommand(subcmd);
     }
     cli_app
+}
+
+fn find_command(matches: &ArgMatches, subcommands: &Vec<Command>) -> Option<Command> {
+    let mut command = None;
+
+    // The child subcommand that was used
+    if let Some(subcommand_name) = matches.subcommand_name() {
+        if let Some(matches) = matches.subcommand_matches(subcommand_name) {
+            // TODO: check for arg/option matches
+
+            for c in subcommands {
+                if c.name == subcommand_name {
+                    // Check if a subcommand was called, otherwise return this command
+                    command = find_command(matches, &c.subcommands).or(Some(c.clone()))
+                }
+            }
+        }
+    }
+
+    return command;
 }
