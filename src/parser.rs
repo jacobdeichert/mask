@@ -58,7 +58,9 @@ pub fn build_command_structure(machfile_contents: String) -> Command {
     commands.push(current_command);
 
     // Convert the flat commands array and to a tree of subcommands based on level
-    treeify_commands(commands)
+    let all = treeify_commands(commands);
+    let root_command = all.first().expect("root command must exist");
+    root_command.clone()
 }
 
 
@@ -72,17 +74,7 @@ fn create_markdown_parser<'a>(machfile_contents: &'a String) -> Parser<'a> {
 }
 
 
-fn treeify_commands(commands: Vec<Command>) -> Command {
-    let mut root_command = commands.first().expect("command should exist").clone();
-    let subcommands = commands[1..].to_vec();
-
-    root_command.subcommands = treeify_subcommands(subcommands);
-
-    root_command
-}
-
-
-fn treeify_subcommands(commands: Vec<Command>) -> Vec<Command> {
+fn treeify_commands(commands: Vec<Command>) -> Vec<Command> {
     let mut command_tree = vec![];
     let mut current_command = commands.first().expect("command should exist").clone();
     let num_commands = commands.len();
@@ -94,29 +86,27 @@ fn treeify_subcommands(commands: Vec<Command>) -> Vec<Command> {
         // This must be a subcommand
         if c.cmd_level > current_command.cmd_level {
             current_command.subcommands.push(c.clone());
-            continue;
         }
-
         // This must be a sibling command
-        if c.cmd_level == current_command.cmd_level {
+        else if c.cmd_level == current_command.cmd_level {
             // Make sure the initial command doesn't skip itself before it finds children
             if i > 0 {
                 // Found a sibling, so the current command has found all children.
                 command_tree.push(current_command.clone());
                 current_command = c.clone();
             }
+        }
 
-            // The last command needs to be added regardless, since there's not another iteration of the loop to do so
-            if is_last_cmd {
-                command_tree.push(current_command.clone());
-            }
+        // The last command needs to be added regardless, since there's not another iteration of the loop to do so
+        if is_last_cmd && c.cmd_level >= current_command.cmd_level {
+            command_tree.push(current_command.clone());
         }
     }
 
     // Treeify all subcommands recursively
     for c in &mut command_tree {
         if !c.subcommands.is_empty() {
-            c.subcommands = treeify_subcommands(c.subcommands.clone());
+            c.subcommands = treeify_commands(c.subcommands.clone());
         }
     }
 
