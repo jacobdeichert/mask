@@ -61,7 +61,7 @@ fn find_command(matches: &ArgMatches, subcommands: &Vec<Command>) -> Option<Comm
             for c in subcommands {
                 if c.name == subcommand_name {
                     // Check if a subcommand was called, otherwise return this command
-                    command = find_command(matches, &c.subcommands).or(Some(c.clone()))
+                    command = find_command(matches, &c.subcommands).or(Some(c.clone()));
                 }
             }
         }
