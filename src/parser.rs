@@ -143,6 +143,8 @@ fn parse_command_name_and_required_args(
     let name = name.join(" ").trim().to_string();
     let mut required_args: Vec<RequiredArg> = vec![];
 
+    // TODO: some how support infinite args?
+    // Maybe something like <files...>
     if !args.is_empty() {
         let args = args.join("");
         let args: Vec<&str> = args.split(" ").collect();

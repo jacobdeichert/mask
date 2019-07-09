@@ -78,4 +78,3 @@ fn get_command_options(mut cmd: Command, matches: &ArgMatches) -> Command {
 
     cmd
 }
-
