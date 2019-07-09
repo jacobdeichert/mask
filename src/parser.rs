@@ -3,7 +3,7 @@ use pulldown_cmark::{
     Options, Parser, Tag,
 };
 
-use crate::command::Command;
+use crate::command::{Command, RequiredArg};
 
 
 pub fn build_command_structure(machfile_contents: String) -> Command {
@@ -116,7 +116,10 @@ fn treeify_commands(commands: Vec<Command>) -> Vec<Command> {
     command_tree
 }
 
-fn parse_command_name_and_required_args(heading_level: i32, text: String) -> (String, Vec<String>) {
+fn parse_command_name_and_required_args(
+    heading_level: i32,
+    text: String,
+) -> (String, Vec<RequiredArg>) {
     // Why heading_level > 2? Because level 1 is the root command title (unused)
     // and level 2 can't be a subcommand so no need to split.
     let name = if heading_level > 2 {
@@ -138,12 +141,15 @@ fn parse_command_name_and_required_args(heading_level: i32, text: String) -> (St
     let name_and_args: Vec<&str> = name.split(|c| c == '<' || c == '>').collect();
     let (name, args) = name_and_args.split_at(1);
     let name = name.join(" ").trim().to_string();
-    let mut required_args: Vec<String> = vec![];
+    let mut required_args: Vec<RequiredArg> = vec![];
 
     if !args.is_empty() {
         let args = args.join("");
         let args: Vec<&str> = args.split(" ").collect();
-        required_args = args.iter().map(|a| a.to_string()).collect();
+        required_args = args
+            .iter()
+            .map(|a| RequiredArg::new(a.to_string()))
+            .collect();
     }
 
     (name, required_args)

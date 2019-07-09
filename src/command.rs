@@ -9,7 +9,7 @@ pub struct Command {
     pub source: String,
     pub subcommands: Vec<Command>,
     // pub options: Vec<CommandOption>,
-    pub required_args: Vec<String>,
+    pub required_args: Vec<RequiredArg>,
 }
 
 impl Command {
@@ -22,6 +22,22 @@ impl Command {
             source: "".to_string(),
             subcommands: vec![],
             required_args: vec![],
+        }
+    }
+}
+
+
+#[derive(Debug, Clone)]
+pub struct RequiredArg {
+    pub name: String,
+    pub val: String,
+}
+
+impl RequiredArg {
+    pub fn new(name: String) -> Self {
+        Self {
+            name,
+            val: "".to_string(),
         }
     }
 }

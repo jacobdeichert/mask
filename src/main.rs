@@ -42,7 +42,7 @@ fn build_subcommands<'a, 'b>(
         }
         // TODO: build options
         for a in &c.required_args {
-            let arg = Arg::with_name(&a).required(true);
+            let arg = Arg::with_name(&a.name).required(true);
             subcmd = subcmd.arg(arg);
         }
         cli_app = cli_app.subcommand(subcmd);
@@ -50,7 +50,7 @@ fn build_subcommands<'a, 'b>(
     cli_app
 }
 
-fn find_command(matches: &ArgMatches, subcommands: &Vec<Command>) -> Option<Command> {
+fn find_command<'a>(matches: &ArgMatches, subcommands: &Vec<Command>) -> Option<Command> {
     let mut command = None;
 
     // The child subcommand that was used
@@ -61,7 +61,8 @@ fn find_command(matches: &ArgMatches, subcommands: &Vec<Command>) -> Option<Comm
             for c in subcommands {
                 if c.name == subcommand_name {
                     // Check if a subcommand was called, otherwise return this command
-                    command = find_command(matches, &c.subcommands).or(Some(c.clone()));
+                    command = find_command(matches, &c.subcommands)
+                        .or(Some(c.clone()).map(|c| get_command_options(c, &matches)));
                 }
             }
         }
@@ -69,3 +70,12 @@ fn find_command(matches: &ArgMatches, subcommands: &Vec<Command>) -> Option<Comm
 
     return command;
 }
+
+fn get_command_options(mut cmd: Command, matches: &ArgMatches) -> Command {
+    for arg in &mut cmd.required_args {
+        arg.val = matches.value_of(arg.name.clone()).unwrap().to_string();
+    }
+
+    cmd
+}
+
