@@ -25,22 +25,22 @@
 > Start or restart a service.
 
 ~~~bash
-cd "~/projects/$service_name"
+echo "Starting service $service_name"
 
-if [[ "$DEVMODE" == "true" ]]; then
-    npm run dev
-else
-    npm start
-fi
+# if [[ "$DEVMODE" == "true" ]]; then
+#     npm run dev
+# else
+#     npm start
+# fi
 ~~~
+
 
 ### services stop <service_name>
 
 > Stop a service.
 
 ~~~bash
-cd "~/projects/$service_name"
-npm run stop
+echo "Stopping service $service_name"
 ~~~
 
 
@@ -56,18 +56,20 @@ npm run stop
 > List database snapshots.
 
 ~~~bash
-cd "~/projects/snapshots/db"
+echo "Listing all database snapshots..."
 ls -al
 ~~~
 
 ### db flush
+
+> Commands related to flushing specific databases.
 
 #### db flush postgres
 
 > Flush the postgres database.
 
 ~~~bash
-echo "flushed postgres"
+echo "Flushed postgres"
 ~~~
 
 #### db flush redis
@@ -75,7 +77,7 @@ echo "flushed postgres"
 > Flush the redis database.
 
 ~~~bash
-echo "flushed redis"
+echo "Flushed redis"
 ~~~
 
 ### db snapshot <snapshot_name>
@@ -83,8 +85,7 @@ echo "flushed redis"
 > Take a snapshot of the database.
 
 ~~~bash
-cd "~/projects/snapshots/db"
-postgres snapshot cmd > $snapshot_name
+echo "Saved db snapshot as '$snapshot_name'"
 ~~~
 
 ### db restore <snapshot_name>
@@ -92,8 +93,7 @@ postgres snapshot cmd > $snapshot_name
 > Restore the database to a snapshot.
 
 ~~~bash
-cd "~/projects/snapshots/db"
-postgres restore cmd > $snapshot_name
+echo "Restored db to snapshot '$snapshot_name'"
 ~~~
 
 
@@ -126,11 +126,12 @@ server.listen(PORT, () => {
 
 
 
-## input
+## input <arg1> <arg2>
 
 > Example of how to accept user input and sleep
 
 ~~~sh
+echo "You entered two arguments: $arg1, $arg2"
 echo "Enter something:"
 read something
 echo "You entered: $something"

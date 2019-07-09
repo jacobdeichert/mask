@@ -1,5 +1,5 @@
 use pulldown_cmark::{
-    Event::{End, Start, Text},
+    Event::{End, InlineHtml, Start, Text},
     Options, Parser, Tag,
 };
 
@@ -52,6 +52,9 @@ pub fn build_command_structure(machfile_contents: String) -> Command {
             Text(body) => {
                 text += &body.to_string();
                 // println!("BODY {}", body);
+            }
+            InlineHtml(html) => {
+                text += &html.to_string();
             }
             _ => (),
         };
@@ -137,7 +140,7 @@ fn parse_command_name_and_required_args(
         text.clone()
     };
 
-    // Find any required arguments
+    // Find any required arguments. They look like this: <required_arg_name>
     let name_and_args: Vec<&str> = name.split(|c| c == '<' || c == '>').collect();
     let (name, args) = name_and_args.split_at(1);
     let name = name.join(" ").trim().to_string();
