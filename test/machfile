@@ -116,7 +116,7 @@ const http = require('http');
 
 const server = http.createServer((request, response) => handler(request, response))
 
-const PORT = Number(process.env.PORT);
+const PORT = Number(process.env.PORT) || 8080;
 server.listen(PORT, () => {
     console.log(`Running at http://localhost:${PORT}`);
 });
