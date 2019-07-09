@@ -33,7 +33,7 @@ fn main() {
 
 fn build_subcommands<'a, 'b>(
     mut cli_app: App<'a, 'b>,
-    subcommands: &'b Vec<Command>,
+    subcommands: &'a Vec<Command>,
 ) -> App<'a, 'b> {
     for c in subcommands {
         let mut subcmd = SubCommand::with_name(&c.name).about(c.desc.as_ref());
@@ -41,12 +41,10 @@ fn build_subcommands<'a, 'b>(
             subcmd = build_subcommands(subcmd, &c.subcommands);
         }
         // TODO: build options
-        // subcmd.arg(
-        //     Arg::with_name("debug")
-        //         .short("d")
-        //         .long("debug")
-        //         .help("print debug information verbosely"),
-        // )
+        for a in &c.required_args {
+            let arg = Arg::with_name(&a).required(true);
+            subcmd = subcmd.arg(arg);
+        }
         cli_app = cli_app.subcommand(subcmd);
     }
     cli_app
