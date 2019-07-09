@@ -9,7 +9,7 @@ pub struct Command {
     pub source: String,
     pub subcommands: Vec<Command>,
     // pub options: Vec<CommandOption>,
-    // pub required_args: Vec<RequiredArg>,
+    pub required_args: Vec<String>,
 }
 
 impl Command {
@@ -21,6 +21,7 @@ impl Command {
             executor: "".to_string(),
             source: "".to_string(),
             subcommands: vec![],
+            required_args: vec![],
         }
     }
 }

@@ -36,22 +36,10 @@ pub fn build_command_structure(machfile_contents: String) -> Command {
             }
             End(tag) => match tag {
                 Tag::Header(heading_level) => {
-                    current_command.name = if heading_level > 2 {
-                        // TODO: split out <required_args> with regex
-
-                        // Takes a subcommand name like this:
-                        // "#### db flush postgres"
-                        // and returns "postgres" as the actual name
-                        text.clone()
-                            .split(" ")
-                            .collect::<Vec<&str>>()
-                            // Get subcommand after the parent command name
-                            .split_at(heading_level as usize - 2)
-                            .1
-                            .join(" ")
-                    } else {
-                        text.clone()
-                    }
+                    let (name, required_args) =
+                        parse_command_name_and_required_args(heading_level, text.clone());
+                    current_command.name = name;
+                    current_command.required_args = required_args;
                 }
                 Tag::BlockQuote => {
                     current_command.desc = text.clone();
@@ -126,4 +114,37 @@ fn treeify_commands(commands: Vec<Command>) -> Vec<Command> {
     }
 
     command_tree
+}
+
+fn parse_command_name_and_required_args(heading_level: i32, text: String) -> (String, Vec<String>) {
+    // Why heading_level > 2? Because level 1 is the root command title (unused)
+    // and level 2 can't be a subcommand so no need to split.
+    let name = if heading_level > 2 {
+        // Takes a subcommand name like this:
+        // "#### db flush postgres <required_arg>"
+        // and returns "postgres <required_arg>" as the actual name
+        text.clone()
+            .split(" ")
+            .collect::<Vec<&str>>()
+            // Get subcommand after the parent command name
+            .split_at(heading_level as usize - 2)
+            .1
+            .join(" ")
+    } else {
+        text.clone()
+    };
+
+    // Find any required arguments
+    let name_and_args: Vec<&str> = name.split(|c| c == '<' || c == '>').collect();
+    let (name, args) = name_and_args.split_at(1);
+    let name = name.join(" ").trim().to_string();
+    let mut required_args: Vec<String> = vec![];
+
+    if !args.is_empty() {
+        let args = args.join("");
+        let args: Vec<&str> = args.split(" ").collect();
+        required_args = args.iter().map(|a| a.to_string()).collect();
+    }
+
+    (name, required_args)
 }
