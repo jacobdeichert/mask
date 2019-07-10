@@ -8,8 +8,8 @@ pub struct Command {
     // The script source to execute
     pub source: String,
     pub subcommands: Vec<Command>,
-    // pub options: Vec<CommandOption>,
     pub required_args: Vec<RequiredArg>,
+    pub option_flags: Vec<OptionFlag>,
 }
 
 impl Command {
@@ -22,6 +22,17 @@ impl Command {
             source: "".to_string(),
             subcommands: vec![],
             required_args: vec![],
+            // Auto add common flags like verbose
+            // TODO: don't needlessly add this to commands that have no source (no logic)
+            option_flags: vec![OptionFlag {
+                name: "verbose".to_string(),
+                desc: "Sets the level of verbosity".to_string(),
+                short: "v".to_string(),
+                long: "verbose".to_string(),
+                multiple: false,
+                takes_value: false,
+                val: "".to_string(),
+            }],
         }
     }
 }
@@ -40,4 +51,16 @@ impl RequiredArg {
             val: "".to_string(),
         }
     }
+}
+
+
+#[derive(Debug, Clone)]
+pub struct OptionFlag {
+    pub name: String,
+    pub desc: String,
+    pub short: String,     // v        (used as -v)
+    pub long: String,      // verbose  (used as --verbose)
+    pub multiple: bool,    // Can it have multiple values? (-vvv OR -i one -i two)
+    pub takes_value: bool, // Does it take a value? (-i value)
+    pub val: String,
 }

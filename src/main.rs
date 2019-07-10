@@ -36,9 +36,21 @@ fn build_subcommands<'a, 'b>(
         if !c.subcommands.is_empty() {
             subcmd = build_subcommands(subcmd, &c.subcommands);
         }
-        // TODO: build options
+
+        // Add all required arguments
         for a in &c.required_args {
             let arg = Arg::with_name(&a.name).required(true);
+            subcmd = subcmd.arg(arg);
+        }
+
+        // Add all optional flags
+        for f in &c.option_flags {
+            let arg = Arg::with_name(&f.name)
+                .help(&f.desc)
+                .short(&f.short)
+                .long(&f.long)
+                .takes_value(f.takes_value)
+                .multiple(f.multiple);
             subcmd = subcmd.arg(arg);
         }
         cli_app = cli_app.subcommand(subcmd);
@@ -52,8 +64,6 @@ fn find_command<'a>(matches: &ArgMatches, subcommands: &Vec<Command>) -> Option<
     // The child subcommand that was used
     if let Some(subcommand_name) = matches.subcommand_name() {
         if let Some(matches) = matches.subcommand_matches(subcommand_name) {
-            // TODO: check for arg/option matches
-
             for c in subcommands {
                 if c.name == subcommand_name {
                     // Check if a subcommand was called, otherwise return this command

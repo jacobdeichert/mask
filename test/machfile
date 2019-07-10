@@ -3,15 +3,6 @@
 > The cli description goes here...
 
 
-<!-- This is how you define options for commands -->
-<!-- All child commands will have parent options in scope. -->
-**OPTIONS:**
-* DEVMODE
-    * flags: -d --dev
-    * type: bool
-    * desc: This flag will run the service in development mode.
-
-
 
 
 
@@ -26,12 +17,6 @@
 
 ~~~bash
 echo "Starting service $service_name"
-
-# if [[ "$DEVMODE" == "true" ]]; then
-#     npm run dev
-# else
-#     npm start
-# fi
 ~~~
 
 
@@ -105,7 +90,7 @@ echo "Restored db to snapshot '$snapshot_name'"
 > Serve this directory
 
 **OPTIONS:**
-* PORT
+* port
     * flags: -p --port
     * type: string
     * desc: Which port to serve on
@@ -116,7 +101,7 @@ const http = require('http');
 
 const server = http.createServer((request, response) => handler(request, response))
 
-const PORT = Number(process.env.PORT) || 8080;
+const PORT = Number(process.env.port) || 8080;
 server.listen(PORT, () => {
     console.log(`Running at http://localhost:${PORT}`);
 });
@@ -149,7 +134,7 @@ sleep 2s
 > Formats files with prettier
 
 **OPTIONS:**
-* CHECK
+* check
     * flags: -c --check
     * type: bool
     * desc: Validate files are correctly formatted
@@ -157,7 +142,7 @@ sleep 2s
 ~~~sh
 alias prettier="./node_modules/.bin/prettier '**/*.{js,jsx,ts,tsx,css,html}'"
 
-if [[ "$CHECK" == "true" ]]; then
+if [[ "$check" == "true" ]]; then
     prettier --list-different
 else
     prettier --write

@@ -148,6 +148,7 @@ fn parse_command_name_and_required_args(
 
     // TODO: some how support infinite args?
     // Maybe something like <files...>
+    // TODO: also support optional args like [optional_arg]
     if !args.is_empty() {
         let args = args.join("");
         let args: Vec<&str> = args.split(" ").collect();
