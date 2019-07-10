@@ -12,23 +12,19 @@ fn main() {
     let cli_app = App::new(crate_name!())
         .version(crate_version!())
         .author(crate_authors!())
-        .about(crate_description!())
-        .arg(
-            Arg::with_name("verbose")
-                .short("v")
-                .long("verbose")
-                .multiple(true)
-                .help("Sets the level of verbosity"),
-        );
+        .about(crate_description!());
 
     let matches = build_subcommands(cli_app, &root_command.subcommands).get_matches();
 
-    let chosen_cmd =
-        find_command(&matches, &root_command.subcommands).expect("command must have been found");
+    let chosen_cmd = find_command(&matches, &root_command.subcommands);
 
-    let result = mach::executor::execute_command(chosen_cmd);
-    println!("exit code {:?}", result.unwrap().code());
+    if chosen_cmd.is_none() {
+        // TODO: echo --help for root command
+        println!("Missing SUBCOMMAND");
+        return;
+    }
 
+    let _ = mach::executor::execute_command(chosen_cmd.unwrap());
 }
 
 fn build_subcommands<'a, 'b>(
