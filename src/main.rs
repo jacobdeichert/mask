@@ -2,11 +2,11 @@ use clap::{
     crate_authors, crate_description, crate_name, crate_version, App, Arg, ArgMatches, SubCommand,
 };
 
-use mach::command::Command;
+use mask::command::Command;
 
 fn main() {
-    let machfile_contents = mach::loader::read_machfile();
-    let root_command = mach::parser::build_command_structure(machfile_contents);
+    let maskfile_contents = mask::loader::read_maskfile();
+    let root_command = mask::parser::build_command_structure(maskfile_contents);
     // dbg!(root_command.clone());
 
     let cli_app = App::new(crate_name!())
@@ -24,7 +24,7 @@ fn main() {
         return;
     }
 
-    let _ = mach::executor::execute_command(chosen_cmd.unwrap());
+    let _ = mask::executor::execute_command(chosen_cmd.unwrap());
 }
 
 fn build_subcommands<'a, 'b>(
