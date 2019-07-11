@@ -28,7 +28,6 @@ pub fn build_command_structure(machfile_contents: String) -> Command {
                             commands.push(current_command);
                         }
                         current_command = Command::new(heading_level as u8);
-                        // println!("Start Header {}", heading_level);
                     }
                     Tag::CodeBlock(lang_code) => {
                         current_command.executor = lang_code.to_string();
