@@ -6,6 +6,7 @@ authors = ["Jake Deichert <git@jakedeichert.com>"]
 keywords = ["cli", "task", "command", "make", "markdown"]
 categories = ["command-line-interface", "command-line-utilities", "development-tools::build-utils", "parser-implementations"]
 edition = "2018"
+exclude = ["justfile"]
 
 [lib]
 name = "mask"
