@@ -24,5 +24,12 @@ pub fn execute_command(cmd: Command) -> Result<ExitStatus> {
         child.env(arg.name, arg.val);
     }
 
+    // Add all optional flags as environment variables if they have a value
+    for flag in cmd.option_flags {
+        if flag.val != "" {
+            child.env(flag.name, flag.val);
+        }
+    }
+
     child.spawn()?.wait()
 }
