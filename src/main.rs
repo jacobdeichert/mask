@@ -78,8 +78,30 @@ fn find_command<'a>(matches: &ArgMatches, subcommands: &Vec<Command>) -> Option<
 }
 
 fn get_command_options(mut cmd: Command, matches: &ArgMatches) -> Command {
+    // Check all required args
     for arg in &mut cmd.required_args {
         arg.val = matches.value_of(arg.name.clone()).unwrap().to_string();
+    }
+
+    // Check all optional flags
+    for flag in &mut cmd.option_flags {
+        flag.val = if flag.takes_value {
+            // Extract the value
+            matches
+                .value_of(flag.name.clone())
+                .or(Some(""))
+                .unwrap()
+                .to_string()
+        } else {
+            // Check if the boolean flag is present and set to "true".
+            // It's a string since it's set as an environment variable.
+            let val = if matches.is_present(flag.name.clone()) {
+                "true".to_string()
+            } else {
+                "".to_string()
+            };
+            val
+        };
     }
 
     cmd
