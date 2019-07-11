@@ -7,6 +7,7 @@ keywords = ["cli", "task", "command", "make", "markdown"]
 categories = ["command-line-interface", "command-line-utilities", "development-tools::build-utils", "parser-implementations"]
 edition = "2018"
 exclude = ["justfile"]
+license = "MIT"
 
 [lib]
 name = "mask"
