@@ -136,7 +136,6 @@ sleep 2s
 **OPTIONS:**
 * check
     * flags: -c --check
-    * type: bool
     * desc: Validate files are correctly formatted
 
 ~~~sh

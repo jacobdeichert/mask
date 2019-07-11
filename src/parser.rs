@@ -3,14 +3,16 @@ use pulldown_cmark::{
     Options, Parser, Tag,
 };
 
-use crate::command::{Command, RequiredArg};
+use crate::command::{Command, OptionFlag, RequiredArg};
 
 
 pub fn build_command_structure(machfile_contents: String) -> Command {
     let parser = create_markdown_parser(&machfile_contents);
     let mut commands = vec![];
     let mut current_command = Command::new(1);
+    let mut current_option_flag = OptionFlag::new();
     let mut text = "".to_string();
+    let mut list_level = 0;
 
     for event in parser {
         match event {
@@ -31,6 +33,9 @@ pub fn build_command_structure(machfile_contents: String) -> Command {
                     Tag::CodeBlock(lang_code) => {
                         current_command.executor = lang_code.to_string();
                     }
+                    Tag::List(_) => {
+                        list_level += 1;
+                    }
                     _ => (),
                 }
             }
@@ -47,11 +52,58 @@ pub fn build_command_structure(machfile_contents: String) -> Command {
                 Tag::CodeBlock(_) => {
                     current_command.source = text.to_string();
                 }
+                Tag::List(_) => {
+                    list_level -= 1;
+                    // Must be finished parsing the current option
+                    if list_level == 0 {
+                        // Add the current one to the list and start a new one
+                        current_command
+                            .option_flags
+                            .push(current_option_flag.clone());
+                        current_option_flag = OptionFlag::new();
+                    }
+                }
                 _ => (),
             },
             Text(body) => {
                 text += &body.to_string();
-                // println!("BODY {}", body);
+                // Level 1 is the flag name
+                if list_level == 1 {
+                    current_option_flag.name = text.clone();
+                }
+                // Level 2 is the flag config
+                else if list_level == 2 {
+                    let mut config_split = text.splitn(2, ":");
+                    let param = config_split.next().unwrap_or("").trim();
+                    let val = config_split.next().unwrap_or("").trim();
+                    match param {
+                        "desc" => current_option_flag.desc = val.to_string(),
+                        // TODO: allow "number" type for input validation purposes (even though it becomes a string env var)
+                        "type" => {
+                            if val == "string" {
+                                current_option_flag.takes_value = true;
+                            }
+                        }
+                        // Parse out the short and long flag names
+                        "flags" => {
+                            let short_and_long_flags: Vec<&str> = val.splitn(2, " ").collect();
+                            for flag in short_and_long_flags {
+                                // Must be a long flag name
+                                if flag.starts_with("--") {
+                                    let name = flag.split("--").collect::<Vec<&str>>().join("");
+                                    current_option_flag.long = name;
+                                }
+                                // Must be a short flag name
+                                else if flag.starts_with("-") {
+                                    // Get the single char
+                                    let name = flag.get(1..2).unwrap_or("");
+                                    current_option_flag.short = name.to_string();
+                                }
+                            }
+                        }
+                        _ => (),
+                    };
+                }
             }
             InlineHtml(html) => {
                 text += &html.to_string();

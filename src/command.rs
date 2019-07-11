@@ -64,3 +64,17 @@ pub struct OptionFlag {
     pub takes_value: bool, // Does it take a value? (-i value)
     pub val: String,
 }
+
+impl OptionFlag {
+    pub fn new() -> Self {
+        Self {
+            name: "".to_string(),
+            desc: "".to_string(),
+            short: "".to_string(),
+            long: "".to_string(),
+            multiple: false,
+            takes_value: false,
+            val: "".to_string(),
+        }
+    }
+}
