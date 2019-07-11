@@ -55,7 +55,7 @@ pub fn build_command_structure(machfile_contents: String) -> Command {
                 Tag::List(_) => {
                     list_level -= 1;
                     // Must be finished parsing the current option
-                    if list_level == 0 {
+                    if list_level == 1 {
                         // Add the current one to the list and start a new one
                         current_command
                             .option_flags
