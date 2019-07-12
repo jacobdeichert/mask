@@ -77,7 +77,7 @@ pub fn build_command_structure(maskfile_contents: String) -> Command {
                     let val = config_split.next().unwrap_or("").trim();
                     match param {
                         "desc" => current_option_flag.desc = val.to_string(),
-                        // TODO: allow "number" type for input validation purposes (even though it becomes a string env var)
+                        // TODO: allow "number" type for input validation purposes https://github.com/jakedeichert/mask/issues/3
                         "type" => {
                             if val == "string" {
                                 current_option_flag.takes_value = true;
@@ -197,9 +197,8 @@ fn parse_command_name_and_required_args(
     let name = name.join(" ").trim().to_string();
     let mut required_args: Vec<RequiredArg> = vec![];
 
-    // TODO: some how support infinite args?
-    // Maybe something like <files...>
-    // TODO: also support optional args like [optional_arg]
+    // TODO: some how support infinite args? https://github.com/jakedeichert/mask/issues/4
+    // TODO: support optional args https://github.com/jakedeichert/mask/issues/5
     if !args.is_empty() {
         let args = args.join("");
         let args: Vec<&str> = args.split(" ").collect();
