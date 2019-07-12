@@ -147,3 +147,19 @@ else
     prettier --write
 fi
 ~~~
+
+
+
+
+
+## python <name>
+
+> An example python script
+
+~~~python
+import os
+
+name = os.getenv("name", "WORLD")
+
+print("Hello, " + name + "!")
+~~~
