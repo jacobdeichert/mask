@@ -17,9 +17,6 @@ pub fn build_command_structure(maskfile_contents: String) -> Command {
     for event in parser {
         match event {
             Start(tag) => {
-                // Reset all state
-                text = "".to_string();
-
                 match tag {
                     Tag::Header(heading_level) => {
                         // Add the last command before starting a new one.
@@ -33,10 +30,16 @@ pub fn build_command_structure(maskfile_contents: String) -> Command {
                         current_command.executor = lang_code.to_string();
                     }
                     Tag::List(_) => {
-                        list_level += 1;
+                        // We're in an options list if the current text above it is "OPTIONS"
+                        if text == "OPTIONS" || list_level > 0 {
+                            list_level += 1;
+                        }
                     }
                     _ => (),
-                }
+                };
+
+                // Reset all state
+                text = "".to_string();
             }
             End(tag) => match tag {
                 Tag::Header(heading_level) => {
@@ -52,7 +55,9 @@ pub fn build_command_structure(maskfile_contents: String) -> Command {
                     current_command.source = text.to_string();
                 }
                 Tag::List(_) => {
-                    list_level -= 1;
+                    // Don't go lower than zero (for cases where it's a non-OPTIONS list)
+                    list_level = std::cmp::max(list_level - 1, 0);
+
                     // Must be finished parsing the current option
                     if list_level == 1 {
                         // Add the current one to the list and start a new one

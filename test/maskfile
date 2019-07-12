@@ -89,7 +89,7 @@ echo "Restored db to snapshot '$snapshot_name'"
 
 > Serve this directory
 
-**OPTIONS:**
+**OPTIONS**
 * port
     * flags: -p --port
     * type: string
@@ -133,7 +133,7 @@ sleep 2s
 
 > Formats files with prettier
 
-**OPTIONS:**
+**OPTIONS**
 * check
     * flags: -c --check
     * desc: Validate files are correctly formatted
