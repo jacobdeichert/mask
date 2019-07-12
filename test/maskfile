@@ -163,3 +163,17 @@ name = os.getenv("name", "WORLD")
 
 print("Hello, " + name + "!")
 ~~~
+
+
+
+
+
+## ruby <name>
+
+> An example ruby script
+
+~~~ruby
+name = ENV["name"] || "WORLD"
+
+puts "Hello, #{name}!"
+~~~

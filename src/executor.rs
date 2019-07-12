@@ -16,6 +16,11 @@ pub fn execute_command(cmd: Command) -> Result<ExitStatus> {
             child.arg("-c").arg(cmd.source);
             child
         }
+        "rb" | "ruby" => {
+            let mut child = process::Command::new("ruby");
+            child.arg("-e").arg(cmd.source);
+            child
+        }
         _ => {
             let mut child = process::Command::new("sh");
             child.arg("-c").arg(cmd.source);
