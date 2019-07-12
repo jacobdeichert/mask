@@ -177,3 +177,17 @@ name = ENV["name"] || "WORLD"
 
 puts "Hello, #{name}!"
 ~~~
+
+
+
+
+
+## php <name>
+
+> An example php script
+
+~~~php
+$name = getenv("name") ?: "WORLD";
+
+echo "Hello, " . $name . "!";
+~~~
