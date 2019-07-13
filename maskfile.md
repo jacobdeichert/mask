@@ -73,7 +73,7 @@ fi
 
 > Commands related to cargo dependencies
 
-### upgrade
+### deps upgrade
 
 > Update the cargo dependencies
 
