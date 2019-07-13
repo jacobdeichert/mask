@@ -1,12 +1,12 @@
 # mask 🎭
 
-`mask` is a CLI task runner defined by a simple markdown file. `mask` searches for a `maskfile.md` in the current directory which it then parses for commands and arguments.
+`mask` is a CLI task runner defined by a simple markdown file. It searches for a `maskfile.md` in the current directory which it then parses for commands and arguments.
 
-A `maskfile.md` is both a **human-readable document** and a **command definition**! Being documentation focused allows others to easily get started with your project's toolchain by simply reading your `maskfile.md` which can be rendered using a variety of markdown previewers or just GitHub itself.
+A `maskfile.md` is both a **human-readable document** and a **command definition**! Being documentation focused allows others to easily get started with your project's development setup by simply reading your `maskfile.md`. A nice advantage of using markdown is that syntax highlighting for code blocks is built-in to a lot of editors and renderers like GitHub itself.
 
 Here's `mask`'s own [maskfile.md](/maskfile.md) as an example!
 
-Follow the getting started guide below or check out the other [features](#features) `mask` has.
+To get started, follow the guide below or check out the more [advanced features](#features) `mask` has.
 
 
 
