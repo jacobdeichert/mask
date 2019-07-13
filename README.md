@@ -132,6 +132,14 @@ echo "Starting service $service_name"
 ~~~bash
 echo "Stopping service $service_name"
 ~~~
+
+#### services stop all
+
+> Stop everything.
+
+~~~bash
+echo "Stopping everything"
+~~~
 ```
 
 
