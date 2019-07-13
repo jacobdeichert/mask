@@ -3,6 +3,7 @@ use std::io::prelude::*;
 
 pub fn read_maskfile() -> Result<String, String> {
     // TODO: try to find maskfile in current directory and maybe parent directories?
+    // https://github.com/jakedeichert/mask/issues/7
     let file = File::open("maskfile.md").or(File::open("maskfile"));
 
     if file.is_err() {
