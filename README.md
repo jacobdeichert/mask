@@ -12,7 +12,7 @@ Follow the getting started guide below or check out the other [features](#featur
 
 ## Getting started
 
-First, install `mask` with `cargo`. You'll need the [rust toolchain][1] installed.
+First, install `mask` with `cargo`. You'll need the [rust toolchain][1] installed if you don't have it already.
 
 ~~~sh
 cargo install mask
@@ -39,7 +39,7 @@ echo "building project..."
 
 <!-- You can choose between a few scripting languages too! (node, python, ruby, php) -->
 ~~~js
-console.log("running project's all tests")
+console.log("running project's tests")
 ~~~
 ```
 
@@ -65,7 +65,7 @@ These are defined beside the command name within `<angle_brackets>`. They are re
 > Run tests
 
 ~~~bash
-echo "Testing '$test_case' in '$file'"
+echo "Testing $test_case in $file"
 ~~~
 ```
 
