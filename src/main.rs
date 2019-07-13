@@ -5,9 +5,12 @@ use clap::{
 use mask::command::Command;
 
 fn main() {
-    let maskfile_contents = mask::loader::read_maskfile();
-    let root_command = mask::parser::build_command_structure(maskfile_contents);
-    // dbg!(root_command.clone());
+    let maskfile = mask::loader::read_maskfile();
+    if maskfile.is_err() {
+        return eprintln!("ERROR: {}", maskfile.unwrap_err());
+    }
+
+    let root_command = mask::parser::build_command_structure(maskfile.unwrap());
 
     let cli_app = App::new(crate_name!())
         .version(crate_version!())
