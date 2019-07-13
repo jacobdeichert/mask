@@ -1,4 +1,4 @@
-# mask
+# mask 🎭
 
 `mask` is a CLI task runner defined by a simple markdown file. `mask` searches for a `maskfile.md` in the current directory which it then parses for commands and arguments.
 
