@@ -10,6 +10,8 @@ Follow the getting started guide below or check out the other [features](#featur
 
 
 
+
+
 ## Getting started
 
 First, install `mask` with `cargo`. You'll need the [rust toolchain][1] installed if you don't have it already.
@@ -23,6 +25,7 @@ Next, define a simple `maskfile.md` in your project.
 ```md
 # My Project CLI
 
+<!-- This is the command name -->
 ## build
 
 <!-- This is the commands description which is printed with -h/--help -->
@@ -53,11 +56,14 @@ mask test
 
 
 
+
 ## Features
 
 ### Positional arguments
 
 These are defined beside the command name within `<angle_brackets>`. They are required arguments that must be supplied for the command to run. [Optional args][2] are coming soon. The argument name is injected into the script's scope as an environment variable.
+
+**Example:**
 
 ```md
 ## test <file> <test_case>
@@ -74,6 +80,8 @@ echo "Testing $test_case in $file"
 You can define a list of optional flags for your commands. The flag name is injected into the script's scope as an environment variable.
 
 Important to note that `mask` auto injects a very common `boolean` flag called `verbose` into every single command even if it's not used. This saves a bit of typing for you! This means every command implictly has a `-v` and `--verbose` flag already. The value of the `$verbose` environment variable is either `"true"` or simply unset/non-existent.
+
+**Example:**
 
 ```md
 ## serve
@@ -98,6 +106,34 @@ python -m SimpleHTTPServer $PORT
 ~~~
 
 ```
+
+### Subcommands
+
+Nested command structures can easily be created since they are simply defined by the level of markdown heading. H2 (`##`) is where you define your top-level commands. Every level after that is a subcommand. The only requirement is that subcommands must have all ancestor commands present in their heading.
+
+**Example:**
+```md
+## services
+
+> Commands related to starting, stopping, and restarting services
+
+### services start <service_name>
+
+> Start a service.
+
+~~~bash
+echo "Starting service $service_name"
+~~~
+
+### services stop <service_name>
+
+> Stop a service.
+
+~~~bash
+echo "Stopping service $service_name"
+~~~
+```
+
 
 
 [1]: https://github.com/rust-lang/rustup.rs
