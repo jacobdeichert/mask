@@ -99,7 +99,7 @@ echo "Restored db to snapshot '$snapshot_name'"
 const handler = require('serve-handler');
 const http = require('http');
 
-const server = http.createServer((request, response) => handler(request, response))
+const server = http.createServer((request, response) => handler(request, response));
 
 const PORT = Number(process.env.port) || 8080;
 server.listen(PORT, () => {
@@ -189,5 +189,5 @@ puts "Hello, #{name}!"
 ~~~php
 $name = getenv("name") ?: "WORLD";
 
-echo "Hello, " . $name . "!";
+echo "Hello, " . $name . "!\n";
 ~~~

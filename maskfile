@@ -1,0 +1,107 @@
+# Tasks
+
+> Development tasks for `mask`
+
+
+
+
+
+## run
+
+> Build and run mask in development mode
+
+**OPTIONS**
+* watch
+    * flags: -w --watch
+    * desc: Rebuild on file change
+
+~~~sh
+if [[ $watch == "true" ]]; then
+    watchexec --exts rs --restart "cargo run"
+else
+    cargo run
+fi
+~~~
+
+
+
+## build
+
+> Build a release version of mask
+
+~~~sh
+cargo build --release
+~~~
+
+
+
+## test
+
+> Run all tests
+
+**OPTIONS**
+* pattern
+    * flags: -p --pattern
+    * type: string
+    * desc: Test only a specific file pattern
+
+~~~sh
+extra_args=""
+
+if [[ "$verbose" == "true" ]]; then
+    # Run tests linearly and make logs visible in output
+    extra_args="-- --nocapture --test-threads=1"
+fi
+
+echo "Start tests..."
+# Run all tests by default
+if [[ "$pattern" == "" ]]; then
+    cargo test $extra_args
+else
+    # Tests a specific integration filename pattern
+    cargo test --test $pattern $extra_args
+fi
+~~~
+
+
+
+## deps
+
+> Commands related to cargo dependencies
+
+### upgrade
+
+> Update the cargo dependencies
+
+~~~sh
+cargo update
+~~~
+
+
+
+## format
+
+> Format all source files
+
+**OPTIONS**
+* check
+    * flags: -c --check
+    * desc: Show which files are not formatted correctly
+
+~~~sh
+if [[ $check == "true" ]]; then
+    cargo fmt --all -- --check
+else
+    cargo fmt
+fi
+~~~
+
+
+
+## lint
+
+> Lint the project with clippy
+
+~~~sh
+cargo clippy
+~~~
