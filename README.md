@@ -100,12 +100,5 @@ python -m SimpleHTTPServer $PORT
 ```
 
 
-
-
-~~~
-```
-
-
-
-
 [1]: https://github.com/rust-lang/rustup.rs
+[2]: https://github.com/jakedeichert/mask/issues/5
