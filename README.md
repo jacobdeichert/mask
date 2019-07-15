@@ -46,7 +46,7 @@ You can also write documentation anywhere you want. Only certain types of markdo
 are parsed to determine the command structure.
 
 Note this code block below is defined as js. So far, mask supports node,
-python, ruby and php as scripting languages!
+python, ruby and php as scripting runtimes!
 
 ~~~js
 console.log("running project's tests")
@@ -181,9 +181,9 @@ ARGS:
     <service_name>
 ~~~
 
-### Support for other scripting languages
+### Support for other scripting runtimes
 
-On top of shell/bash scripts, `mask` also supports using node, python, ruby and php as scripting languages. This gives you the freedom to choose the right tool for the specific task at hand.
+On top of shell/bash scripts, `mask` also supports using node, python, ruby and php as scripting runtimes. This gives you the freedom to choose the right tool for the specific task at hand.
 
 For example, let's say you have a `serve` command and a `snapshot` command. You could choose python to `serve` a simple directory and maybe node to run a puppeteer script that generates a png `snapshot` of each page.
 
