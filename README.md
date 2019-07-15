@@ -25,10 +25,11 @@ Next, define a simple `maskfile.md` in your project.
 ```md
 # My Project CLI
 
+
 <!-- This is the command name -->
 ## build
 
-<!-- This is the commands description which is printed with -h/--help -->
+<!-- This is the command description -->
 > Builds my project
 
 <!-- This is the script that will be executed -->
@@ -36,11 +37,15 @@ Next, define a simple `maskfile.md` in your project.
 echo "building project..."
 ~~~
 
+
 ## test
 
 > Tests my project
 
-<!-- You can choose between a few scripting languages too! (node, python, ruby, php) -->
+You can also write documentation anywhere you want. Only certain types of markdown patterns are parsed to determine the command structure.
+
+Note this code block below is defined as js. So far, mask supports node, python, ruby and php as scripting languages!
+
 ~~~js
 console.log("running project's tests")
 ~~~
@@ -173,6 +178,67 @@ FLAGS:
 ARGS:
     <service_name>
 ~~~
+
+### Support for other scripting languages
+
+On top of shell/bash scripts, `mask` also supports using node, python, ruby and php as scripting languages. This gives you the freedom to choose the right tool for the specific task at hand.
+
+For example, let's say you have a `serve` command and a `snapshot` command. You could choose python to `serve` a simple directory and maybe node to run a puppeteer script that generates a png `snapshot` of each page.
+
+**Example:**
+
+```md
+## node <name>
+
+> An example node script
+
+"js" or "javascript" can be used as the lang code
+
+~~~js
+const { name } = process.env;
+console.log(`Hello, ${name}!`)
+~~~
+
+
+## python <name>
+
+> An example python script
+
+"py" or "python" can be used as the lang code
+
+~~~python
+import os
+
+name = os.getenv("name", "WORLD")
+
+print("Hello, " + name + "!")
+~~~
+
+
+## ruby <name>
+
+> An example ruby script
+
+"rb" or "ruby" can be used as the lang code
+
+~~~ruby
+name = ENV["name"] || "WORLD"
+
+puts "Hello, #{name}!"
+~~~
+
+
+## php <name>
+
+> An example php script
+
+~~~php
+$name = getenv("name") ?: "WORLD";
+
+echo "Hello, " . $name . "!\n";
+~~~
+```
+
 
 
 
