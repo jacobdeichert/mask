@@ -22,7 +22,7 @@ cargo install mask
 
 Next, define a simple `maskfile.md` in your project.
 
-```md
+```markdown
 # My Project CLI
 
 
@@ -72,7 +72,7 @@ These are defined beside the command name within `<angle_brackets>`. They are re
 
 **Example:**
 
-```md
+```markdown
 ## test <file> <test_case>
 
 > Run tests
@@ -90,7 +90,7 @@ Important to note that `mask` auto injects a very common `boolean` flag called `
 
 **Example:**
 
-```md
+```markdown
 ## serve
 
 > Serve this directory
@@ -118,7 +118,7 @@ python -m SimpleHTTPServer $PORT
 Nested command structures can easily be created since they are simply defined by the level of markdown heading. H2 (`##`) is where you define your top-level commands. Every level after that is a subcommand. The only requirement is that subcommands must have all ancestor commands present in their heading.
 
 **Example:**
-```md
+```markdown
 ## services
 
 > Commands related to starting, stopping, and restarting services
@@ -188,7 +188,7 @@ For example, let's say you have a `serve` command and a `snapshot` command. You 
 
 **Example:**
 
-```md
+```markdown
 ## node <name>
 
 > An example node script
@@ -246,7 +246,7 @@ echo "Hello, " . $name . "!\n";
 You can easily call `mask` within scripts if you need to chain commands together.
 
 
-```md
+```markdown
 ## bootstrap
 
 > Installs deps, builds, links, migrates the db and then starts the app
