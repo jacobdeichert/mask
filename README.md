@@ -2,7 +2,7 @@
 
 `mask` is a CLI task runner which is defined by a simple markdown file. It searches for a `maskfile.md` in the current directory which it then parses for commands and arguments.
 
-A `maskfile.md` is both a **human-readable document** and a **command definition**! Being documentation focused allows others to easily get started with your project's development setup by simply reading your `maskfile.md`. A nice advantage of using markdown is that syntax highlighting for code blocks is built-in to a lot of editors and renderers like GitHub itself.
+A `maskfile.md` is both a **human-readable document** and a **command definition**! Being documentation focused allows others to easily get started with your project's development setup by simply reading your `maskfile.md`. A nice advantage of using markdown is that syntax highlighting for code blocks is built-in to many editors and renderers like GitHub itself.
 
 Here's `mask`'s own [maskfile.md](/maskfile.md) as an example!
 
@@ -142,7 +142,41 @@ echo "Stopping everything"
 ~~~
 ```
 
+### Automatic help and usage output
+
+You don't have to spend time writing out help info manually. `mask` uses your command descriptions and options to automatically generate help output. It adds `-h --help` flags and a `help <name>` command to all commands (thanks to [clap][3]).
+
+**Example:**
+~~~sh
+mask services start -h
+mask services start --help
+mask services help start
+mask help services start
+~~~
+
+All output the same help info:
+
+~~~txt
+mask-services-start
+Start or restart a service.
+
+USAGE:
+    mask services start [FLAGS] <service_name>
+
+FLAGS:
+    -h, --help       Prints help information
+    -V, --version    Prints version information
+    -v, --verbose    Sets the level of verbosity
+    -r, --restart    Restart this service if it's already running
+    -w, --watch      Restart a service on file change
+
+ARGS:
+    <service_name>
+~~~
+
+
 
 
 [1]: https://github.com/rust-lang/rustup.rs
 [2]: https://github.com/jakedeichert/mask/issues/5
+[3]: https://github.com/clap-rs/clap
