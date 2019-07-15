@@ -42,9 +42,11 @@ echo "building project..."
 
 > Tests my project
 
-You can also write documentation anywhere you want. Only certain types of markdown patterns are parsed to determine the command structure.
+You can also write documentation anywhere you want. Only certain types of markdown patterns
+are parsed to determine the command structure.
 
-Note this code block below is defined as js. So far, mask supports node, python, ruby and php as scripting languages!
+Note this code block below is defined as js. So far, mask supports node,
+python, ruby and php as scripting languages!
 
 ~~~js
 console.log("running project's tests")
