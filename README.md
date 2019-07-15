@@ -26,13 +26,13 @@ Next, define a simple `maskfile.md` in your project.
 # My Project CLI
 
 
-<!-- This is the command name -->
+<!-- A heading defines the command's name -->
 ## build
 
-<!-- This is the command description -->
+<!-- A blockquote defines the command's description -->
 > Builds my project
 
-<!-- This is the script that will be executed -->
+<!-- A code block defines the script to be executed -->
 ~~~sh
 echo "building project..."
 ~~~
