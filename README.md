@@ -23,7 +23,7 @@ cargo install mask
 Next, define a simple `maskfile.md` in your project.
 
 ```markdown
-# My Project CLI
+# Tasks For My Project
 
 
 <!-- A heading defines the command's name -->
@@ -261,6 +261,30 @@ mask start
 
 
 
+
+## Upcoming features
+
+* [ ] [Optional (non-required) positional arguments][2]
+* [ ] [Infinite positional args](https://github.com/jakedeichert/mask/issues/4)
+* [ ] [Option flag `number` type for input validation purposes](https://github.com/jakedeichert/mask/issues/3)
+
+
+
+
+
+## Inspiration
+
+I'm definitely not the first to come up with this idea.
+
+My frustrations with `make`'s syntax is what led me to search for other options. I landed on [just][just] for awhile which was a great improvement. But I still wanted more... subcommands and optional flags were near the top of my list. My favourite feature of `just` was the support for other language runtimes, which is why `mask` also has this ability!
+
+At some point in my searching, I came across [maid][maid] which is where most of my inspiration comes from. I thought it was brilliant that markdown could be used as a command definition format while still being so readable.
+
+So why did I choose to rebuild the wheel instead of using `maid`? For one, I preferred installing a single binary, like `just` is, rather than installing an npm package with hundreds of deps. I also had a few ideas on how I could improve upon `maid` which is why `mask` supports multiple levels of nested subcommands as well as optional flags and positional args. And finally... I just really wanted to build something with Rust :)
+
+
 [1]: https://github.com/rust-lang/rustup.rs
 [2]: https://github.com/jakedeichert/mask/issues/5
 [3]: https://github.com/clap-rs/clap
+[maid]: https://github.com/egoist/maid
+[just]: https://github.com/casey/just
