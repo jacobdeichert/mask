@@ -6,7 +6,7 @@ A `maskfile.md` is both a **human-readable document** and a **command definition
 
 Here's the [maskfile.md](/maskfile.md) that `mask` itself uses as an example!
 
-To get started, follow the guide below or check out the more [advanced features](#features) `mask` has.
+To get started, follow the guide below or check out the more [advanced features](#features) `mask` has like **positional args**, **optional flags**, **subcommands**, other **scripting runtimes** and more!
 
 
 
@@ -148,38 +148,6 @@ echo "Stopping everything"
 ~~~
 ```
 
-### Automatic help and usage output
-
-You don't have to spend time writing out help info manually. `mask` uses your command descriptions and options to automatically generate help output. It adds `-h --help` flags and a `help <name>` command to all commands (thanks to [clap][3]).
-
-**Example:**
-~~~sh
-mask services start -h
-mask services start --help
-mask services help start
-mask help services start
-~~~
-
-All output the same help info:
-
-~~~txt
-mask-services-start
-Start or restart a service.
-
-USAGE:
-    mask services start [FLAGS] <service_name>
-
-FLAGS:
-    -h, --help       Prints help information
-    -V, --version    Prints version information
-    -v, --verbose    Sets the level of verbosity
-    -r, --restart    Restart this service if it's already running
-    -w, --watch      Restart a service on file change
-
-ARGS:
-    <service_name>
-~~~
-
 ### Support for other scripting runtimes
 
 On top of shell/bash scripts, `mask` also supports using node, python, ruby and php as scripting runtimes. This gives you the freedom to choose the right tool for the specific task at hand.
@@ -240,11 +208,41 @@ echo "Hello, " . $name . "!\n";
 ~~~
 ```
 
+### Automatic help and usage output
+
+You don't have to spend time writing out help info manually. `mask` uses your command descriptions and options to automatically generate help output. It adds `-h --help` flags and a `help <name>` command to all commands (thanks to [clap][3]).
+
+**Example:**
+~~~sh
+mask services start -h
+mask services start --help
+mask services help start
+mask help services start
+~~~
+
+All output the same help info:
+
+~~~txt
+mask-services-start
+Start or restart a service.
+
+USAGE:
+    mask services start [FLAGS] <service_name>
+
+FLAGS:
+    -h, --help       Prints help information
+    -V, --version    Prints version information
+    -v, --verbose    Sets the level of verbosity
+    -r, --restart    Restart this service if it's already running
+    -w, --watch      Restart a service on file change
+
+ARGS:
+    <service_name>
+~~~
 
 ### Running mask from within a script
 
 You can easily call `mask` within scripts if you need to chain commands together.
-
 
 ```markdown
 ## bootstrap
