@@ -111,7 +111,6 @@ if [[ "$verbose" == "true" ]]; then
 fi
 python -m SimpleHTTPServer $PORT
 ~~~
-
 ```
 
 ### Subcommands
@@ -241,6 +240,25 @@ echo "Hello, " . $name . "!\n";
 ~~~
 ```
 
+
+### Running mask from within a script
+
+You can easily call `mask` within scripts if you need to chain commands together.
+
+
+```md
+## bootstrap
+
+> Installs deps, builds, links, migrates the db and then starts the app
+
+~~~sh
+mask install
+mask build
+mask link
+mask db migrate
+mask start
+~~~
+```
 
 
 
