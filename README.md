@@ -14,7 +14,7 @@ To get started, follow the guide below or check out the more [advanced features]
 
 ## Getting started
 
-First, install `mask` with `cargo`. You'll need the [rust toolchain][1] installed if you don't have it already.
+First, install `mask` with `cargo`. You'll need the [rust toolchain][rustup] installed if you don't have it already.
 
 ~~~sh
 cargo install mask
@@ -208,7 +208,7 @@ echo "Hello, " . $name . "!\n";
 
 ### Automatic help and usage output
 
-You don't have to spend time writing out help info manually. `mask` uses your command descriptions and options to automatically generate help output. It adds `-h --help` flags and a `help <name>` command to all commands (thanks to [clap][clap]).
+You don't have to spend time writing out help info manually. `mask` uses your command descriptions and options to automatically generate help output. For every command, it adds `-h, --help` flags and an alternative `help <name>` command.
 
 **Example:**
 ~~~sh
@@ -285,7 +285,17 @@ I also need to mention [clap][clap] and [pulldown-cmark][cmark] which are really
 
 
 
-[1]: https://github.com/rust-lang/rustup.rs
+
+## Contributing
+
+Please file an [issue][new_issue] for discussion of features or bugs, and we'll go from there :)
+
+
+
+
+
+[new_issue]: https://github.com/jakedeichert/mask/issues/new
+[rustup]: https://github.com/rust-lang/rustup.rs
 [2]: https://github.com/jakedeichert/mask/issues/5
 [maid]: https://github.com/egoist/maid
 [just]: https://github.com/casey/just
