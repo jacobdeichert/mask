@@ -14,11 +14,15 @@ To get started, follow the guide below or check out the more [advanced features]
 
 ## Getting started
 
-First, install `mask` with `cargo`. You'll need the [rust toolchain][rustup] installed if you don't have it already.
+Currently, `mask` is only published to crates.io which allows you to install it with `cargo`.
+
+> `mask` is built with rust, so you'll need the [rust toolchain][rustup] installed if you don't have it already.
 
 ~~~sh
 cargo install mask
 ~~~
+
+> If you prefer to build from source, clone this repo and then run `cargo build --release`
 
 Next, define a simple `maskfile.md` in your project.
 
@@ -286,6 +290,16 @@ I also need to mention [clap][clap] and [pulldown-cmark][cmark] which are really
 
 
 
+## FAQ
+
+### Windows support
+
+Currently, this is [unknown][windows_issue]. I'm pretty sure the executor logic will need to be Windows specific.
+
+
+
+
+
 ## Contributing
 
 Please file an [issue][new_issue] for discussion of features or bugs, and we'll go from there :)
@@ -301,3 +315,4 @@ Please file an [issue][new_issue] for discussion of features or bugs, and we'll 
 [just]: https://github.com/casey/just
 [clap]: https://github.com/clap-rs/clap
 [cmark]: https://github.com/raphlinus/pulldown-cmark
+[windows_issue]: https://github.com/jakedeichert/mask/issues/10
