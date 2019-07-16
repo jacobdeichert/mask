@@ -246,6 +246,8 @@ ARGS:
 
 You can easily call `mask` within scripts if you need to chain commands together.
 
+**Example:**
+
 ```markdown
 ## bootstrap
 
