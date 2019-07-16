@@ -276,9 +276,19 @@ mask start
 
 
 
-## Inspiration
+## FAQ
 
-I'm definitely not the first to come up with this idea.
+### Windows support?
+
+Currently, this is [unknown][windows_issue]. I'm pretty sure the executor logic will need to be Windows specific.
+
+### Is `mask` available as a lib?
+
+`mask` was designed as a lib from the beginning and is accessible. However, it's very undocumented and will need to be cleaned up before 1.0.
+
+### Where did the inspiration come from?
+
+I'm definitely not the first to come up with this idea of using markdown as a CLI structure definition.
 
 My frustrations with `make`'s syntax is what led me to search for other options. I landed on [just][just] for awhile which was a pretty nice improvement. My favourite feature of `just` is its support for other language runtimes, which is why `mask` also has this ability! However, it still didn't have some features I wanted like nested subcommands and multiple optional flags.
 
@@ -287,16 +297,6 @@ At some point in my searching, I came across [maid][maid] which is where most of
 So why did I choose to rebuild the wheel instead of using `maid`? For one, I preferred installing a single binary, like `just` is, rather than installing an npm package with hundreds of deps. I also had a few ideas on how I could improve upon `maid` which is why `mask` supports multiple levels of nested subcommands as well as optional flags and positional args. And finally... I just really wanted to build another thing with Rust :)
 
 I also need to mention [clap][clap] and [pulldown-cmark][cmark] which are really the core parts of `mask` that made it so easy to create.
-
-
-
-
-
-## FAQ
-
-### Windows support
-
-Currently, this is [unknown][windows_issue]. I'm pretty sure the executor logic will need to be Windows specific.
 
 
 
