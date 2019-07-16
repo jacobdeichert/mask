@@ -295,7 +295,7 @@ Please file an [issue][new_issue] for discussion of features or bugs, and we'll 
 
 
 [new_issue]: https://github.com/jakedeichert/mask/issues/new
-[rustup]: https://github.com/rust-lang/rustup.rs
+[rustup]: https://rustup.rs
 [2]: https://github.com/jakedeichert/mask/issues/5
 [maid]: https://github.com/egoist/maid
 [just]: https://github.com/casey/just
