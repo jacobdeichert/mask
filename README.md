@@ -311,8 +311,21 @@ Please file an [issue][new_issue] for discussion of features or bugs, and we'll 
 
 
 
+
+## Author
+
+Jake Deichert
+
+[@jakedeichert][twitter] on Twitter · [Website][website]
+
+
+
+
+
 [crate]: https://crates.io/crates/mask
 [new_issue]: https://github.com/jakedeichert/mask/issues/new
+[website]: https://jakedeichert.com
+[twitter]: https://twitter.com/jakedeichert
 [rustup]: https://rustup.rs
 [2]: https://github.com/jakedeichert/mask/issues/5
 [maid]: https://github.com/egoist/maid
