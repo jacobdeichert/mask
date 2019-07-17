@@ -8,7 +8,7 @@ readme = "README.md"
 keywords = ["cli", "task", "command", "make", "markdown"]
 categories = ["command-line-interface", "command-line-utilities", "development-tools::build-utils", "parser-implementations"]
 edition = "2018"
-exclude = ["maskfile.md"]
+exclude = ["maskfile.md", ".gitignore", "CHANGELOG.md", "test/**"]
 license = "MIT"
 
 [lib]
