@@ -282,7 +282,7 @@ mask start
 
 ### Windows support?
 
-Currently, this is [unknown][windows_issue]. I'm pretty sure the executor logic will need to be Windows specific.
+Currently, this is [unknown][windows_issue]. I'm pretty sure the executor logic will need to be adjusted for Windows.
 
 ### Is `mask` available as a lib?
 
