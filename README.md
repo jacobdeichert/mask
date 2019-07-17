@@ -1,5 +1,7 @@
 # mask 🎭
 
+[![mask version](https://img.shields.io/crates/v/mask.svg)][crate]
+
 `mask` is a CLI task runner which is defined by a simple markdown file. It searches for a `maskfile.md` in the current directory which it then parses for commands and arguments.
 
 A `maskfile.md` is both a **human-readable document** and a **command definition**! Being documentation focused allows others to easily get started with your project's development setup by simply reading your `maskfile.md`. A nice advantage of using markdown is that syntax highlighting for code blocks is built-in to many editors and renderers like GitHub itself.
@@ -14,7 +16,7 @@ To get started, follow the guide below or check out the more [advanced features]
 
 ## Getting started
 
-Currently, `mask` is only published to crates.io which allows you to install it with `cargo`.
+Currently, `mask` is only published to [crates.io][crate] which allows you to install it with `cargo`.
 
 > `mask` is built with rust, so you'll need the [rust toolchain][rustup] installed if you don't have it already.
 
@@ -284,7 +286,7 @@ Currently, this is [unknown][windows_issue]. I'm pretty sure the executor logic 
 
 ### Is `mask` available as a lib?
 
-`mask` was designed as a lib from the beginning and is accessible. However, it's very undocumented and will need to be cleaned up before 1.0.
+`mask` was designed as a lib from the beginning and is accessible. However, it's very undocumented and will need to be cleaned up before it's considered stable.
 
 ### Where did the inspiration come from?
 
@@ -294,7 +296,7 @@ My frustrations with `make`'s syntax is what led me to search for other options.
 
 At some point in my searching, I came across [maid][maid] which is where most of the inspiration for `mask` comes from. I thought it was brilliant that markdown could be used as a command definition format while still being so readable.
 
-So why did I choose to rebuild the wheel instead of using `maid`? For one, I preferred installing a single binary, like `just` is, rather than installing an npm package with hundreds of deps. I also had a few ideas on how I could improve upon `maid` which is why `mask` supports multiple levels of nested subcommands as well as optional flags and positional args. And finally... I just really wanted to build another thing with Rust :)
+So why did I choose to rebuild the wheel instead of using `maid`? For one, I preferred installing a single binary, like `just` is, rather than installing an npm package with hundreds of deps. I also had a few ideas on how I could improve upon `maid` which is why `mask` supports multiple levels of nested subcommands as well as optional flags and positional args. Also... I just really wanted to build another thing with Rust :)
 
 I also need to mention [clap][clap] and [pulldown-cmark][cmark] which are really the core parts of `mask` that made it so easy to create.
 
@@ -309,7 +311,7 @@ Please file an [issue][new_issue] for discussion of features or bugs, and we'll 
 
 
 
-
+[crate]: https://crates.io/crates/mask
 [new_issue]: https://github.com/jakedeichert/mask/issues/new
 [rustup]: https://rustup.rs
 [2]: https://github.com/jakedeichert/mask/issues/5
