@@ -1,0 +1,49 @@
+version: 2
+jobs:
+  setup:
+    docker:
+      - image: rust:latest
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - run:
+          name: Rust version info
+          command: rustc --version; cargo --version
+      - restore_cache:
+          keys:
+            - v1-cargo-{{ checksum "Cargo.lock" }}
+      - run:
+          name: Install cargo dependencies
+          command: cargo fetch
+      - save_cache:
+          key: v1-cargo-{{ checksum "Cargo.lock" }}
+          paths:
+            - /usr/local/cargo/registry
+            - /usr/local/cargo/git
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .
+
+  test:
+    docker:
+      - image: rust:latest
+    working_directory: ~/repo
+    steps:
+      - attach_workspace:
+          at: ~/repo
+      - restore_cache:
+          keys:
+            - v1-cargo-{{ checksum "Cargo.lock" }}
+      - run:
+          name: Run tests
+          command: cargo test --verbose --frozen
+
+workflows:
+  version: 2
+  pr_test:
+    jobs:
+      - setup
+      - test:
+          requires:
+            - setup
