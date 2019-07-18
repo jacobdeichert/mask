@@ -210,6 +210,15 @@ $name = getenv("name") ?: "WORLD";
 
 echo "Hello, " . $name . "!\n";
 ~~~
+
+## fish <name>
+
+> An example fish script
+
+~~~fish
+read -l name
+echo Hello, $name!
+~~~
 ```
 
 ### Automatic help and usage output
