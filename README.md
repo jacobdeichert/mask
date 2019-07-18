@@ -161,11 +161,23 @@ On top of shell/bash scripts, `mask` also supports using node, python, ruby and 
 **Example:**
 
 ```markdown
+## shell <name>
+
+> An example shell script
+
+Valid lang codes: sh, bash, zsh, fish
+The fallback is sh for unknown language codes.
+
+~~~zsh
+echo "Hello, $name!"
+~~~
+
+
 ## node <name>
 
 > An example node script
 
-"js" or "javascript" can be used as the lang code
+Valid lang codes: js, javascript
 
 ~~~js
 const { name } = process.env;
@@ -177,7 +189,7 @@ console.log(`Hello, ${name}!`)
 
 > An example python script
 
-"py" or "python" can be used as the lang code
+Valid lang codes: py, python
 
 ~~~python
 import os
@@ -192,7 +204,7 @@ print("Hello, " + name + "!")
 
 > An example ruby script
 
-"rb" or "ruby" can be used as the lang code
+Valid lang codes: rb, ruby
 
 ~~~ruby
 name = ENV["name"] || "WORLD"
@@ -209,15 +221,6 @@ puts "Hello, #{name}!"
 $name = getenv("name") ?: "WORLD";
 
 echo "Hello, " . $name . "!\n";
-~~~
-
-## fish <name>
-
-> An example fish script
-
-~~~fish
-read -l name
-echo Hello, $name!
 ~~~
 ```
 

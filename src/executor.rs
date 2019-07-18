@@ -26,8 +26,8 @@ pub fn execute_command(cmd: Command) -> Result<ExitStatus> {
             child.arg("-r").arg(cmd.source);
             child
         }
-        "fish" => {
-            let mut child = process::Command::new("fish");
+        "bash" | "zsh" | "fish" => {
+            let mut child = process::Command::new(cmd.executor);
             child.arg("-c").arg(cmd.source);
             child
         }
