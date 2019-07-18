@@ -1,5 +1,6 @@
 # mask 🎭
 
+[![build status](https://img.shields.io/circleci/build/github/jakedeichert/mask/master.svg)][circleci]
 [![mask version](https://img.shields.io/crates/v/mask.svg)][crate]
 
 `mask` is a CLI task runner which is defined by a simple markdown file. It searches for a `maskfile.md` in the current directory which it then parses for commands and arguments.
@@ -335,6 +336,7 @@ Jake Deichert
 
 
 [crate]: https://crates.io/crates/mask
+[circleci]: https://circleci.com/gh/jakedeichert/mask
 [new_issue]: https://github.com/jakedeichert/mask/issues/new
 [website]: https://jakedeichert.com
 [twitter]: https://twitter.com/jakedeichert
