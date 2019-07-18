@@ -1,3 +1,5 @@
+use std::path::Path;
+
 use clap::{
     crate_authors, crate_description, crate_name, crate_version, App, Arg, ArgMatches, SubCommand,
 };
@@ -5,7 +7,7 @@ use clap::{
 use mask::command::Command;
 
 fn main() {
-    let maskfile = mask::loader::read_maskfile();
+    let maskfile = mask::loader::read_maskfile(Path::new("."));
     if maskfile.is_err() {
         return eprintln!("ERROR: {}", maskfile.unwrap_err());
     }
