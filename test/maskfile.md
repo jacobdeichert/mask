@@ -11,7 +11,7 @@
 <!-- Cmd description goes here. -->
 > Commands related to starting, stopping, and restarting services
 
-### services start <service_name>
+### services start (service_name)
 
 > Start or restart a service.
 
@@ -20,7 +20,7 @@ echo "Starting service $service_name"
 ~~~
 
 
-### services stop <service_name>
+### services stop (service_name)
 
 > Stop a service.
 
@@ -65,7 +65,7 @@ echo "Flushed postgres"
 echo "Flushed redis"
 ~~~
 
-### db snapshot <snapshot_name>
+### db snapshot (snapshot_name)
 
 > Take a snapshot of the database.
 
@@ -73,7 +73,7 @@ echo "Flushed redis"
 echo "Saved db snapshot as '$snapshot_name'"
 ~~~
 
-### db restore <snapshot_name>
+### db restore (snapshot_name)
 
 > Restore the database to a snapshot.
 
@@ -111,7 +111,7 @@ server.listen(PORT, () => {
 
 
 
-## input <arg1> <arg2>
+## input (arg1) (arg2)
 
 > Example of how to accept user input and sleep
 
@@ -152,7 +152,7 @@ fi
 
 
 
-## python <name>
+## python (name)
 
 > An example python script
 
@@ -168,7 +168,7 @@ print("Hello, " + name + "!")
 
 
 
-## ruby <name>
+## ruby (name)
 
 > An example ruby script
 
@@ -182,7 +182,7 @@ puts "Hello, #{name}!"
 
 
 
-## php <name>
+## php (name)
 
 > An example php script
 

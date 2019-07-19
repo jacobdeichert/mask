@@ -1,5 +1,5 @@
 use pulldown_cmark::{
-    Event::{End, InlineHtml, Start, Text},
+    Event::{Code, End, InlineHtml, Start, Text},
     Options, Parser, Tag,
 };
 
@@ -112,6 +112,9 @@ pub fn build_command_structure(maskfile_contents: String) -> Command {
             InlineHtml(html) => {
                 text += &html.to_string();
             }
+            Code(inline_code) => {
+                text += &format!("`{}`", inline_code);
+            }
             _ => (),
         };
     }
@@ -183,8 +186,8 @@ fn parse_command_name_and_required_args(
     // and level 2 can't be a subcommand so no need to split.
     let name = if heading_level > 2 {
         // Takes a subcommand name like this:
-        // "#### db flush postgres <required_arg>"
-        // and returns "postgres <required_arg>" as the actual name
+        // "#### db flush postgres (required_arg_name)"
+        // and returns "postgres (required_arg_name)" as the actual name
         text.clone()
             .split(" ")
             .collect::<Vec<&str>>()
@@ -196,8 +199,8 @@ fn parse_command_name_and_required_args(
         text.clone()
     };
 
-    // Find any required arguments. They look like this: <required_arg_name>
-    let name_and_args: Vec<&str> = name.split(|c| c == '<' || c == '>').collect();
+    // Find any required arguments. They look like this: (required_arg_name)
+    let name_and_args: Vec<&str> = name.split(|c| c == '(' || c == ')').collect();
     let (name, args) = name_and_args.split_at(1);
     let name = name.join(" ").trim().to_string();
     let mut required_args: Vec<RequiredArg> = vec![];
@@ -214,4 +217,97 @@ fn parse_command_name_and_required_args(
     }
 
     (name, required_args)
+}
+
+#[cfg(test)]
+const TEST_MASKFILE: &str = r#"
+# Document Title
+
+This is an example maskfile for the tests below.
+
+## serve (port)
+
+> Serve the app on the `port`
+
+~~~bash
+echo "Serving on port $port"
+~~~
+
+## node (name)
+
+> An example node script
+
+Valid lang codes: js, javascript
+
+```js
+const { name } = process.env;
+console.log(`Hello, ${name}!`);
+```
+"#;
+
+#[cfg(test)]
+mod build_command_structure {
+    use super::*;
+
+    #[test]
+    fn parses_serve_command_name() {
+        let tree = build_command_structure(TEST_MASKFILE.to_string());
+        let serve_command = &tree.subcommands[0];
+        assert_eq!(serve_command.name, "serve");
+    }
+
+    #[test]
+    fn parses_serve_command_description() {
+        let tree = build_command_structure(TEST_MASKFILE.to_string());
+        let serve_command = &tree.subcommands[0];
+        assert_eq!(serve_command.desc, "Serve the app on the `port`");
+    }
+
+    #[test]
+    fn parses_serve_required_positional_arguments() {
+        let tree = build_command_structure(TEST_MASKFILE.to_string());
+        let serve_command = &tree.subcommands[0];
+        assert_eq!(serve_command.required_args.len(), 1);
+        assert_eq!(serve_command.required_args[0].name, "port");
+    }
+
+    #[test]
+    fn adds_default_verbose_optional_flag() {
+        let tree = build_command_structure(TEST_MASKFILE.to_string());
+        let serve_command = &tree.subcommands[0];
+        assert_eq!(serve_command.option_flags.len(), 1);
+        assert_eq!(serve_command.option_flags[0].name, "verbose");
+        assert_eq!(
+            serve_command.option_flags[0].desc,
+            "Sets the level of verbosity"
+        );
+        assert_eq!(serve_command.option_flags[0].short, "v");
+        assert_eq!(serve_command.option_flags[0].long, "verbose");
+        assert_eq!(serve_command.option_flags[0].multiple, false);
+        assert_eq!(serve_command.option_flags[0].takes_value, false);
+    }
+
+    #[test]
+    fn parses_serve_command_executor() {
+        let tree = build_command_structure(TEST_MASKFILE.to_string());
+        let serve_command = &tree.subcommands[0];
+        assert_eq!(serve_command.executor, "bash");
+    }
+
+    #[test]
+    fn parses_serve_command_source_with_tildes() {
+        let tree = build_command_structure(TEST_MASKFILE.to_string());
+        let serve_command = &tree.subcommands[0];
+        assert_eq!(serve_command.source, "echo \"Serving on port $port\"\n");
+    }
+
+    #[test]
+    fn parses_node_command_source_with_backticks() {
+        let tree = build_command_structure(TEST_MASKFILE.to_string());
+        let node_command = &tree.subcommands[1];
+        assert_eq!(
+            node_command.source,
+            "const { name } = process.env;\nconsole.log(`Hello, ${name}!`);\n"
+        );
+    }
 }

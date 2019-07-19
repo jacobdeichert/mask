@@ -75,12 +75,12 @@ mask test
 
 ### Positional arguments
 
-These are defined beside the command name within `<angle_brackets>`. They are required arguments that must be supplied for the command to run. [Optional args][2] are coming soon. The argument name is injected into the script's scope as an environment variable.
+These are defined beside the command name within `(round_brackets)`. They are required arguments that must be supplied for the command to run. [Optional args][2] are coming soon. The argument name is injected into the script's scope as an environment variable.
 
 **Example:**
 
 ```markdown
-## test <file> <test_case>
+## test (file) (test_case)
 
 > Run tests
 
@@ -130,7 +130,7 @@ Nested command structures can easily be created since they are simply defined by
 
 > Commands related to starting, stopping, and restarting services
 
-### services start <service_name>
+### services start (service_name)
 
 > Start a service.
 
@@ -138,7 +138,7 @@ Nested command structures can easily be created since they are simply defined by
 echo "Starting service $service_name"
 ~~~
 
-### services stop <service_name>
+### services stop (service_name)
 
 > Stop a service.
 
@@ -162,7 +162,7 @@ On top of shell/bash scripts, `mask` also supports using node, python, ruby and 
 **Example:**
 
 ```markdown
-## shell <name>
+## shell (name)
 
 > An example shell script
 
@@ -174,7 +174,7 @@ echo "Hello, $name!"
 ~~~
 
 
-## node <name>
+## node (name)
 
 > An example node script
 
@@ -182,11 +182,11 @@ Valid lang codes: js, javascript
 
 ~~~js
 const { name } = process.env;
-console.log(`Hello, ${name}!`)
+console.log(`Hello, ${name}!`);
 ~~~
 
 
-## python <name>
+## python (name)
 
 > An example python script
 
@@ -201,7 +201,7 @@ print("Hello, " + name + "!")
 ~~~
 
 
-## ruby <name>
+## ruby (name)
 
 > An example ruby script
 
@@ -214,7 +214,7 @@ puts "Hello, #{name}!"
 ~~~
 
 
-## php <name>
+## php (name)
 
 > An example php script
 
