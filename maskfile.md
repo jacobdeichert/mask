@@ -6,7 +6,7 @@
 
 
 
-## run <maskfile_command>
+## run (maskfile_command)
 
 > Build and run mask in development mode
 
