@@ -181,7 +181,7 @@ Valid lang codes: js, javascript
 
 ~~~js
 const { name } = process.env;
-console.log(`Hello, ${name}!`)
+console.log(`Hello, ${name}!`);
 ~~~
 
 
