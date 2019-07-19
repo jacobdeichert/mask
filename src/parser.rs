@@ -186,8 +186,8 @@ fn parse_command_name_and_required_args(
     // and level 2 can't be a subcommand so no need to split.
     let name = if heading_level > 2 {
         // Takes a subcommand name like this:
-        // "#### db flush postgres <required_arg>"
-        // and returns "postgres <required_arg>" as the actual name
+        // "#### db flush postgres (required_arg_name)"
+        // and returns "postgres (required_arg_name)" as the actual name
         text.clone()
             .split(" ")
             .collect::<Vec<&str>>()
@@ -199,8 +199,8 @@ fn parse_command_name_and_required_args(
         text.clone()
     };
 
-    // Find any required arguments. They look like this: <required_arg_name>
-    let name_and_args: Vec<&str> = name.split(|c| c == '<' || c == '>').collect();
+    // Find any required arguments. They look like this: (required_arg_name)
+    let name_and_args: Vec<&str> = name.split(|c| c == '(' || c == ')').collect();
     let (name, args) = name_and_args.split_at(1);
     let name = name.join(" ").trim().to_string();
     let mut required_args: Vec<RequiredArg> = vec![];
@@ -225,7 +225,7 @@ const TEST_MASKFILE: &str = r#"
 
 This is an example maskfile for the tests below.
 
-## serve <port>
+## serve (port)
 
 > Serve the app on the `port`
 
@@ -233,7 +233,7 @@ This is an example maskfile for the tests below.
 echo "Serving on port $port"
 ~~~
 
-## node <name>
+## node (name)
 
 > An example node script
 
