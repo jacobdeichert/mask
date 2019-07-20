@@ -19,7 +19,7 @@ echo Hello, $name!
 ",
     );
 
-    common::run_mask(maskfile_path)
+    common::run_mask(&maskfile_path)
         .command("bash")
         .env("name", "World")
         .assert()
@@ -43,7 +43,7 @@ console.log(`Hello, ${name}!`);
 ",
     );
 
-    common::run_mask(maskfile_path)
+    common::run_mask(&maskfile_path)
         .command("node")
         .env("name", "World")
         .assert()
@@ -70,7 +70,7 @@ print("Hello, " + name + "!")
 "#,
     );
 
-    common::run_mask(maskfile_path)
+    common::run_mask(&maskfile_path)
         .command("python")
         .env("name", "World")
         .assert()
@@ -95,7 +95,7 @@ puts "Hello, #{name}!"
 "#,
     );
 
-    common::run_mask(maskfile_path)
+    common::run_mask(&maskfile_path)
         .command("ruby")
         .env("name", "World")
         .assert()
@@ -120,7 +120,7 @@ echo "Hello, " . $name . "!\n";
 "#,
     );
 
-    common::run_mask(maskfile_path)
+    common::run_mask(&maskfile_path)
         .command("php")
         .env("name", "World")
         .assert()

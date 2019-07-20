@@ -5,11 +5,20 @@ use std::path::PathBuf;
 
 pub trait MaskCommandExt {
     fn command(&mut self, c: &'static str) -> &mut Command;
+    fn cli(&mut self, arguments: &'static str) -> &mut Command;
 }
 
 impl MaskCommandExt for Command {
     fn command(&mut self, c: &'static str) -> &mut Command {
         self.arg(c);
+        self
+    }
+
+    fn cli(&mut self, arguments: &'static str) -> &mut Command {
+        let args: Vec<&str> = arguments.split(" ").collect();
+        for arg in args {
+            self.arg(arg);
+        }
         self
     }
 }
@@ -25,7 +34,7 @@ pub fn maskfile(content: &'static str) -> (assert_fs::TempDir, PathBuf) {
     (temp, maskfile_path)
 }
 
-pub fn run_mask(maskfile: PathBuf) -> Command {
+pub fn run_mask(maskfile: &PathBuf) -> Command {
     let mut mask = Command::cargo_bin(crate_name!()).expect("Was not able to find binary");
 
     mask.arg("--maskfile").arg(maskfile);
