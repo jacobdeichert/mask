@@ -1,5 +1,5 @@
 use assert_cmd::prelude::*;
-use predicates::str;
+use predicates::str::contains;
 
 mod common;
 use common::MaskCommandExt;
@@ -23,7 +23,7 @@ echo Hello, $name!
         .command("bash")
         .env("name", "World")
         .assert()
-        .stdout(str::contains("Hello, World!"))
+        .stdout(contains("Hello, World!"))
         .success();
 }
 
@@ -47,7 +47,7 @@ console.log(`Hello, ${name}!`);
         .command("node")
         .env("name", "World")
         .assert()
-        .stdout(str::contains("Hello, World!"))
+        .stdout(contains("Hello, World!"))
         .success();
 }
 
@@ -74,7 +74,7 @@ print("Hello, " + name + "!")
         .command("python")
         .env("name", "World")
         .assert()
-        .stdout(str::contains("Hello, World!"))
+        .stdout(contains("Hello, World!"))
         .success();
 }
 
@@ -99,7 +99,7 @@ puts "Hello, #{name}!"
         .command("ruby")
         .env("name", "World")
         .assert()
-        .stdout(str::contains("Hello, World!"))
+        .stdout(contains("Hello, World!"))
         .success();
 }
 
@@ -124,6 +124,6 @@ echo "Hello, " . $name . "!\n";
         .command("php")
         .env("name", "World")
         .assert()
-        .stdout(str::contains("Hello, World!"))
+        .stdout(contains("Hello, World!"))
         .success();
 }
