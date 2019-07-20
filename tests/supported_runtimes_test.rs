@@ -5,6 +5,29 @@ mod common;
 use common::MaskCommandExt;
 
 #[test]
+fn bash() {
+    let (_temp, maskfile_path) = common::maskfile(
+        "
+# Integartion tests
+
+## bash
+
+```bash
+echo Hello, $name!
+```
+
+",
+    );
+
+    common::run_mask(maskfile_path)
+        .command("bash")
+        .env("name", "World")
+        .assert()
+        .stdout(str::contains("Hello, World!"))
+        .success();
+}
+
+#[test]
 fn node() {
     let (_temp, maskfile_path) = common::maskfile(
         "
