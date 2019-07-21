@@ -5,8 +5,8 @@ use std::path::Path;
 // TODO: try to find maskfile in current directory and maybe parent directories?
 // https://github.com/jakedeichert/mask/issues/7
 
-pub fn read_maskfile(maskfile_dir: &Path) -> Result<String, String> {
-    let file = File::open(maskfile_dir.join("maskfile.md"));
+pub fn read_maskfile(maskfile: &Path) -> Result<String, String> {
+    let file = File::open(maskfile);
     if file.is_err() {
         return Err("Expected a maskfile.md to exist in the current directory.".to_string());
     }
@@ -26,7 +26,7 @@ mod read_maskfile {
 
     #[test]
     fn reads_root_maskfile() {
-        let maskfile = read_maskfile(Path::new("."));
+        let maskfile = read_maskfile(Path::new("./maskfile.md"));
 
         assert!(maskfile.is_ok(), "maskfile was ok");
 
@@ -42,7 +42,7 @@ mod read_maskfile {
 
     #[test]
     fn errors_for_non_existent_maskfile() {
-        let maskfile = read_maskfile(Path::new("src"));
+        let maskfile = read_maskfile(Path::new("src/maskfile.md"));
 
         assert!(maskfile.is_err(), "maskfile was err");
 

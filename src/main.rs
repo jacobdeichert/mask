@@ -1,4 +1,5 @@
 use std::path::Path;
+use std::env;
 
 use clap::{
     crate_authors, crate_description, crate_name, crate_version, App, Arg, ArgMatches, SubCommand,
@@ -7,7 +8,17 @@ use clap::{
 use mask::command::Command;
 
 fn main() {
-    let maskfile = mask::loader::read_maskfile(Path::new("."));
+    let args: Vec<String> = env::args().collect();
+
+    let maybe_maskfile = args.get(1);
+    let maybe_path = args.get(2);
+
+    let maskfile_path = match (maybe_maskfile, maybe_path) {
+        (Some(a), Some(path)) if a == "--maskfile" => Path::new(path),
+        _ => Path::new("./maskfile.md"),
+    };
+
+    let maskfile = mask::loader::read_maskfile(maskfile_path);
     if maskfile.is_err() {
         return eprintln!("ERROR: {}", maskfile.unwrap_err());
     }
@@ -60,7 +71,17 @@ fn build_subcommands<'a, 'b>(
         }
         cli_app = cli_app.subcommand(subcmd);
     }
-    cli_app
+
+    // This is needed to prevent clap from complaining. It should be removed once
+    // clap 3.x is released. See https://github.com/clap-rs/clap/issues/748
+    let custom_maskfile_path = Arg::with_name("maskfile")
+        .help("Path to a different maskfile you want to use")
+        .short("m")
+        .long("maskfile")
+        .takes_value(true)
+        .multiple(false);
+
+    cli_app.arg(custom_maskfile_path)
 }
 
 fn find_command<'a>(matches: &ArgMatches, subcommands: &Vec<Command>) -> Option<Command> {
