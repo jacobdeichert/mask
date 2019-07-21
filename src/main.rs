@@ -81,7 +81,7 @@ fn build_subcommands<'a, 'b>(
         .takes_value(true)
         .multiple(false);
 
-    cli_app.arg(maskfile)
+    cli_app.arg(custom_maskfile_path)
 }
 
 fn find_command<'a>(matches: &ArgMatches, subcommands: &Vec<Command>) -> Option<Command> {
