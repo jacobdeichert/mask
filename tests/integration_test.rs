@@ -9,7 +9,7 @@ fn specifying_a_maskfile_in_a_different_dir() {
     let maskfile = temp.child("maskfile.md");
 
     maskfile.write_str("
-# Integartion tests
+# Integration tests
 
 > A line describing the integration tests
 
