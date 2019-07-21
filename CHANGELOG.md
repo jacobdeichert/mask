@@ -1,5 +1,16 @@
 # Changelog
 
+
+## [0.3.1] - 2019-07-21
+
+### Added
+
+* Allow specifying an external maskfile.md to use [#15](https://github.com/jakedeichert/mask/pull/19) ([@felipesere](https://github.com/felipesere))
+
+
+
+
+
 ## [0.3.0] - 2019-07-19
 
 ### Breaking Changes

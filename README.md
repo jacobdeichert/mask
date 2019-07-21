@@ -291,11 +291,28 @@ mask start
 
 
 
+## Use cases
+
+Here's some example scenarios where `mask` might be handy.
+
+### Project specific tasks
+
+You have a project with a bunch of random build and development scripts or an unwieldy `Makefile`. You want to simplify by having a single, readable file for your team members to add and modify existing tasks.
+
+
+### Global system utility
+
+You want a global utility CLI for a variety of system tasks such as backing up directories or renaming a bunch of files. This is easily possible by making a bash alias for `mask --maskfile ~/my-global-maskfile.md $1`.
+
+
+
+
+
 ## FAQ
 
 ### Windows support?
 
-Currently, this is [unknown][windows_issue]. I'm pretty sure the executor logic will need to be adjusted for Windows.
+Currently, this is [unknown][windows_issue]. I'm pretty sure the executor logic will need to be adjusted for Windows. Git Bash and Ubuntu on Windows have been reported to work but they are not actively being tested.
 
 ### Is `mask` available as a lib?
 
@@ -321,13 +338,15 @@ I also need to mention [clap][clap] and [pulldown-cmark][cmark] which are really
 
 Please file an [issue][new_issue] for discussion of features or bugs, and we'll go from there :)
 
+If you'd like to tackle one of the issues after a decision has been made, please leave a comment.
+
 
 
 
 
 ## Author
 
-Jake Deichert
+Jake Deichert with the help of contributors.
 
 [@jakedeichert][twitter] on Twitter · [Website][website]
 
