@@ -8,7 +8,7 @@ fn specifying_a_maskfile_in_a_different_dir() {
     let temp = assert_fs::TempDir::new().unwrap();
     let maskfile = temp.child("maskfile.md");
 
-    maskfile.write_str("
+    let src = "
 # Integration tests
 
 > A line describing the integration tests
@@ -20,12 +20,16 @@ fn specifying_a_maskfile_in_a_different_dir() {
 ## bar
 
 <!-- a few more details -->
-")
-        .unwrap();
+";
 
+    maskfile.write_str(src).unwrap();
 
     let maskfile_path = maskfile.path().to_str().unwrap();
 
     let mut mask = Command::cargo_bin(crate_name!()).unwrap();
-    mask.arg("--maskfile").arg(maskfile_path).arg("--help").assert().success();
+    mask.arg("--maskfile")
+        .arg(maskfile_path)
+        .arg("--help")
+        .assert()
+        .success();
 }

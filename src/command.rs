@@ -37,7 +37,6 @@ impl Command {
     }
 }
 
-
 #[derive(Debug, Clone)]
 pub struct RequiredArg {
     pub name: String,
@@ -52,7 +51,6 @@ impl RequiredArg {
         }
     }
 }
-
 
 #[derive(Debug, Clone)]
 pub struct OptionFlag {

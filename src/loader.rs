@@ -19,7 +19,6 @@ pub fn read_maskfile(maskfile: &Path) -> Result<String, String> {
     Ok(maskfile_contents)
 }
 
-
 #[cfg(test)]
 mod read_maskfile {
     use super::*;

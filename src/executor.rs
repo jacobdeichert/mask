@@ -38,7 +38,6 @@ pub fn execute_command(cmd: Command) -> Result<ExitStatus> {
         }
     };
 
-
     // Add all required args as environment variables
     for arg in cmd.required_args {
         child.env(arg.name, arg.val);
