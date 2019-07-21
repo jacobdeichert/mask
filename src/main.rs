@@ -74,7 +74,7 @@ fn build_subcommands<'a, 'b>(
 
     // This is needed to prevent clap from complaining. It should be removed once
     // clap 3.x is released. See https://github.com/clap-rs/clap/issues/748
-    let maskfile = Arg::with_name("maskfile")
+    let custom_maskfile_path = Arg::with_name("maskfile")
         .help("Path to a different maskfile you want to use")
         .short("m")
         .long("maskfile")
