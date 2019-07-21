@@ -20,5 +20,5 @@ clap = "2.33.0"                                                         # https:
 pulldown-cmark = { version = "0.5", default-features = false }          # https://github.com/raphlinus/pulldown-cmark
 
 [dev-dependencies]
-assert_cmd = "0.11.1"
+assert_cmd = "0.11.1"                                                   # https://github.com/assert-rs/assert_cmd
 assert_fs = "0.11.3"
