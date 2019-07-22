@@ -23,9 +23,6 @@ jobs:
       - run:
           name: Rust version info
           command: rustc --version; cargo --version
-      - run:
-          name: Install other runtimes
-          command: apt-get update && apt-get install -y ruby-full nodejs
       - *restore_cache
       - run:
           name: Install cargo dependencies
@@ -45,6 +42,9 @@ jobs:
     steps:
       - *attach_workspace
       - *restore_cache
+      - run:
+          name: Install other runtimes
+          command: apt-get update && apt-get install -y ruby-full nodejs
       - run:
           name: Run tests
           command: cargo test --verbose --frozen
