@@ -22,9 +22,14 @@ impl Command {
             source: "".to_string(),
             subcommands: vec![],
             required_args: vec![],
-            // TODO: don't needlessly add this to commands that have no script https://github.com/jakedeichert/mask/issues/6
-            // Auto add common flags like verbose
-            option_flags: vec![OptionFlag {
+            option_flags: vec![],
+        }
+    }
+
+    pub fn build(mut self) -> Self {
+        // Auto add common flags like verbose for commands that have a script source
+        if !self.source.is_empty() {
+            self.option_flags.push(OptionFlag {
                 name: "verbose".to_string(),
                 desc: "Sets the level of verbosity".to_string(),
                 short: "v".to_string(),
@@ -32,8 +37,9 @@ impl Command {
                 multiple: false,
                 takes_value: false,
                 val: "".to_string(),
-            }],
+            });
         }
+        self
     }
 }
 

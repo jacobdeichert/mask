@@ -21,7 +21,7 @@ pub fn build_command_structure(maskfile_contents: String) -> Command {
                         // Add the last command before starting a new one.
                         // Don't add the first command during the first iteration.
                         if heading_level > 1 {
-                            commands.push(current_command);
+                            commands.push(current_command.build());
                         }
                         current_command = Command::new(heading_level as u8);
                     }
@@ -119,7 +119,7 @@ pub fn build_command_structure(maskfile_contents: String) -> Command {
     }
 
     // Add the last command
-    commands.push(current_command);
+    commands.push(current_command.build());
 
     // Convert the flat commands array and to a tree of subcommands based on level
     let all = treeify_commands(commands);
@@ -230,6 +230,7 @@ This is an example maskfile for the tests below.
 echo "Serving on port $port"
 ~~~
 
+
 ## node (name)
 
 > An example node script
@@ -240,6 +241,11 @@ Valid lang codes: js, javascript
 const { name } = process.env;
 console.log(`Hello, ${name}!`);
 ```
+
+
+## no_script
+
+This command has no source/script.
 "#;
 
 #[cfg(test)]
@@ -249,62 +255,103 @@ mod build_command_structure {
     #[test]
     fn parses_serve_command_name() {
         let tree = build_command_structure(TEST_MASKFILE.to_string());
-        let serve_command = &tree.subcommands[0];
+        let serve_command = &tree
+            .subcommands
+            .iter()
+            .find(|cmd| cmd.name == "serve")
+            .expect("serve command missing");
         assert_eq!(serve_command.name, "serve");
     }
 
     #[test]
     fn parses_serve_command_description() {
         let tree = build_command_structure(TEST_MASKFILE.to_string());
-        let serve_command = &tree.subcommands[0];
+        let serve_command = &tree
+            .subcommands
+            .iter()
+            .find(|cmd| cmd.name == "serve")
+            .expect("serve command missing");
         assert_eq!(serve_command.desc, "Serve the app on the `port`");
     }
 
     #[test]
     fn parses_serve_required_positional_arguments() {
         let tree = build_command_structure(TEST_MASKFILE.to_string());
-        let serve_command = &tree.subcommands[0];
+        let serve_command = &tree
+            .subcommands
+            .iter()
+            .find(|cmd| cmd.name == "serve")
+            .expect("serve command missing");
         assert_eq!(serve_command.required_args.len(), 1);
         assert_eq!(serve_command.required_args[0].name, "port");
     }
 
     #[test]
-    fn adds_default_verbose_optional_flag() {
-        let tree = build_command_structure(TEST_MASKFILE.to_string());
-        let serve_command = &tree.subcommands[0];
-        assert_eq!(serve_command.option_flags.len(), 1);
-        assert_eq!(serve_command.option_flags[0].name, "verbose");
-        assert_eq!(
-            serve_command.option_flags[0].desc,
-            "Sets the level of verbosity"
-        );
-        assert_eq!(serve_command.option_flags[0].short, "v");
-        assert_eq!(serve_command.option_flags[0].long, "verbose");
-        assert_eq!(serve_command.option_flags[0].multiple, false);
-        assert_eq!(serve_command.option_flags[0].takes_value, false);
-    }
-
-    #[test]
     fn parses_serve_command_executor() {
         let tree = build_command_structure(TEST_MASKFILE.to_string());
-        let serve_command = &tree.subcommands[0];
+        let serve_command = &tree
+            .subcommands
+            .iter()
+            .find(|cmd| cmd.name == "serve")
+            .expect("serve command missing");
         assert_eq!(serve_command.executor, "bash");
     }
 
     #[test]
     fn parses_serve_command_source_with_tildes() {
         let tree = build_command_structure(TEST_MASKFILE.to_string());
-        let serve_command = &tree.subcommands[0];
+        let serve_command = &tree
+            .subcommands
+            .iter()
+            .find(|cmd| cmd.name == "serve")
+            .expect("serve command missing");
         assert_eq!(serve_command.source, "echo \"Serving on port $port\"\n");
     }
 
     #[test]
     fn parses_node_command_source_with_backticks() {
         let tree = build_command_structure(TEST_MASKFILE.to_string());
-        let node_command = &tree.subcommands[1];
+        let node_command = &tree
+            .subcommands
+            .iter()
+            .find(|cmd| cmd.name == "node")
+            .expect("node command missing");
         assert_eq!(
             node_command.source,
             "const { name } = process.env;\nconsole.log(`Hello, ${name}!`);\n"
         );
+    }
+
+    #[test]
+    fn adds_verbose_optional_flag_to_command_with_script() {
+        let tree = build_command_structure(TEST_MASKFILE.to_string());
+        let node_command = tree
+            .subcommands
+            .iter()
+            .find(|cmd| cmd.name == "node")
+            .expect("node command missing");
+
+        assert_eq!(node_command.option_flags.len(), 1);
+        assert_eq!(node_command.option_flags[0].name, "verbose");
+        assert_eq!(
+            node_command.option_flags[0].desc,
+            "Sets the level of verbosity"
+        );
+        assert_eq!(node_command.option_flags[0].short, "v");
+        assert_eq!(node_command.option_flags[0].long, "verbose");
+        assert_eq!(node_command.option_flags[0].multiple, false);
+        assert_eq!(node_command.option_flags[0].takes_value, false);
+    }
+
+    #[test]
+    fn does_not_add_verbose_optional_flag_to_command_with_no_script() {
+        let tree = build_command_structure(TEST_MASKFILE.to_string());
+        let no_script_command = tree
+            .subcommands
+            .iter()
+            .find(|cmd| cmd.name == "no_script")
+            .expect("no_script command missing");
+
+        assert_eq!(no_script_command.option_flags.len(), 0);
     }
 }
