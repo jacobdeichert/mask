@@ -53,7 +53,7 @@ fn optional_flags() {
     * type: string
     * desc: Which port to serve on
 
-~~~sh
+```bash
 # Set a fallback port
 PORT=${port:-8080}
 
@@ -62,7 +62,7 @@ if [[ "$verbose" == "true" ]]; then
 else
     echo $PORT
 fi
-~~~
+```
 "#,
     );
 
