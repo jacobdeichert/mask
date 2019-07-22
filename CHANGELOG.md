@@ -1,6 +1,16 @@
 # Changelog
 
 
+## UNRELEASED
+
+### Fixed
+
+* Prevent adding needless verbose flag to commands with no script [#21](https://github.com/jakedeichert/mask/pull/21)
+
+
+
+
+
 ## [0.3.1] - 2019-07-21
 
 ### Added
