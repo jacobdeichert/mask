@@ -8,7 +8,7 @@ use common::MaskCommandExt;
 fn bash() {
     let (_temp, maskfile_path) = common::maskfile(
         "
-# Integartion tests
+# Integration tests
 
 ## bash
 
@@ -31,7 +31,7 @@ echo Hello, $name!
 fn node() {
     let (_temp, maskfile_path) = common::maskfile(
         "
-# Integartion tests
+# Integration tests
 
 ## node
 
@@ -55,7 +55,7 @@ console.log(`Hello, ${name}!`);
 fn python() {
     let (_temp, maskfile_path) = common::maskfile(
         r#"
-# Integartion tests
+# Integration tests
 
 ## python
 
@@ -82,7 +82,7 @@ print("Hello, " + name + "!")
 fn ruby() {
     let (_temp, maskfile_path) = common::maskfile(
         r#"
-# Integartion tests
+# Integration tests
 
 ## ruby
 
@@ -107,7 +107,7 @@ puts "Hello, #{name}!"
 fn php() {
     let (_temp, maskfile_path) = common::maskfile(
         r#"
-# Integartion tests
+# Integration tests
 
 ## php
 

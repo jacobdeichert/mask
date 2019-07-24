@@ -29,14 +29,6 @@ echo "Starting service $service_name"
 ~~~bash
 echo "Stopping service $service_name"
 ~~~
-
-#### services stop (service_name) now
-
-> Immediately stop without graceful shutdown
-
-~~~bash
-echo "Stopping $service_name now"
-~~~
 "#,
     );
 
@@ -45,15 +37,4 @@ echo "Stopping $service_name now"
         .assert()
         .stdout(contains("Starting service my_fancy_service"))
         .success();
-
-    /*
-     * Doesn't really works.
-     * It triggers the 'service stop $name
-     *
-    common::run_mask(&maskfile_path)
-        .cli("services stop my_fancy_service now")
-        .assert()
-        .stdout(contains("Stopping everything"))
-        .success();
-     */
 }
