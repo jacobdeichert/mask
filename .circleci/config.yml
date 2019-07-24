@@ -43,6 +43,12 @@ jobs:
       - *attach_workspace
       - *restore_cache
       - run:
+          name: Install latest node from PPA
+          command: apt-get update && apt-get install -y curl software-properties-common && curl -sL https://deb.nodesource.com/setup_12.x | bash - && apt-get install nodejs
+      - run:
+          name: Install other runtimes
+          command: apt-get update && apt-get install -y ruby-full php
+      - run:
           name: Run tests
           command: cargo test --verbose --frozen
 

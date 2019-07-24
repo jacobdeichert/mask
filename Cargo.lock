@@ -222,6 +222,7 @@ dependencies = [
  "assert_cmd 0.11.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "assert_fs 0.11.3 (registry+https://github.com/rust-lang/crates.io-index)",
  "clap 2.33.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "predicates 1.0.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "pulldown-cmark 0.5.2 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
