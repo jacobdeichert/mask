@@ -13,12 +13,16 @@ Closes #{ISSUE}
 
 
 
-
-
 ### Describe the solution
 <!-- Add some details about what you did to fix the issue. -->
 
 
+
+### How to test
+<!-- Describe how to test this PR and check the boxes if you added tests -->
+
+- [ ] Added unit tests
+- [ ] Added integration tests
 
 
 
