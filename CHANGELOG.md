@@ -7,11 +7,12 @@
 
 * Prevent adding needless verbose flag to commands with no script [#21](https://github.com/jakedeichert/mask/pull/21)
 
+* Propagate exit status of child process to main process [#22](https://github.com/jakedeichert/mask/pull/22) ([@atty303](https://github.com/atty303))
 
 
 
 
-## [0.3.1] - 2019-07-21
+## v0.3.1 (2019-07-21)
 
 ### Added
 
@@ -21,7 +22,7 @@
 
 
 
-## [0.3.0] - 2019-07-19
+## v0.3.0 (2019-07-19)
 
 ### Breaking Changes
 
@@ -36,7 +37,7 @@
 
 
 
-## [0.2.1] - 2019-07-17
+## v0.2.1 (2019-07-17)
 
 ### Added
 
@@ -46,6 +47,6 @@
 
 
 
-## [0.2.0] - 2019-07-16
+## v0.2.0 (2019-07-16)
 
 Initial release 🎉
