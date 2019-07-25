@@ -277,6 +277,24 @@ mask start
 ~~~
 ```
 
+### Inherits the script's exit code
+
+If your command exits with an error, `mask` will exit with its status code. This allows you to chain commands which will exit on the first error.
+
+**Example:**
+
+```markdown
+## ci
+
+> Runs tests and checks for lint and formatting errors
+
+~~~sh
+mask test \
+    && mask lint \
+    && mask format --check
+~~~
+```
+
 
 
 
