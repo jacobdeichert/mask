@@ -1,7 +1,7 @@
-use assert_fs::prelude::*;
 use assert_cmd::{crate_name, prelude::*};
-use std::process::Command;
+use assert_fs::prelude::*;
 use std::path::PathBuf;
+use std::process::Command;
 
 pub trait MaskCommandExt {
     fn command(&mut self, c: &'static str) -> &mut Command;

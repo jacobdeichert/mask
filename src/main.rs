@@ -43,9 +43,9 @@ fn main() {
     match mask::executor::execute_command(chosen_cmd.unwrap()) {
         Ok(status) => match status.code() {
             Some(code) => std::process::exit(code),
-            None       => return
+            None => return,
         },
-        Err(err) => eprintln!("ERROR: {}", err)
+        Err(err) => eprintln!("ERROR: {}", err),
     }
 }
 
