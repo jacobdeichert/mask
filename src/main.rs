@@ -40,7 +40,13 @@ fn main() {
         return;
     }
 
-    let _ = mask::executor::execute_command(chosen_cmd.unwrap());
+    match mask::executor::execute_command(chosen_cmd.unwrap()) {
+        Ok(status) => match status.code() {
+            Some(code) => std::process::exit(code),
+            None       => return
+        },
+        Err(err) => eprintln!("ERROR: {}", err)
+    }
 }
 
 fn build_subcommands<'a, 'b>(
