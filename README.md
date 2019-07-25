@@ -302,7 +302,7 @@ You have a project with a bunch of random build and development scripts or an un
 
 ### Global system utility
 
-You want a global utility CLI for a variety of system tasks such as backing up directories or renaming a bunch of files. This is easily possible by making a bash alias for `mask --maskfile ~/my-global-maskfile.md $1`.
+You want a global utility CLI for a variety of system tasks such as backing up directories or renaming a bunch of files. This is easily possible by making a bash alias for `mask --maskfile ~/my-global-maskfile.md`.
 
 
 
