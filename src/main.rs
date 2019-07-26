@@ -27,9 +27,9 @@ fn main() {
     let matches = build_subcommands(cli_app, &root_command.subcommands).get_matches();
     let chosen_cmd = find_command(&matches, &root_command.subcommands);
     if chosen_cmd.is_none() {
-        // TODO: echo --help for root command
-        println!("Missing SUBCOMMAND");
-        return;
+        // Exit with an error
+        eprintln!("{} missing subcommand", "ERROR:".red());
+        std::process::exit(1);
     }
 
     match mask::executor::execute_command(chosen_cmd.unwrap()) {
