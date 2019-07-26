@@ -295,6 +295,26 @@ mask test \
 ~~~
 ```
 
+### Running mask with a different maskfile
+
+If you're in a directory that doesn't have a `maskfile.md` but you want to reference one somewhere else, you can with the `--maskfile <path_to_maskfile>` option.
+
+**Example:**
+
+~~~sh
+mask --maskfile ~/maskfile.md <subcommand>
+~~~
+
+**Tip:** Make a bash alias for this so you can call it anywhere easily
+
+~~~bash
+# Call it something fun
+alias wask="mask --maskfile ~/maskfile.md"
+
+# You can run this from anywhere
+wask <subcommand>
+~~~
+
 
 
 
