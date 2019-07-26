@@ -1,4 +1,5 @@
 use assert_cmd::prelude::*;
+use colored::*;
 use predicates::str::contains;
 
 mod common;
@@ -37,4 +38,18 @@ echo "Stopping service $service_name"
         .assert()
         .stdout(contains("Starting service my_fancy_service"))
         .success();
+}
+
+#[test]
+fn exits_with_error_when_missing_subcommnad() {
+    let (_temp, maskfile_path) = common::maskfile(
+        r#"
+## foo
+"#,
+    );
+
+    common::run_mask(&maskfile_path)
+        .assert()
+        .stderr(contains(format!("{} missing subcommand", "ERROR:".red())))
+        .failure();
 }

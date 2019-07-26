@@ -2,6 +2,7 @@ use std::path::PathBuf;
 
 use assert_cmd::prelude::*;
 use clap::{crate_name, crate_version};
+use colored::*;
 use predicates::str::contains;
 
 mod common;
@@ -18,8 +19,6 @@ fn specifying_a_maskfile_in_a_different_dir() {
     );
 
     common::run_mask(&maskfile_path)
-        .arg("--maskfile")
-        .arg(maskfile_path)
         .arg("--help")
         .assert()
         .stdout(contains("USAGE:"))
@@ -28,6 +27,17 @@ fn specifying_a_maskfile_in_a_different_dir() {
 
 mod when_no_maskfile_found {
     use super::*;
+
+    #[test]
+    fn logs_warning_about_missing_file() {
+        common::run_mask(&PathBuf::from("./nonexistent.md"))
+            .assert()
+            .stdout(contains(format!(
+                "{} no maskfile.md found",
+                "WARNING:".yellow()
+            )))
+            .success();
+    }
 
     #[test]
     fn exits_without_error_for_help() {
