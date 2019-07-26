@@ -9,6 +9,11 @@
 
 * Propagate exit status of child process to main process [#22](https://github.com/jakedeichert/mask/pull/22) ([@atty303](https://github.com/atty303))
 
+* Allow --version and --help to be used even when missing a maskfile [#23](https://github.com/jakedeichert/mask/pull/23)
+
+* Exit with an error message and status code 1 when subcommand is missing [#23](https://github.com/jakedeichert/mask/pull/23)
+
+
 
 
 
