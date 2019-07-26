@@ -17,6 +17,7 @@ path = "src/lib.rs"
 
 [dependencies]
 clap = "2.33.0"                                                         # https://github.com/clap-rs/clap
+colored = "1.8.0"                                                       # https://github.com/mackwic/colored
 pulldown-cmark = { version = "0.5", default-features = false }          # https://github.com/raphlinus/pulldown-cmark
 
 [dev-dependencies]
