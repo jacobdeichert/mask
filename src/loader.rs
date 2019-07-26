@@ -8,7 +8,7 @@ use std::path::Path;
 pub fn read_maskfile(maskfile: &Path) -> Result<String, String> {
     let file = File::open(maskfile);
     if file.is_err() {
-        return Err("Expected a maskfile.md to exist in the current directory.".to_string());
+        return Err("failed to open maskfile.md".to_string());
     }
 
     let mut file = file.unwrap();
@@ -47,7 +47,7 @@ mod read_maskfile {
 
         let err = maskfile.unwrap_err();
 
-        let expected_err = "Expected a maskfile.md to exist in the current directory.";
+        let expected_err = "failed to open maskfile.md";
         assert_eq!(err, expected_err, "error message was wrong");
     }
 }
