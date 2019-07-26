@@ -4,6 +4,7 @@ use std::path::Path;
 use clap::{
     crate_authors, crate_description, crate_name, crate_version, App, Arg, ArgMatches, SubCommand,
 };
+use colored::*;
 
 use mask::command::Command;
 
@@ -16,6 +17,7 @@ fn main() {
 
     let maskfile = find_maskfile();
     if maskfile.is_err() {
+        println!("{} no maskfile.md found", "WARNING:".yellow());
         // If the maskfile can't be found, at least parse for --version or --help
         cli_app.get_matches();
         return;
