@@ -78,7 +78,10 @@ fn add_utility_variables(mut child: process::Command, maskfile_path: String) -> 
     // This allows us to call "$MASK command" instead of "mask --maskfile <path> command"
     // inside scripts so that they can be location-agnostic (not care where they are
     // called from). This is useful for global maskfiles especially.
-    child.env("MASK", format!("{} --maskfile {}", crate_name!(), absolute_path_str));
+    child.env(
+        "MASK",
+        format!("{} --maskfile {}", crate_name!(), absolute_path_str),
+    );
     // This allows us to refer to the directory the maskfile lives in which can be handy
     // for loading relative files to it.
     child.env("MASKFILE_DIR", parent_dir);
