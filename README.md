@@ -1,4 +1,8 @@
-# mask 🎭
+
+<p align="center">
+  <img height="180" width="210" src="https://user-images.githubusercontent.com/1631044/61989571-aae27580-afff-11e9-8f8a-c9768ed7a6b8.png">
+</p>
+      
 
 [![build status](https://img.shields.io/circleci/build/github/jakedeichert/mask/master.svg)][circleci]
 [![mask version](https://img.shields.io/crates/v/mask.svg)][crate]
