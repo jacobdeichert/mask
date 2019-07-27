@@ -1,8 +1,7 @@
-
 <p align="center">
   <img height="180" width="210" src="https://user-images.githubusercontent.com/1631044/61989571-aae27580-afff-11e9-8f8a-c9768ed7a6b8.png">
 </p>
-      
+
 
 [![build status](https://img.shields.io/circleci/build/github/jakedeichert/mask/master.svg)][circleci]
 [![mask version](https://img.shields.io/crates/v/mask.svg)][crate]
@@ -263,7 +262,7 @@ ARGS:
 
 ### Running mask from within a script
 
-You can easily call `mask` within scripts if you need to chain commands together.
+You can easily call `mask` within scripts if you need to chain commands together. However, if you plan on [running mask with a different maskfile](#running-mask-with-a-different-maskfile), you should consider using the `$MASK` utility instead which allows your scripts to be location-agnostic.
 
 **Example:**
 
@@ -276,8 +275,10 @@ You can easily call `mask` within scripts if you need to chain commands together
 mask install
 mask build
 mask link
-mask db migrate
-mask start
+# $MASK also works. It's an alias variable for `mask --maskfile <path_to_maskfile>`
+# which allows an externally referenced maskfile to be called from anywhere.
+$MASK db migrate
+$MASK start
 ~~~
 ```
 
