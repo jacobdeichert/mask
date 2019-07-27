@@ -49,11 +49,9 @@ jobs:
           name: Install other runtimes
           command: apt-get update && apt-get install -y ruby-full php
       - run:
-          name: Set mask alias for certain test suites that depend on it
-          command: alias mask="./target/debug/mask"
-      - run:
           name: Run tests
-          command: cargo test --verbose --frozen
+          # Set mask alias for certain test suites that depend on it
+          command: alias mask="./target/debug/mask" && cargo test --verbose --frozen
 
 workflows:
   pr_test:
