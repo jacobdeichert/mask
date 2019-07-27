@@ -25,12 +25,14 @@ fn specifying_a_maskfile_in_a_different_dir() {
         .success();
 }
 
-mod when_no_maskfile_found {
+// Using current_dir(".github") to make sure the default maskfile.md can't be found
+mod when_no_maskfile_found_in_current_directory {
     use super::*;
 
     #[test]
-    fn logs_warning_about_missing_file() {
-        common::run_mask(&PathBuf::from("./nonexistent.md"))
+    fn logs_warning_about_missing_maskfile_when_its_not_custom() {
+        common::run_mask(&PathBuf::from("./maskfile.md"))
+            .current_dir(".github")
             .assert()
             .stdout(contains(format!(
                 "{} no maskfile.md found",
@@ -41,7 +43,8 @@ mod when_no_maskfile_found {
 
     #[test]
     fn exits_without_error_for_help() {
-        common::run_mask(&PathBuf::from("./nonexistent.md"))
+        common::run_mask(&PathBuf::from("./maskfile.md"))
+            .current_dir(".github")
             .command("--help")
             .assert()
             .stdout(contains("USAGE:"))
@@ -50,7 +53,8 @@ mod when_no_maskfile_found {
 
     #[test]
     fn exits_without_error_for_version() {
-        common::run_mask(&PathBuf::from("./nonexistent.md"))
+        common::run_mask(&PathBuf::from("./maskfile.md"))
+            .current_dir(".github")
             .command("--version")
             .assert()
             .stdout(contains(format!("{} {}", crate_name!(), crate_version!())))
@@ -59,10 +63,51 @@ mod when_no_maskfile_found {
 
     #[test]
     fn exits_with_error_for_any_other_command() {
-        common::run_mask(&PathBuf::from("./nonexistent.md"))
-            .command("yasss")
+        common::run_mask(&PathBuf::from("./maskfile.md"))
+            .current_dir(".github")
+            .command("nothing")
             .assert()
-            .stderr(contains("error: Found argument 'yasss' which wasn't expected, or isn't valid in this context"))
+            .stderr(contains("error: Found argument 'nothing' which wasn't expected, or isn't valid in this context"))
+            .failure();
+    }
+}
+
+mod when_custom_specified_maskfile_not_found {
+    use super::*;
+
+    #[test]
+    fn exits_with_error_for_help() {
+        common::run_mask(&PathBuf::from("./nonexistent.md"))
+            .command("--help")
+            .assert()
+            .stderr(contains(format!(
+                "{} specified maskfile not found",
+                "ERROR:".red()
+            )))
+            .failure();
+    }
+
+    #[test]
+    fn exits_with_error_for_version() {
+        common::run_mask(&PathBuf::from("./nonexistent.md"))
+            .command("--version")
+            .assert()
+            .stderr(contains(format!(
+                "{} specified maskfile not found",
+                "ERROR:".red()
+            )))
+            .failure();
+    }
+
+    #[test]
+    fn exits_with_error_for_any_other_command() {
+        common::run_mask(&PathBuf::from("./nonexistent.md"))
+            .command("what")
+            .assert()
+            .stderr(contains(format!(
+                "{} specified maskfile not found",
+                "ERROR:".red()
+            )))
             .failure();
     }
 }

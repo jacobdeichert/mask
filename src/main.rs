@@ -17,7 +17,6 @@ fn main() {
 
     let maskfile = find_maskfile();
     if maskfile.is_err() {
-        println!("{} no maskfile.md found", "WARNING:".yellow());
         // If the maskfile can't be found, at least parse for --version or --help
         cli_app.get_matches();
         return;
@@ -54,6 +53,20 @@ fn find_maskfile() -> Result<String, String> {
     };
 
     let maskfile = mask::loader::read_maskfile(maskfile_path);
+
+    if maskfile.is_err() {
+        if let Some(p) = maskfile_path.to_str() {
+            // Check if this is a custom maskfile
+            if p != "./maskfile.md" {
+                // Exit with an error it's not found
+                eprintln!("{} specified maskfile not found", "ERROR:".red());
+                std::process::exit(1);
+            } else {
+                // Just log a warning and let the process continue
+                println!("{} no maskfile.md found", "WARNING:".yellow());
+            }
+        }
+    }
 
     maskfile
 }
