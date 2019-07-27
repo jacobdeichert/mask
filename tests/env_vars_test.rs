@@ -4,6 +4,8 @@ use predicates::str::contains;
 mod common;
 use common::MaskCommandExt;
 
+// NOTE: This test suite depends on the mask binary being available in the current shell
+
 // Using current_dir(".github") to make sure the default maskfile.md can't be found
 mod env_var_mask {
     use super::*;
