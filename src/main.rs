@@ -15,7 +15,7 @@ fn main() {
         .about(crate_description!())
         .arg(custom_maskfile_path_arg());
 
-    let maskfile = find_maskfile();
+    let (maskfile, maskfile_path) = find_maskfile();
     if maskfile.is_err() {
         // If the maskfile can't be found, at least parse for --version or --help
         cli_app.get_matches();
@@ -31,7 +31,7 @@ fn main() {
         std::process::exit(1);
     }
 
-    match mask::executor::execute_command(chosen_cmd.unwrap()) {
+    match mask::executor::execute_command(chosen_cmd.unwrap(), maskfile_path) {
         Ok(status) => match status.code() {
             Some(code) => std::process::exit(code),
             None => return,
@@ -40,7 +40,7 @@ fn main() {
     }
 }
 
-fn find_maskfile() -> Result<String, String> {
+fn find_maskfile() -> (Result<String, String>, String) {
     let args: Vec<String> = env::args().collect();
 
     let maybe_maskfile = args.get(1);
@@ -68,7 +68,7 @@ fn find_maskfile() -> Result<String, String> {
         }
     }
 
-    maskfile
+    (maskfile, maskfile_path.to_str().unwrap().to_string())
 }
 
 fn custom_maskfile_path_arg<'a, 'b>() -> Arg<'a, 'b> {
