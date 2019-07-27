@@ -51,9 +51,9 @@ jobs:
       - run:
           name: Run tests
           command: cargo test --verbose --frozen
-        environment:
           # mask needs to be available for certain test suites that depend on it
-          PATH: "$PATH:~/repo/target/debug"
+          environment:
+            PATH: "$PATH:~/repo/target/debug"
 
 workflows:
   pr_test:
