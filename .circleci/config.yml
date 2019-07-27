@@ -50,8 +50,10 @@ jobs:
           command: apt-get update && apt-get install -y ruby-full php
       - run:
           name: Run tests
-          # Set a mask alias/func for certain test suites that depend on it
-          command: mask() { ./target/debug/mask; } && cargo test --verbose --frozen
+          command: cargo test --verbose --frozen
+        environment:
+          # mask needs to be available for certain test suites that depend on it
+          PATH: "$PATH:~/repo/target/debug"
 
 workflows:
   pr_test:
