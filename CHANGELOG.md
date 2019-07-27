@@ -13,6 +13,8 @@
 
 * Exit with an error message and status code 1 when subcommand is missing [#23](https://github.com/jakedeichert/mask/pull/23)
 
+* Always exit with error when custom maskfile is not found [#25](https://github.com/jakedeichert/mask/pull/25)
+
 
 
 
