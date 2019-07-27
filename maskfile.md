@@ -39,6 +39,16 @@ cargo build --release
 
 
 
+## link
+
+> Build mask and replace your globally installed version with it for testing
+
+~~~bash
+cargo install --force --path .
+~~~
+
+
+
 ## test
 
 > Run all tests
