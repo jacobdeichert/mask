@@ -1,6 +1,16 @@
 # Changelog
 
 
+## UNRELEASED
+
+### Added
+
+* Add `$MASK` and `$MASKFILE_DIR` utility env variables [#26](https://github.com/jakedeichert/mask/pull/26)
+
+
+
+
+
 ## v0.4.0 (2019-07-26)
 
 ### Fixed

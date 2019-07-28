@@ -321,6 +321,18 @@ alias wask="mask --maskfile ~/maskfile.md"
 wask <subcommand>
 ~~~
 
+### Environment variable utilities
+
+Inside of each script's execution environment, `mask` injects a few environment variable helpers that might come in handy.
+
+`$MASK`
+
+This is useful when [running mask within a script](#running-mask-from-within-a-script). This variable allows us to call `$MASK command` instead of `mask --maskfile <path> command` inside scripts so that they can be location-agnostic (not care where they are called from). This is especially handy for global maskfiles which you may call from anywhere.
+
+`$MASKFILE_DIR`
+
+This variable is an absolute path to the maskfile's parent directory. Having the parent directory available allows us to load files relative to the maskfile itself which can be useful when you have commands that depend on other external files.
+
 
 
 
