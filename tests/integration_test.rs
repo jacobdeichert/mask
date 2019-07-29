@@ -30,15 +30,15 @@ mod when_no_maskfile_found_in_current_directory {
     use super::*;
 
     #[test]
-    fn logs_warning_about_missing_maskfile_when_its_not_custom() {
+    fn logs_warning_about_missing_maskfile() {
         common::run_mask(&PathBuf::from("./maskfile.md"))
             .current_dir(".github")
+            .command("-V")
             .assert()
             .stdout(contains(format!(
                 "{} no maskfile.md found",
                 "WARNING:".yellow()
-            )))
-            .success();
+            )));
     }
 
     #[test]

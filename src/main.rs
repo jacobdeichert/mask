@@ -2,14 +2,17 @@ use std::env;
 use std::path::Path;
 
 use clap::{
-    crate_authors, crate_description, crate_name, crate_version, App, Arg, ArgMatches, SubCommand,
+    crate_authors, crate_description, crate_name, crate_version, App, AppSettings, Arg, ArgMatches,
+    SubCommand,
 };
 use colored::*;
 
 use mask::command::Command;
+use mask::executor::execute_command;
 
 fn main() {
     let cli_app = App::new(crate_name!())
+        .setting(AppSettings::SubcommandRequired)
         .version(crate_version!())
         .author(crate_authors!())
         .about(crate_description!())
@@ -24,14 +27,10 @@ fn main() {
 
     let root_command = mask::parser::build_command_structure(maskfile.unwrap());
     let matches = build_subcommands(cli_app, &root_command.subcommands).get_matches();
-    let chosen_cmd = find_command(&matches, &root_command.subcommands);
-    if chosen_cmd.is_none() {
-        // Exit with an error
-        eprintln!("{} missing subcommand", "ERROR:".red());
-        std::process::exit(1);
-    }
+    let chosen_cmd = find_command(&matches, &root_command.subcommands)
+        .expect("SubcommandRequired failed to work");
 
-    match mask::executor::execute_command(chosen_cmd.unwrap(), maskfile_path) {
+    match execute_command(chosen_cmd, maskfile_path) {
         Ok(status) => match status.code() {
             Some(code) => std::process::exit(code),
             None => return,
@@ -92,6 +91,10 @@ fn build_subcommands<'a, 'b>(
         let mut subcmd = SubCommand::with_name(&c.name).about(c.desc.as_ref());
         if !c.subcommands.is_empty() {
             subcmd = build_subcommands(subcmd, &c.subcommands);
+            // If this parent command has no script source, require a subcommand.
+            if c.source == "" {
+                subcmd = subcmd.setting(AppSettings::SubcommandRequired);
+            }
         }
 
         // Add all required arguments

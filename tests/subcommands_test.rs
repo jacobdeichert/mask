@@ -41,7 +41,7 @@ echo "Stopping service $service_name"
 }
 
 #[test]
-fn exits_with_error_when_missing_subcommnad() {
+fn exits_with_error_when_missing_subcommand() {
     let (_temp, maskfile_path) = common::maskfile(
         r#"
 ## foo
@@ -50,6 +50,8 @@ fn exits_with_error_when_missing_subcommnad() {
 
     common::run_mask(&maskfile_path)
         .assert()
-        .stderr(contains(format!("{} missing subcommand", "ERROR:".red())))
+        .stderr(contains(
+            "error: 'mask' requires a subcommand, but one was not provided",
+        ))
         .failure();
 }
