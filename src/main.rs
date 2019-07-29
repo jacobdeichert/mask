@@ -12,6 +12,7 @@ use mask::executor::execute_command;
 
 fn main() {
     let cli_app = App::new(crate_name!())
+        .setting(AppSettings::VersionlessSubcommands)
         .setting(AppSettings::SubcommandRequired)
         .version(crate_version!())
         .author(crate_authors!())
