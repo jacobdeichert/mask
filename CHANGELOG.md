@@ -8,6 +8,12 @@
 * Add `$MASK` and `$MASKFILE_DIR` utility env variables [#26](https://github.com/jakedeichert/mask/pull/26)
 
 
+### Fixed
+
+* Error when command has no script and missing subcommand [#27](https://github.com/jakedeichert/mask/pull/27)
+* Remove needless version flag from all subcommands [#27](https://github.com/jakedeichert/mask/pull/27)
+
+
 
 
 
