@@ -1,6 +1,5 @@
 use assert_cmd::prelude::*;
-use colored::*;
-use predicates::str::contains;
+use predicates::str::{contains, is_empty};
 
 mod common;
 
@@ -54,4 +53,48 @@ fn exits_with_error_when_missing_subcommand() {
             "error: 'mask' requires a subcommand, but one was not provided",
         ))
         .failure();
+}
+
+mod when_command_has_no_source {
+    use super::*;
+
+    #[test]
+    fn exits_gracefully_when_it_has_no_subcommands() {
+        let (_temp, maskfile_path) = common::maskfile(
+            r#"
+## system
+"#,
+        );
+
+        // NOTE: Right now we exit without an error. Perhaps there should at least
+        // be a warning logged to the console?
+        common::run_mask(&maskfile_path)
+            .command("system")
+            .assert()
+            .stdout(is_empty())
+            .success();
+    }
+
+    #[test]
+    fn exits_with_error_when_it_has_subcommands() {
+        let (_temp, maskfile_path) = common::maskfile(
+            r#"
+## system
+
+### start
+
+~~~sh
+echo "system, online"
+~~~
+"#,
+        );
+
+        common::run_mask(&maskfile_path)
+            .command("system")
+            .assert()
+            .stderr(contains(
+                "error: 'mask system' requires a subcommand, but one was not provided",
+            ))
+            .failure();
+    }
 }
