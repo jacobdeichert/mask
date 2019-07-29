@@ -1,8 +1,8 @@
 use assert_cmd::prelude::*;
+use clap::{crate_name, crate_version};
 use predicates::str::contains;
 
 mod common;
-
 use common::MaskCommandExt;
 
 #[test]
@@ -83,4 +83,36 @@ fi
         .assert()
         .stdout(contains("Starting an http server on PORT: 1234"))
         .success();
+}
+
+mod version_flag {
+    use super::*;
+
+    #[test]
+    fn shows_the_correct_version_for_the_root_command() {
+        let (_temp, maskfile_path) = common::maskfile("## foo");
+
+        common::run_mask(&maskfile_path)
+            .command("--version")
+            .assert()
+            .stdout(contains(format!("{} {}", crate_name!(), crate_version!())))
+            .success();
+    }
+
+    #[test]
+    fn exits_with_error_when_subcommand_has_version_flag() {
+        let (_temp, maskfile_path) = common::maskfile("## foo");
+
+        // The setting "VersionlessSubcommands" removes the version flags (-V, --version)
+        // from subcommands. Only the root command has a version flag.
+
+        common::run_mask(&maskfile_path)
+            .command("foo")
+            .arg("--version")
+            .assert()
+            .stderr(contains(
+                "error: Found argument '--version' which wasn't expected, or isn't valid in this context",
+            ))
+            .failure();
+    }
 }
