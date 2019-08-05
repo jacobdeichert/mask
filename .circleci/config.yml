@@ -11,8 +11,9 @@ aliases:
 
 executors:
   rust_exec:
+    # https://hub.docker.com/r/voxel/mask-ci
     docker:
-      - image: rust:latest
+      - image: voxel/mask-ci
     working_directory: ~/repo
 
 jobs:
@@ -45,12 +46,6 @@ jobs:
       - run:
           name: Make mask available for certain test suites that depend on it
           command: echo 'export PATH="$PATH:~/repo/target/debug"' >> $BASH_ENV
-      - run:
-          name: Install latest node from PPA
-          command: apt-get update && apt-get install -y curl software-properties-common && curl -sL https://deb.nodesource.com/setup_12.x | bash - && apt-get install nodejs
-      - run:
-          name: Install other runtimes
-          command: apt-get update && apt-get install -y ruby-full php
       - run:
           name: Run tests
           command: cargo test --verbose --frozen
