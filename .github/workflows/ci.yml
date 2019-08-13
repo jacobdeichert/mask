@@ -1,0 +1,21 @@
+name: CI
+
+on: push
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: Build
+      run: cargo build --verbose
+    - name: Run tests
+      run: cargo test --verbose --frozen
+  
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: Make mask available for certain test suites that depend on it
+      run: pwd && ls -al #export PATH="$PATH:~/repo/target/debug"
