@@ -23,6 +23,8 @@ jobs:
       run: pwd && ls -al #export PATH="$PATH:~/repo/target/debug"
     - name: Fetch dependencies
       run: cargo fetch
+    - name: Build in debug mode
+      run: cargo build --frozen
     - name: Run tests
       run: cargo test --verbose --frozen
   
