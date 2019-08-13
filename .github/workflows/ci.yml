@@ -19,19 +19,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
-    - name: Test echo PATH
-      run: echo $PATH
+    - name: Set up a Ruby runtime for a test that requires it
+      uses: actions/setup-ruby@master
+      with:
+        version: 2.6.x
     - name: Fetch dependencies
       run: cargo fetch
     - name: Build in test mode
       run: cargo build --tests --frozen
-    - name: Make mask available for certain test suites that depend on it
+    - name: Make mask available globally for certain test suites that depend on it
       run: cp ./target/debug/mask /usr/share/rust/.cargo/bin
     - name: Run tests
       run: cargo test --frozen
   
   format:
-    name: Formatting
+    name: Format
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
