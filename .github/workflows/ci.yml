@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
-    - name: Set up a Ruby runtime for a test that requires it
+    - name: Add Ruby for a test that requires it
       uses: actions/setup-ruby@master
       with:
         version: 2.6.x
