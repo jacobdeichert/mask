@@ -20,13 +20,13 @@ jobs:
     steps:
     - uses: actions/checkout@master
     - name: Make mask available for certain test suites that depend on it
-      run: pwd && ls -al #export PATH="$PATH:~/repo/target/debug"
+      run: export PATH="$PATH:./target/debug"
     - name: Fetch dependencies
       run: cargo fetch
     - name: Build in debug mode
       run: cargo build --frozen
     - name: Run tests
-      run: cargo test --verbose --frozen
+      run: cargo test --frozen
   
   format:
     name: Formatting
