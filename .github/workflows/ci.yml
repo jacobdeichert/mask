@@ -21,6 +21,8 @@ jobs:
     - uses: actions/checkout@master
     - name: Make mask available for certain test suites that depend on it
       run: export PATH="$PATH:./target/debug"
+    - name: Test echo PATH
+      run: echo $PATH
     - name: Fetch dependencies
       run: cargo fetch
     - name: Build in test mode
