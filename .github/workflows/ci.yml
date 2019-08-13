@@ -23,8 +23,8 @@ jobs:
       run: export PATH="$PATH:./target/debug"
     - name: Fetch dependencies
       run: cargo fetch
-    - name: Build in debug mode
-      run: cargo build --frozen
+    - name: Build in test mode
+      run: cargo build --tests --frozen
     - name: Run tests
       run: cargo test --frozen
   
