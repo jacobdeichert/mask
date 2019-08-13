@@ -3,7 +3,7 @@
 </p>
 
 
-[![build status](https://img.shields.io/circleci/build/github/jakedeichert/mask/master.svg)][circleci]
+[![build status](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2Fjakedeichert%2Fmask%2Fbadge&label=build&logo=none)][github_ci]
 [![mask version](https://img.shields.io/crates/v/mask.svg)][crate]
 
 `mask` is a CLI task runner which is defined by a simple markdown file. It searches for a `maskfile.md` in the current directory which it then parses for commands and arguments.
@@ -409,9 +409,10 @@ Jake Deichert with the help of contributors.
 
 
 
+<!-- Badge from here: https://github.com/atrox/github-actions-badge -->
+[github_ci]: https://actions-badge.atrox.dev/jakedeichert/mask/goto
 
 [crate]: https://crates.io/crates/mask
-[circleci]: https://circleci.com/gh/jakedeichert/mask
 [new_issue]: https://github.com/jakedeichert/mask/issues/new
 [website]: https://jakedeichert.com
 [twitter]: https://twitter.com/jakedeichert
