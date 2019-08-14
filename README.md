@@ -392,9 +392,9 @@ I also need to mention [clap][clap] and [pulldown-cmark][cmark] which are really
 
 ## Contributing
 
-Please file an [issue][new_issue] for discussion of features or bugs, and we'll go from there :)
+Check out our [Contribution Guidelines](CONTRIBUTING.md) before creating an issue or submitting a PR 🙌
 
-If you'd like to tackle one of the issues after a decision has been made, please leave a comment.
+Also, please review and follow the rules within our [Code of Conduct](CODE_OF_CONDUCT.md) 🙂
 
 
 
