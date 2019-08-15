@@ -1,8 +1,7 @@
 <!--
   IMPORTANT
-  Please do not create a pull request without an existing issue. A solution for
-  the issue must be decided before anyone works on it. You should comment on that
-  issue if you've chosen to work on it.
+  Please review our Contribution Guidelines (CONTRIBUTING.md) before creating
+  an issue or submitting a PR 🙌
 -->
 
 
