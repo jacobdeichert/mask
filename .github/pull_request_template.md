@@ -1,5 +1,4 @@
 <!--
-  IMPORTANT
   Please review our Contribution Guidelines (CONTRIBUTING.md) before creating
   an issue or submitting a PR 🙌
 -->
