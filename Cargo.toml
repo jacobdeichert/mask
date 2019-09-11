@@ -16,6 +16,8 @@ name = "mask"
 path = "src/lib.rs"
 
 [dependencies]
+# see https://rust-lang-nursery.github.io/cli-wg/in-depth/machine-communication.html?highlight=atty#whos-reading-this
+atty = "0.2"															# https://github.com/softprops/atty
 colored = "1.8.0"                                                       # https://github.com/mackwic/colored
 pulldown-cmark = { version = "0.5", default-features = false }          # https://github.com/raphlinus/pulldown-cmark
 
