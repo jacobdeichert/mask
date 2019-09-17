@@ -1,7 +1,6 @@
 use std::env;
 use std::path::Path;
 
-use atty::{self, Stream};
 use clap::{
     crate_authors, crate_description, crate_name, crate_version, App, AppSettings, Arg, ArgMatches,
     SubCommand,
@@ -15,11 +14,7 @@ fn main() {
     let cli_app = App::new(crate_name!())
         .setting(AppSettings::VersionlessSubcommands)
         .setting(AppSettings::SubcommandRequired)
-        .setting(if atty::is(Stream::Stdout) {
-            AppSettings::ColoredHelp
-        } else {
-            AppSettings::ColorNever // in case it run on terminal without color support
-        })
+        .setting(AppSettings::ColoredHelp)
         .version(crate_version!())
         .author(crate_authors!())
         .about(crate_description!())
@@ -97,11 +92,7 @@ fn build_subcommands<'a, 'b>(
     for c in subcommands {
         let mut subcmd = SubCommand::with_name(&c.name)
             .about(c.desc.as_ref())
-            .setting(if atty::is(Stream::Stdout) {
-                AppSettings::ColoredHelp
-            } else {
-                AppSettings::ColorNever // in case it run on terminal without color support
-            });
+            .setting(AppSettings::ColoredHelp);
         if !c.subcommands.is_empty() {
             subcmd = build_subcommands(subcmd, &c.subcommands);
             // If this parent command has no script source, require a subcommand.
