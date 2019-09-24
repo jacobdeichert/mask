@@ -10,7 +10,7 @@
 
 > Build and run mask in development mode
 
-**NOTE:** This uses `cargo run` to build and run `mask` in development mode. You must have a `maskfile` in the current directory (this file) and must supply a valid command for that `maskfile` (`maskfile_command`) in order to test the changes you've made to `mask`. Since you can only test against this `maskfile` (for now), you can add subcommands to the bottom and run against those instead of running one of the existing commands.
+**NOTE:** This uses `cargo run` to build and run `mask` in development mode. You must have a `maskfile` in the current directory (this file) and must supply a valid command for that `maskfile` (`maskfile_command`) in order to test the changes you've made to `mask`. Since you can only test against this `maskfile` for now, you can add subcommands to the bottom and run against those instead of running one of the existing commands.
 
 **EXAMPLE:** `mask run "test -h"` - outputs the help info of this `test` command
 
