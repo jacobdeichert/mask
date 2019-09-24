@@ -3,6 +3,13 @@
 
 ## UNRELEASED
 
+### Fixed
+
+* No need to show mask's author and description in help output [#32](https://github.com/jakedeichert/mask/pull/32)
+
+
+
+
 
 ## v0.5.0 (2019-07-28)
 
