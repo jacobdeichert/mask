@@ -1,10 +1,7 @@
 use std::env;
 use std::path::Path;
 
-use clap::{
-    crate_authors, crate_description, crate_name, crate_version, App, AppSettings, Arg, ArgMatches,
-    SubCommand,
-};
+use clap::{crate_name, crate_version, App, AppSettings, Arg, ArgMatches, SubCommand};
 use colored::*;
 
 use mask::command::Command;
@@ -15,8 +12,6 @@ fn main() {
         .setting(AppSettings::VersionlessSubcommands)
         .setting(AppSettings::SubcommandRequired)
         .version(crate_version!())
-        .author(crate_authors!())
-        .about(crate_description!())
         .arg(custom_maskfile_path_arg());
 
     let (maskfile, maskfile_path) = find_maskfile();
