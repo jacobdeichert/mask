@@ -113,13 +113,33 @@ Important to note that `mask` auto injects a very common `boolean` flag called `
     * desc: Which port to serve on
 
 ~~~sh
-# Set a fallback port
-PORT=${port:-8080}
+PORT=${port:-8080} # Set a fallback port if not supplied
 
 if [[ "$verbose" == "true" ]]; then
     echo "Starting an http server on PORT: $PORT"
 fi
 python -m SimpleHTTPServer $PORT
+~~~
+```
+
+You can also make your flag expect a numerical value by setting its `type` to `number`. This means `mask` will automatically validate it as a number for you. If it fails to validate, `mask` will exit with a helpful error message.
+
+**Example:**
+
+```markdown
+## purchase (price)
+
+> Calculate the total price of something.
+
+**OPTIONS**
+* tax
+    * flags: -t --tax
+    * type: number
+    * desc: What's the tax?
+
+~~~sh
+TAX=${tax:-1} # Fallback to 1 if not supplied
+echo "Total: $(($price * $TAX))"
 ~~~
 ```
 
@@ -341,7 +361,6 @@ This variable is an absolute path to the maskfile's parent directory. Having the
 
 * [ ] [Optional (non-required) positional arguments][2]
 * [ ] [Infinite positional args](https://github.com/jakedeichert/mask/issues/4)
-* [ ] [Option flag `number` type for input validation purposes](https://github.com/jakedeichert/mask/issues/3)
 
 
 
