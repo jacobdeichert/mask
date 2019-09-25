@@ -3,10 +3,15 @@
 
 ## UNRELEASED
 
+
+
+
+
+## v0.5.1 (2019-09-24)
+
 ### Added
 
 * Colored help output and text wrapping [#30](https://github.com/jakedeichert/mask/pull/30) ([@DrSensor](https://github.com/DrSensor))
-
 
 ### Fixed
 
@@ -21,7 +26,6 @@
 ### Added
 
 * Add `$MASK` and `$MASKFILE_DIR` utility env variables [#26](https://github.com/jakedeichert/mask/pull/26)
-
 
 ### Fixed
 
