@@ -3,6 +3,11 @@
 
 ## UNRELEASED
 
+### Added
+
+* Colored help output and text wrapping [#30](https://github.com/jakedeichert/mask/pull/30) ([@DrSensor](https://github.com/DrSensor))
+
+
 ### Fixed
 
 * No need to show mask's author and description in help output [#32](https://github.com/jakedeichert/mask/pull/32)
