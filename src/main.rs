@@ -149,11 +149,25 @@ fn get_command_options(mut cmd: Command, matches: &ArgMatches) -> Command {
     for flag in &mut cmd.option_flags {
         flag.val = if flag.takes_value {
             // Extract the value
-            matches
+            let raw_value = matches
                 .value_of(flag.name.clone())
                 .or(Some(""))
                 .unwrap()
-                .to_string()
+                .to_string();
+
+            if flag.validate_as_number {
+                // Try converting to an integer or float to validate it
+                if raw_value.parse::<isize>().is_err() && raw_value.parse::<f32>().is_err() {
+                    eprintln!(
+                        "{} flag `{}` expects a numerical value",
+                        "ERROR:".red(),
+                        flag.name
+                    );
+                    std::process::exit(1);
+                }
+            }
+
+            raw_value
         } else {
             // Check if the boolean flag is present and set to "true".
             // It's a string since it's set as an environment variable.

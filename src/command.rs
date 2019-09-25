@@ -36,6 +36,7 @@ impl Command {
                 long: "verbose".to_string(),
                 multiple: false,
                 takes_value: false,
+                validate_as_number: false,
                 val: "".to_string(),
             });
         }
@@ -62,10 +63,11 @@ impl RequiredArg {
 pub struct OptionFlag {
     pub name: String,
     pub desc: String,
-    pub short: String,     // v        (used as -v)
-    pub long: String,      // verbose  (used as --verbose)
-    pub multiple: bool,    // Can it have multiple values? (-vvv OR -i one -i two)
-    pub takes_value: bool, // Does it take a value? (-i value)
+    pub short: String,            // v        (used as -v)
+    pub long: String,             // verbose  (used as --verbose)
+    pub multiple: bool,           // Can it have multiple values? (-vvv OR -i one -i two)
+    pub takes_value: bool,        // Does it take a value? (-i value)
+    pub validate_as_number: bool, // Should we validate it as a number?
     pub val: String,
 }
 
@@ -78,6 +80,7 @@ impl OptionFlag {
             long: "".to_string(),
             multiple: false,
             takes_value: false,
+            validate_as_number: false,
             val: "".to_string(),
         }
     }
