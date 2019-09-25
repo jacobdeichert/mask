@@ -187,6 +187,30 @@ echo "This shouldn't render"
             )))
             .failure();
     }
+
+    #[test]
+    fn ignores_the_option_if_not_supplied() {
+        let (_temp, maskfile_path) = common::maskfile(
+            r#"
+## nooption
+
+**OPTIONS**
+* val
+    * flags: --val
+    * type: number
+
+~~~bash
+echo "No arg this time"
+~~~
+"#,
+        );
+
+        common::run_mask(&maskfile_path)
+            .cli("nooption")
+            .assert()
+            .stdout(contains("No arg this time"))
+            .success();
+    }
 }
 
 mod version_flag {

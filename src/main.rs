@@ -155,7 +155,7 @@ fn get_command_options(mut cmd: Command, matches: &ArgMatches) -> Command {
                 .unwrap()
                 .to_string();
 
-            if flag.validate_as_number {
+            if flag.validate_as_number && raw_value != "" {
                 // Try converting to an integer or float to validate it
                 if raw_value.parse::<isize>().is_err() && raw_value.parse::<f32>().is_err() {
                     eprintln!(
