@@ -3,6 +3,10 @@
 
 ## UNRELEASED
 
+### Fixed
+
+* Allow entering negative numbers as arg values [#34](https://github.com/jakedeichert/mask/pull/34)
+
 
 
 
