@@ -81,10 +81,13 @@ pub fn build_command_structure(maskfile_contents: String) -> Command {
                     let val = config_split.next().unwrap_or("").trim();
                     match param {
                         "desc" => current_option_flag.desc = val.to_string(),
-                        // TODO: allow "number" type for input validation purposes https://github.com/jakedeichert/mask/issues/3
                         "type" => {
-                            if val == "string" {
+                            if val == "string" || val == "number" {
                                 current_option_flag.takes_value = true;
+                            }
+
+                            if val == "number" {
+                                current_option_flag.validate_as_number = true;
                             }
                         }
                         // Parse out the short and long flag names

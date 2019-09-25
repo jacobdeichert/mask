@@ -62,8 +62,7 @@ mod when_entering_negative_numbers {
     fn allows_entering_negative_numbers_as_values() {
         let (_temp, maskfile_path) = common::maskfile(
             r#"
-## math
-### math add (a) (b)
+## add (a) (b)
 ~~~bash
 echo $(($a + $b))
 ~~~
@@ -71,7 +70,7 @@ echo $(($a + $b))
         );
 
         common::run_mask(&maskfile_path)
-            .cli("math add -1 -3")
+            .cli("add -1 -3")
             .assert()
             .stdout(contains("-4"))
             .success();
@@ -81,8 +80,7 @@ echo $(($a + $b))
     fn allows_entering_negative_numbers_as_flag_values() {
         let (_temp, maskfile_path) = common::maskfile(
             r#"
-## math
-### math add
+## add
 
 **OPTIONS**
 * a
@@ -99,7 +97,7 @@ echo $(($a + $b))
         );
 
         common::run_mask(&maskfile_path)
-            .cli("math add --a -33 --b 17")
+            .cli("add --a -33 --b 17")
             .assert()
             .stdout(contains("-16"))
             .success();

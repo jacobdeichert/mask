@@ -1,5 +1,6 @@
 use assert_cmd::prelude::*;
 use clap::{crate_name, crate_version};
+use colored::*;
 use predicates::str::contains;
 
 mod common;
@@ -83,6 +84,133 @@ fi
         .assert()
         .stdout(contains("Starting an http server on PORT: 1234"))
         .success();
+}
+
+mod numerical_option_flag {
+    use super::*;
+
+    #[test]
+    fn properly_validates_flag_with_type_number() {
+        let (_temp, maskfile_path) = common::maskfile(
+            r#"
+## integer
+
+**OPTIONS**
+* val
+    * flags: --val
+    * type: number
+
+~~~bash
+echo "Value: $val"
+~~~
+"#,
+        );
+
+        common::run_mask(&maskfile_path)
+            .cli("integer --val 1111112222")
+            .assert()
+            .stdout(contains("Value: 1111112222"))
+            .success();
+    }
+
+    #[test]
+    fn properly_validates_negative_numbers() {
+        let (_temp, maskfile_path) = common::maskfile(
+            r#"
+## negative
+
+**OPTIONS**
+* val
+    * flags: --val
+    * type: number
+
+~~~bash
+echo "Value: $val"
+~~~
+"#,
+        );
+
+        common::run_mask(&maskfile_path)
+            .cli("negative --val -123")
+            .assert()
+            .stdout(contains("Value: -123"))
+            .success();
+    }
+
+    #[test]
+    fn properly_validates_decimal_numbers() {
+        let (_temp, maskfile_path) = common::maskfile(
+            r#"
+## decimal
+
+**OPTIONS**
+* val
+    * flags: --val
+    * type: number
+
+~~~bash
+echo "Value: $val"
+~~~
+"#,
+        );
+
+        common::run_mask(&maskfile_path)
+            .cli("decimal --val 123.3456789")
+            .assert()
+            .stdout(contains("Value: 123.3456789"))
+            .success();
+    }
+
+    #[test]
+    fn errors_when_value_is_not_a_number() {
+        let (_temp, maskfile_path) = common::maskfile(
+            r#"
+## notanumber
+
+**OPTIONS**
+* val
+    * flags: --val
+    * type: number
+
+~~~bash
+echo "This shouldn't render"
+~~~
+"#,
+        );
+
+        common::run_mask(&maskfile_path)
+            .cli("notanumber --val a234")
+            .assert()
+            .stderr(contains(format!(
+                "{} flag `val` expects a numerical value",
+                "ERROR:".red()
+            )))
+            .failure();
+    }
+
+    #[test]
+    fn ignores_the_option_if_not_supplied() {
+        let (_temp, maskfile_path) = common::maskfile(
+            r#"
+## nooption
+
+**OPTIONS**
+* val
+    * flags: --val
+    * type: number
+
+~~~bash
+echo "No arg this time"
+~~~
+"#,
+        );
+
+        common::run_mask(&maskfile_path)
+            .cli("nooption")
+            .assert()
+            .stdout(contains("No arg this time"))
+            .success();
+    }
 }
 
 mod version_flag {
