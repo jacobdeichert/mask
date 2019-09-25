@@ -3,6 +3,10 @@
 
 ## UNRELEASED
 
+### Added
+
+* Add support for type=number in option flags for numerical validation [#35](https://github.com/jakedeichert/mask/pull/35)
+
 ### Fixed
 
 * Allow entering negative numbers as arg values [#34](https://github.com/jakedeichert/mask/pull/34)
