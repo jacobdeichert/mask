@@ -10,6 +10,7 @@ use mask::executor::execute_command;
 fn main() {
     let cli_app = App::new(crate_name!())
         .setting(AppSettings::VersionlessSubcommands)
+        .setting(AppSettings::AllowNegativeNumbers)
         .setting(AppSettings::SubcommandRequired)
         .setting(AppSettings::ColoredHelp)
         .version(crate_version!())
@@ -87,7 +88,8 @@ fn build_subcommands<'a, 'b>(
     for c in subcommands {
         let mut subcmd = SubCommand::with_name(&c.name)
             .about(c.desc.as_ref())
-            .setting(AppSettings::ColoredHelp);
+            .setting(AppSettings::ColoredHelp)
+            .setting(AppSettings::AllowNegativeNumbers);
         if !c.subcommands.is_empty() {
             subcmd = build_subcommands(subcmd, &c.subcommands);
             // If this parent command has no script source, require a subcommand.
