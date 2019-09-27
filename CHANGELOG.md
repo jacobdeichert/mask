@@ -3,6 +3,9 @@
 
 ## UNRELEASED
 
+
+## v0.5.2 (2019-09-26)
+
 ### Added
 
 * Add support for type=number in option flags for numerical validation [#35](https://github.com/jakedeichert/mask/pull/35)
