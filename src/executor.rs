@@ -9,35 +9,35 @@ use clap::crate_name;
 use crate::command::Command;
 
 pub fn execute_command(cmd: Command, maskfile_path: String) -> Result<ExitStatus> {
-    let mut child = match cmd.executor.as_ref() {
+    let mut child = match cmd.script.executor.as_ref() {
         "js" | "javascript" => {
             let mut child = process::Command::new("node");
-            child.arg("-e").arg(cmd.source);
+            child.arg("-e").arg(cmd.script.source);
             child
         }
         "py" | "python" => {
             let mut child = process::Command::new("python");
-            child.arg("-c").arg(cmd.source);
+            child.arg("-c").arg(cmd.script.source);
             child
         }
         "rb" | "ruby" => {
             let mut child = process::Command::new("ruby");
-            child.arg("-e").arg(cmd.source);
+            child.arg("-e").arg(cmd.script.source);
             child
         }
         "php" => {
             let mut child = process::Command::new("php");
-            child.arg("-r").arg(cmd.source);
+            child.arg("-r").arg(cmd.script.source);
             child
         }
         "bash" | "zsh" | "fish" => {
-            let mut child = process::Command::new(cmd.executor);
-            child.arg("-c").arg(cmd.source);
+            let mut child = process::Command::new(cmd.script.executor);
+            child.arg("-c").arg(cmd.script.source);
             child
         }
         _ => {
             let mut child = process::Command::new("sh");
-            child.arg("-c").arg(cmd.source);
+            child.arg("-c").arg(cmd.script.source);
             child
         }
     };

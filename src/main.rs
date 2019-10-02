@@ -93,7 +93,7 @@ fn build_subcommands<'a, 'b>(
         if !c.subcommands.is_empty() {
             subcmd = build_subcommands(subcmd, &c.subcommands);
             // If this parent command has no script source, require a subcommand.
-            if c.source == "" {
+            if c.script.source == "" {
                 subcmd = subcmd.setting(AppSettings::SubcommandRequired);
             }
         }

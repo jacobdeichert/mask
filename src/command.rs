@@ -3,10 +3,7 @@ pub struct Command {
     pub cmd_level: u8,
     pub name: String,
     pub desc: String,
-    // The executor to run the source with
-    pub executor: String, // shell, node, ruby, python, etc...
-    // The script source to execute
-    pub source: String,
+    pub script: Script,
     pub subcommands: Vec<Command>,
     pub required_args: Vec<RequiredArg>,
     pub option_flags: Vec<OptionFlag>,
@@ -18,8 +15,7 @@ impl Command {
             cmd_level,
             name: "".to_string(),
             desc: "".to_string(),
-            executor: "".to_string(),
-            source: "".to_string(),
+            script: Script::new(),
             subcommands: vec![],
             required_args: vec![],
             option_flags: vec![],
@@ -28,7 +24,7 @@ impl Command {
 
     pub fn build(mut self) -> Self {
         // Auto add common flags like verbose for commands that have a script source
-        if !self.source.is_empty() {
+        if !self.script.source.is_empty() {
             self.option_flags.push(OptionFlag {
                 name: "verbose".to_string(),
                 desc: "Sets the level of verbosity".to_string(),
@@ -41,6 +37,23 @@ impl Command {
             });
         }
         self
+    }
+}
+
+#[derive(Debug, Clone)]
+pub struct Script {
+    // The executor to run the source with
+    pub executor: String, // shell, node, ruby, python, etc...
+    // The script source to execute
+    pub source: String,
+}
+
+impl Script {
+    pub fn new() -> Self {
+        Self {
+            executor: "".to_string(),
+            source: "".to_string(),
+        }
     }
 }
 

@@ -26,7 +26,7 @@ pub fn build_command_structure(maskfile_contents: String) -> Command {
                         current_command = Command::new(heading_level as u8);
                     }
                     Tag::CodeBlock(lang_code) => {
-                        current_command.executor = lang_code.to_string();
+                        current_command.script.executor = lang_code.to_string();
                     }
                     Tag::List(_) => {
                         // We're in an options list if the current text above it is "OPTIONS"
@@ -51,7 +51,7 @@ pub fn build_command_structure(maskfile_contents: String) -> Command {
                     current_command.desc = text.clone();
                 }
                 Tag::CodeBlock(_) => {
-                    current_command.source = text.to_string();
+                    current_command.script.source = text.to_string();
                 }
                 Tag::List(_) => {
                     // Don't go lower than zero (for cases where it's a non-OPTIONS list)
@@ -70,11 +70,11 @@ pub fn build_command_structure(maskfile_contents: String) -> Command {
             },
             Text(body) => {
                 text += &body.to_string();
-                // Level 1 is the flag name
+                // Options level 1 is the flag name
                 if list_level == 1 {
                     current_option_flag.name = text.clone();
                 }
-                // Level 2 is the flag config
+                // Options level 2 is the flag config
                 else if list_level == 2 {
                     let mut config_split = text.splitn(2, ":");
                     let param = config_split.next().unwrap_or("").trim();
