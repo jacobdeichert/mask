@@ -67,6 +67,7 @@ mod when_no_maskfile_found_in_current_directory {
             .current_dir(".github")
             .command("nothing")
             .assert()
+            .code(1)
             .stderr(contains("error: Found argument 'nothing' which wasn't expected, or isn't valid in this context"))
             .failure();
     }
@@ -80,6 +81,7 @@ mod when_custom_specified_maskfile_not_found {
         common::run_mask(&PathBuf::from("./nonexistent.md"))
             .command("--help")
             .assert()
+            .code(1)
             .stderr(contains(format!(
                 "{} specified maskfile not found",
                 "ERROR:".red()
@@ -92,6 +94,7 @@ mod when_custom_specified_maskfile_not_found {
         common::run_mask(&PathBuf::from("./nonexistent.md"))
             .command("--version")
             .assert()
+            .code(1)
             .stderr(contains(format!(
                 "{} specified maskfile not found",
                 "ERROR:".red()
@@ -104,6 +107,7 @@ mod when_custom_specified_maskfile_not_found {
         common::run_mask(&PathBuf::from("./nonexistent.md"))
             .command("what")
             .assert()
+            .code(1)
             .stderr(contains(format!(
                 "{} specified maskfile not found",
                 "ERROR:".red()

@@ -33,7 +33,10 @@ fn main() {
             Some(code) => std::process::exit(code),
             None => return,
         },
-        Err(err) => eprintln!("{} {}", "ERROR:".red(), err),
+        Err(err) => {
+            eprintln!("{} {}", "ERROR:".red(), err);
+            std::process::exit(1)
+        }
     }
 }
 
