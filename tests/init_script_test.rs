@@ -1,6 +1,6 @@
 use assert_cmd::prelude::*;
-use predicates::str::contains;
 use colored::*;
+use predicates::str::contains;
 
 mod common;
 use common::MaskCommandExt;
@@ -78,4 +78,3 @@ echo "This shouldn't echo"
         )))
         .failure();
 }
-
