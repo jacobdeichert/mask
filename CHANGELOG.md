@@ -4,6 +4,19 @@
 ## UNRELEASED
 
 
+
+
+
+## v0.6.0 (2019-10-06)
+
+### Breaking Changes
+
+* Add support for an `ON::INIT` script which initializes subshell environments [#36](https://github.com/jakedeichert/mask/pull/36)
+
+
+
+
+
 ## v0.5.2 (2019-09-26)
 
 ### Added
