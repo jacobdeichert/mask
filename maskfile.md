@@ -54,10 +54,10 @@ cargo install --force --path .
 > Run all tests
 
 **OPTIONS**
-* pattern
-    * flags: -p --pattern
+* file
+    * flags: -f --file
     * type: string
-    * desc: Test only a specific file pattern
+    * desc: Only run tests from a specific filename
 
 ~~~sh
 extra_args=""
@@ -68,12 +68,12 @@ if [[ "$verbose" == "true" ]]; then
 fi
 
 echo "Start tests..."
-# Run all tests by default
-if [[ "$pattern" == "" ]]; then
+if [[ -z "$file" ]]; then
+    # Run all tests by default
     cargo test $extra_args
 else
-    # Tests a specific integration filename pattern
-    cargo test --test $pattern $extra_args
+    # Tests a specific integration filename
+    cargo test --test $file $extra_args
 fi
 ~~~
 
