@@ -23,17 +23,20 @@ fn main() {
         return;
     }
 
-    let root_command = mask::parser::build_command_structure(maskfile.unwrap());
+    let (root_command, init_script) = mask::parser::build_command_structure(maskfile.unwrap());
     let matches = build_subcommands(cli_app, &root_command.subcommands).get_matches();
     let chosen_cmd = find_command(&matches, &root_command.subcommands)
         .expect("SubcommandRequired failed to work");
 
-    match execute_command(chosen_cmd, maskfile_path) {
+    match execute_command(init_script, chosen_cmd, maskfile_path) {
         Ok(status) => match status.code() {
             Some(code) => std::process::exit(code),
             None => return,
         },
-        Err(err) => eprintln!("{} {}", "ERROR:".red(), err),
+        Err(err) => {
+            eprintln!("{} {}", "ERROR:".red(), err);
+            std::process::exit(1)
+        }
     }
 }
 
@@ -93,7 +96,7 @@ fn build_subcommands<'a, 'b>(
         if !c.subcommands.is_empty() {
             subcmd = build_subcommands(subcmd, &c.subcommands);
             // If this parent command has no script source, require a subcommand.
-            if c.source == "" {
+            if c.script.source == "" {
                 subcmd = subcmd.setting(AppSettings::SubcommandRequired);
             }
         }

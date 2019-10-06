@@ -19,7 +19,7 @@
     * flags: -w --watch
     * desc: Rebuild on file change
 
-~~~sh
+~~~bash
 if [[ $watch == "true" ]]; then
     watchexec --exts rs --restart "cargo run -- $maskfile_command"
 else
@@ -33,7 +33,7 @@ fi
 
 > Build a release version of mask
 
-~~~sh
+~~~bash
 cargo build --release
 ~~~
 
@@ -54,12 +54,12 @@ cargo install --force --path .
 > Run all tests
 
 **OPTIONS**
-* pattern
-    * flags: -p --pattern
+* file
+    * flags: -f --file
     * type: string
-    * desc: Test only a specific file pattern
+    * desc: Only run tests from a specific filename
 
-~~~sh
+~~~bash
 extra_args=""
 
 if [[ "$verbose" == "true" ]]; then
@@ -67,14 +67,15 @@ if [[ "$verbose" == "true" ]]; then
     extra_args="-- --nocapture --test-threads=1"
 fi
 
-echo "Start tests..."
-# Run all tests by default
-if [[ "$pattern" == "" ]]; then
+log_info "Running tests..."
+if [[ -z "$file" ]]; then
+    # Run all tests by default
     cargo test $extra_args
 else
-    # Tests a specific integration filename pattern
-    cargo test --test $pattern $extra_args
+    # Tests a specific integration filename
+    cargo test --test $file $extra_args
 fi
+log_success "Tests passed!"
 ~~~
 
 
@@ -87,7 +88,7 @@ fi
 
 > Update the cargo dependencies
 
-~~~sh
+~~~bash
 cargo update
 ~~~
 
@@ -102,7 +103,7 @@ cargo update
     * flags: -c --check
     * desc: Show which files are not formatted correctly
 
-~~~sh
+~~~bash
 if [[ $check == "true" ]]; then
     cargo fmt --all -- --check
 else
@@ -116,6 +117,33 @@ fi
 
 > Lint the project with clippy
 
-~~~sh
+~~~bash
 cargo clippy
+~~~
+
+
+
+
+
+
+
+**ON::INIT**
+
+This special script sets up the subshell environment before a command is executed. This is useful for global utilities and helpers.
+
+~~~bash
+set -a # Export everything so subprocesses have access
+color_reset=$(tput sgr0)
+color_blue=$(tput setaf 4)
+color_green=$(tput setaf 2)
+color_yellow=$(tput setaf 3)
+color_red=$(tput setaf 1)
+log_info() { echo "$color_blue$1$color_reset"; }
+log_success() { echo "$color_green$1$color_reset"; }
+log_error() { echo "$color_red$1$color_reset"; }
+log_warn() { echo "$color_yellow$1$color_reset"; }
+set +a
+set -e # Exit on error
+# Export this so bash subshells inherit "set -e"
+export SHELLOPTS
 ~~~

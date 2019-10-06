@@ -49,6 +49,7 @@ fn exits_with_error_when_missing_subcommand() {
 
     common::run_mask(&maskfile_path)
         .assert()
+        .code(1)
         .stderr(contains(
             "error: 'mask' requires a subcommand, but one was not provided",
         ))
@@ -141,6 +142,7 @@ echo "system, online"
         common::run_mask(&maskfile_path)
             .command("system")
             .assert()
+            .code(1)
             .stderr(contains(
                 "error: 'mask system' requires a subcommand, but one was not provided",
             ))
