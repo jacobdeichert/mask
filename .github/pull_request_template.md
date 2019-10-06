@@ -1,26 +1,23 @@
 <!--
-  Please review our Contribution Guidelines (CONTRIBUTING.md) before creating
-  an issue or submitting a PR 🙌
+Please review our Contribution Guidelines (CONTRIBUTING.md) before creating an issue or submitting a PR 🙌
 -->
 
-
 ### Which issue does this fix?
-<!-- Replace {ISSUE} with the issue number you've fixed. -->
+<!-- Replace {ISSUE} with the issue number you've fixed -->
 
 Closes #{ISSUE}
 
 
 
 ### Describe the solution
-<!-- Add some details about what you did to fix the issue. -->
+<!-- Add some details about what you did to fix the issue -->
 
 
 
 ### How to test
-<!-- Describe how to test this PR and check the boxes if you added tests -->
+<!-- Describe how to test this PR and check the box if you added tests -->
 
-- [ ] Added unit tests
-- [ ] Added integration tests
+- [ ] Added tests
 
 
 
