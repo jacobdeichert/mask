@@ -217,9 +217,7 @@ Valid lang codes: py, python
 
 ~~~python
 import os
-
 name = os.getenv("name", "WORLD")
-
 print("Hello, " + name + "!")
 ~~~
 
@@ -232,7 +230,6 @@ Valid lang codes: rb, ruby
 
 ~~~ruby
 name = ENV["name"] || "WORLD"
-
 puts "Hello, #{name}!"
 ~~~
 
@@ -243,7 +240,6 @@ puts "Hello, #{name}!"
 
 ~~~php
 $name = getenv("name") ?: "WORLD";
-
 echo "Hello, " . $name . "!\n";
 ~~~
 ```
@@ -340,6 +336,30 @@ alias wask="mask --maskfile ~/maskfile.md"
 # You can run this from anywhere
 wask <subcommand>
 ~~~
+
+### Subshell environment initialization script
+
+When specifying the special `ON::INIT` script, you can hook into the subshell initialization process to inject common helpers and utilities your commands share. This script only allows shell-based executors (`sh`, `bash`, `zsh`, etc...) and it **must not** be defined as a heading.
+
+**Example:**
+
+```markdown
+**ON::INIT**
+
+~~~bash
+set -a # Export everything so subprocesses have access
+log_info() { echo "🔵 >> $1"; }
+log_error() { echo "❌ >> $1"; }
+log_success() { echo "✅ >> $1"; }
+~~~
+
+## test
+
+~~~bash
+log_info "Running tests..."
+cargo test || log_error "TESTS FAILED"
+~~~
+```
 
 ### Environment variable utilities
 
