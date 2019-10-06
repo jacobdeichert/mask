@@ -55,6 +55,10 @@ impl Script {
             source: "".to_string(),
         }
     }
+
+    pub fn has_script(&self) -> bool {
+        self.source != ""
+    }
 }
 
 #[derive(Debug, Clone)]
