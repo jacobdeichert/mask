@@ -67,7 +67,7 @@ fn prepare_command_without_init_script(cmd: &Command) -> process::Command {
             child.arg("-r").arg(source);
             child
         }
-        // Any shell script that uses -c (sh, bash, zsh, fish, dash, etc...)
+        // Any other executor that supports -c (sh, bash, zsh, fish, dash, etc...)
         _ => {
             let mut child = process::Command::new(executor);
             child.arg("-c").arg(source);
@@ -84,7 +84,7 @@ fn prepare_command_with_init_script(init_script: Script, cmd: &Command) -> proce
         "py" | "python" => run_with_init_script(&init_script, &cmd, "python -c"),
         "rb" | "ruby" => run_with_init_script(&init_script, &cmd, "ruby -e"),
         "php" => run_with_init_script(&init_script, &cmd, "php -r"),
-        // Any other executor that uses -c (sh, bash, zsh, fish, dash, etc...)
+        // Any other executor that supports -c (sh, bash, zsh, fish, dash, etc...)
         _ => run_with_init_script(&init_script, &cmd, &format!("{} -c", executor)),
     }
 }
