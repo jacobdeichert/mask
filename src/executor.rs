@@ -14,6 +14,16 @@ pub fn execute_command(
     cmd: Command,
     maskfile_path: String,
 ) -> Result<ExitStatus> {
+    if cmd.script.source == "" {
+        let msg = "Command has no script.";
+        return Err(Error::new(ErrorKind::Other, msg));
+    }
+
+    if cmd.script.executor == "" {
+        let msg = "Command script requires a lang code which determines which executor to use.";
+        return Err(Error::new(ErrorKind::Other, msg));
+    }
+
     let mut child;
     if init_script.has_script() {
         if !validate_init_script(&init_script) {
@@ -57,13 +67,9 @@ fn prepare_command_without_init_script(cmd: &Command) -> process::Command {
             child.arg("-r").arg(source);
             child
         }
-        "bash" | "zsh" | "fish" => {
-            let mut child = process::Command::new(executor);
-            child.arg("-c").arg(source);
-            child
-        }
+        // Any shell script that uses -c (sh, bash, zsh, fish, dash, etc...)
         _ => {
-            let mut child = process::Command::new("sh");
+            let mut child = process::Command::new(executor);
             child.arg("-c").arg(source);
             child
         }
@@ -78,10 +84,8 @@ fn prepare_command_with_init_script(init_script: Script, cmd: &Command) -> proce
         "py" | "python" => run_with_init_script(&init_script, &cmd, "python -c"),
         "rb" | "ruby" => run_with_init_script(&init_script, &cmd, "ruby -e"),
         "php" => run_with_init_script(&init_script, &cmd, "php -r"),
-        "bash" | "zsh" | "fish" => {
-            run_with_init_script(&init_script, &cmd, &format!("{} -c", executor))
-        }
-        _ => run_with_init_script(&init_script, &cmd, "sh -c"),
+        // Any other executor that uses -c (sh, bash, zsh, fish, dash, etc...)
+        _ => run_with_init_script(&init_script, &cmd, &format!("{} -c", executor)),
     }
 }
 
