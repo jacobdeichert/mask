@@ -337,9 +337,9 @@ alias wask="mask --maskfile ~/maskfile.md"
 wask <subcommand>
 ~~~
 
-### Subshell environment initialization script
+### Subshell environment initialization
 
-When specifying the special `ON::INIT` script, you can hook into the subshell initialization process to inject common helpers and utilities your commands share. This script only allows shell-based executors (`sh`, `bash`, `zsh`, etc...) and it **must not** be defined as a heading.
+Adding the special `ON::INIT` script allows you to hook into the subshell initialization process to inject common environment variables and utilities your commands share. This script only allows shell-based executors (`sh`, `bash`, `zsh`, etc...) and it **must not** be defined as a heading.
 
 **Example:**
 
