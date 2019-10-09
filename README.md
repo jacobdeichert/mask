@@ -189,8 +189,7 @@ On top of shell/bash scripts, `mask` also supports using node, python, ruby and 
 
 > An example shell script
 
-Valid lang codes: sh, bash, zsh, fish
-The fallback is sh for unknown language codes.
+Valid lang codes: sh, bash, zsh, fish... any shell that supports -c
 
 ~~~zsh
 echo "Hello, $name!"

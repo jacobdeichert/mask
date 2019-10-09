@@ -1,8 +1,8 @@
 use assert_cmd::prelude::*;
-use predicates::str::{contains, is_empty};
+use colored::*;
+use predicates::str::contains;
 
 mod common;
-
 use common::MaskCommandExt;
 
 #[test]
@@ -43,109 +43,62 @@ echo "Stopping service $service_name"
 fn exits_with_error_when_missing_subcommand() {
     let (_temp, maskfile_path) = common::maskfile(
         r#"
-## foo
+## service
+### service start
 "#,
     );
 
     common::run_mask(&maskfile_path)
+        .command("service")
         .assert()
         .code(1)
         .stderr(contains(
-            "error: 'mask' requires a subcommand, but one was not provided",
+            "error: 'mask service' requires a subcommand, but one was not provided",
         ))
         .failure();
-}
-
-mod when_entering_negative_numbers {
-    use super::*;
-
-    #[test]
-    fn allows_entering_negative_numbers_as_values() {
-        let (_temp, maskfile_path) = common::maskfile(
-            r#"
-## add (a) (b)
-~~~bash
-echo $(($a + $b))
-~~~
-"#,
-        );
-
-        common::run_mask(&maskfile_path)
-            .cli("add -1 -3")
-            .assert()
-            .stdout(contains("-4"))
-            .success();
-    }
-
-    #[test]
-    fn allows_entering_negative_numbers_as_flag_values() {
-        let (_temp, maskfile_path) = common::maskfile(
-            r#"
-## add
-
-**OPTIONS**
-* a
-    * flags: --a
-    * type: string
-* b
-    * flags: --b
-    * type: string
-
-~~~bash
-echo $(($a + $b))
-~~~
-"#,
-        );
-
-        common::run_mask(&maskfile_path)
-            .cli("add --a -33 --b 17")
-            .assert()
-            .stdout(contains("-16"))
-            .success();
-    }
 }
 
 mod when_command_has_no_source {
     use super::*;
 
     #[test]
-    fn exits_gracefully_when_it_has_no_subcommands() {
+    fn exits_with_error_when_it_has_no_script_lang_code() {
         let (_temp, maskfile_path) = common::maskfile(
             r#"
-## system
-"#,
-        );
-
-        // NOTE: Right now we exit without an error. Perhaps there should at least
-        // be a warning logged to the console?
-        common::run_mask(&maskfile_path)
-            .command("system")
-            .assert()
-            .stdout(is_empty())
-            .success();
-    }
-
-    #[test]
-    fn exits_with_error_when_it_has_subcommands() {
-        let (_temp, maskfile_path) = common::maskfile(
-            r#"
-## system
-
-### start
-
-~~~sh
+## start
+~~~
 echo "system, online"
 ~~~
 "#,
         );
 
         common::run_mask(&maskfile_path)
-            .command("system")
+            .command("start")
             .assert()
             .code(1)
-            .stderr(contains(
-                "error: 'mask system' requires a subcommand, but one was not provided",
-            ))
+            .stderr(contains(format!(
+                "{} Command script requires a lang code which determines which executor to use.",
+                "ERROR:".red()
+            )))
+            .failure();
+    }
+
+    #[test]
+    fn exits_with_error_when_it_has_no_subcommands() {
+        let (_temp, maskfile_path) = common::maskfile(
+            r#"
+## start
+"#,
+        );
+
+        common::run_mask(&maskfile_path)
+            .command("start")
+            .assert()
+            .code(1)
+            .stderr(contains(format!(
+                "{} Command has no script.",
+                "ERROR:".red()
+            )))
             .failure();
     }
 }
