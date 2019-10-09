@@ -86,6 +86,55 @@ fi
         .success();
 }
 
+mod when_entering_negative_numbers {
+    use super::*;
+
+    #[test]
+    fn allows_entering_negative_numbers_as_values() {
+        let (_temp, maskfile_path) = common::maskfile(
+            r#"
+## add (a) (b)
+~~~bash
+echo $(($a + $b))
+~~~
+"#,
+        );
+
+        common::run_mask(&maskfile_path)
+            .cli("add -1 -3")
+            .assert()
+            .stdout(contains("-4"))
+            .success();
+    }
+
+    #[test]
+    fn allows_entering_negative_numbers_as_flag_values() {
+        let (_temp, maskfile_path) = common::maskfile(
+            r#"
+## add
+
+**OPTIONS**
+* a
+    * flags: --a
+    * type: string
+* b
+    * flags: --b
+    * type: string
+
+~~~bash
+echo $(($a + $b))
+~~~
+"#,
+        );
+
+        common::run_mask(&maskfile_path)
+            .cli("add --a -33 --b 17")
+            .assert()
+            .stdout(contains("-16"))
+            .success();
+    }
+}
+
 mod numerical_option_flag {
     use super::*;
 
