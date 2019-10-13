@@ -8,6 +8,7 @@
 * Allow any shell executor that supports -c evaluation (sh, bash, zsh, fish, dash, etc...) [#37](https://github.com/jakedeichert/mask/pull/37)
 * Error when chosen command doesn't have a script [#37](https://github.com/jakedeichert/mask/pull/37)
 * Error when chosen command script doesn't have a lang code to determine the executor [#37](https://github.com/jakedeichert/mask/pull/37)
+* Remove the `ON::INIT` script idea [#38](https://github.com/jakedeichert/mask/pull/38)
 
 
 
