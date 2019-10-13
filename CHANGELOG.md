@@ -3,6 +3,12 @@
 
 ## UNRELEASED
 
+
+
+
+
+## v0.7.0 (2019-10-13)
+
 ### Breaking Changes
 
 * Allow any shell executor that supports -c evaluation (sh, bash, zsh, fish, dash, etc...) [#37](https://github.com/jakedeichert/mask/pull/37)
