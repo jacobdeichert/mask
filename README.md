@@ -336,30 +336,6 @@ alias wask="mask --maskfile ~/maskfile.md"
 wask <subcommand>
 ~~~
 
-### Subshell environment initialization
-
-Adding the special `ON::INIT` script allows you to hook into the subshell initialization process to inject common environment variables and utilities your commands share. This script only allows shell-based executors (`sh`, `bash`, `zsh`, etc...) and it **must not** be defined as a heading.
-
-**Example:**
-
-```markdown
-**ON::INIT**
-
-~~~bash
-set -a # Export everything so subprocesses have access
-log_info() { echo "🔵 >> $1"; }
-log_error() { echo "❌ >> $1"; }
-log_success() { echo "✅ >> $1"; }
-~~~
-
-## test
-
-~~~bash
-log_info "Running tests..."
-cargo test || log_error "TESTS FAILED"
-~~~
-```
-
 ### Environment variable utilities
 
 Inside of each script's execution environment, `mask` injects a few environment variable helpers that might come in handy.

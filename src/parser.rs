@@ -3,19 +3,17 @@ use pulldown_cmark::{
     Options, Parser, Tag,
 };
 
-use crate::command::{Command, OptionFlag, RequiredArg, Script};
+use crate::command::{Command, OptionFlag, RequiredArg};
 
 // Woof. This is ugly. I'm planning on giving this a rewrite at some point...
 // At least we have some decent tests in place.
-pub fn build_command_structure(maskfile_contents: String) -> (Command, Script) {
+pub fn build_command_structure(maskfile_contents: String) -> Command {
     let parser = create_markdown_parser(&maskfile_contents);
     let mut commands = vec![];
     let mut current_command = Command::new(1);
     let mut current_option_flag = OptionFlag::new();
     let mut text = "".to_string();
     let mut list_level = 0;
-    let mut init_script = Script::new();
-    let mut init_script_state = ParserPatternState::new();
 
     for event in parser {
         match event {
@@ -30,11 +28,7 @@ pub fn build_command_structure(maskfile_contents: String) -> (Command, Script) {
                         current_command = Command::new(heading_level as u8);
                     }
                     Tag::CodeBlock(lang_code) => {
-                        if init_script_state.is_open() {
-                            init_script.executor = lang_code.to_string();
-                        } else {
-                            current_command.script.executor = lang_code.to_string();
-                        }
+                        current_command.script.executor = lang_code.to_string();
                     }
                     Tag::List(_) => {
                         // We're in an options list if the current text above it is "OPTIONS"
@@ -59,12 +53,7 @@ pub fn build_command_structure(maskfile_contents: String) -> (Command, Script) {
                     current_command.desc = text.clone();
                 }
                 Tag::CodeBlock(_) => {
-                    if init_script_state.is_open() {
-                        init_script.source = text.to_string();
-                        init_script_state.closed = true;
-                    } else {
-                        current_command.script.source = text.to_string();
-                    }
+                    current_command.script.source = text.to_string();
                 }
                 Tag::List(_) => {
                     // Don't go lower than zero (for cases where it's a non-OPTIONS list)
@@ -84,12 +73,8 @@ pub fn build_command_structure(maskfile_contents: String) -> (Command, Script) {
             Text(body) => {
                 text += &body.to_string();
 
-                // Look for a shell initialization script
-                if list_level == 0 && text == "ON::INIT" && !init_script_state.found {
-                    init_script_state.found = true;
-                }
                 // Options level 1 is the flag name
-                else if list_level == 1 {
+                if list_level == 1 {
                     current_option_flag.name = text.clone();
                 }
                 // Options level 2 is the flag config
@@ -147,29 +132,7 @@ pub fn build_command_structure(maskfile_contents: String) -> (Command, Script) {
     let root_command = all.first().expect("root command must exist");
 
     // The command root and a possible init script
-    (root_command.clone(), init_script)
-}
-
-#[derive(Debug, Clone)]
-pub struct ParserPatternState {
-    // Whether this pattern has been found
-    pub found: bool,
-    // Whether this pattern has been closed
-    pub closed: bool,
-}
-
-impl ParserPatternState {
-    pub fn new() -> Self {
-        Self {
-            found: false,
-            closed: false,
-        }
-    }
-
-    // Open means we're currently parsing this pattern and haven't closed it yet
-    pub fn is_open(&self) -> bool {
-        self.found && !self.closed
-    }
+    root_command.clone()
 }
 
 fn create_markdown_parser<'a>(maskfile_contents: &'a String) -> Parser<'a> {
@@ -299,7 +262,7 @@ mod build_command_structure {
 
     #[test]
     fn parses_serve_command_name() {
-        let (tree, _) = build_command_structure(TEST_MASKFILE.to_string());
+        let tree = build_command_structure(TEST_MASKFILE.to_string());
         let serve_command = &tree
             .subcommands
             .iter()
@@ -310,7 +273,7 @@ mod build_command_structure {
 
     #[test]
     fn parses_serve_command_description() {
-        let (tree, _) = build_command_structure(TEST_MASKFILE.to_string());
+        let tree = build_command_structure(TEST_MASKFILE.to_string());
         let serve_command = &tree
             .subcommands
             .iter()
@@ -321,7 +284,7 @@ mod build_command_structure {
 
     #[test]
     fn parses_serve_required_positional_arguments() {
-        let (tree, _) = build_command_structure(TEST_MASKFILE.to_string());
+        let tree = build_command_structure(TEST_MASKFILE.to_string());
         let serve_command = &tree
             .subcommands
             .iter()
@@ -333,7 +296,7 @@ mod build_command_structure {
 
     #[test]
     fn parses_serve_command_executor() {
-        let (tree, _) = build_command_structure(TEST_MASKFILE.to_string());
+        let tree = build_command_structure(TEST_MASKFILE.to_string());
         let serve_command = &tree
             .subcommands
             .iter()
@@ -344,7 +307,7 @@ mod build_command_structure {
 
     #[test]
     fn parses_serve_command_source_with_tildes() {
-        let (tree, _) = build_command_structure(TEST_MASKFILE.to_string());
+        let tree = build_command_structure(TEST_MASKFILE.to_string());
         let serve_command = &tree
             .subcommands
             .iter()
@@ -358,7 +321,7 @@ mod build_command_structure {
 
     #[test]
     fn parses_node_command_source_with_backticks() {
-        let (tree, _) = build_command_structure(TEST_MASKFILE.to_string());
+        let tree = build_command_structure(TEST_MASKFILE.to_string());
         let node_command = &tree
             .subcommands
             .iter()
@@ -372,7 +335,7 @@ mod build_command_structure {
 
     #[test]
     fn adds_verbose_optional_flag_to_command_with_script() {
-        let (tree, _) = build_command_structure(TEST_MASKFILE.to_string());
+        let tree = build_command_structure(TEST_MASKFILE.to_string());
         let node_command = tree
             .subcommands
             .iter()
@@ -393,7 +356,7 @@ mod build_command_structure {
 
     #[test]
     fn does_not_add_verbose_optional_flag_to_command_with_no_script() {
-        let (tree, _) = build_command_structure(TEST_MASKFILE.to_string());
+        let tree = build_command_structure(TEST_MASKFILE.to_string());
         let no_script_command = tree
             .subcommands
             .iter()
