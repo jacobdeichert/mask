@@ -23,12 +23,12 @@ fn main() {
         return;
     }
 
-    let (root_command, init_script) = mask::parser::build_command_structure(maskfile.unwrap());
+    let root_command = mask::parser::build_command_structure(maskfile.unwrap());
     let matches = build_subcommands(cli_app, &root_command.subcommands).get_matches();
     let chosen_cmd = find_command(&matches, &root_command.subcommands)
         .expect("SubcommandRequired failed to work");
 
-    match execute_command(init_script, chosen_cmd, maskfile_path) {
+    match execute_command(chosen_cmd, maskfile_path) {
         Ok(status) => match status.code() {
             Some(code) => std::process::exit(code),
             None => return,

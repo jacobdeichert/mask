@@ -7,13 +7,9 @@ use std::process::ExitStatus;
 
 use clap::crate_name;
 
-use crate::command::{Command, Script};
+use crate::command::Command;
 
-pub fn execute_command(
-    init_script: Script,
-    cmd: Command,
-    maskfile_path: String,
-) -> Result<ExitStatus> {
+pub fn execute_command(cmd: Command, maskfile_path: String) -> Result<ExitStatus> {
     if cmd.script.source == "" {
         let msg = "Command has no script.";
         return Err(Error::new(ErrorKind::Other, msg));
@@ -24,24 +20,14 @@ pub fn execute_command(
         return Err(Error::new(ErrorKind::Other, msg));
     }
 
-    let mut child;
-    if init_script.has_script() {
-        if !validate_init_script(&init_script) {
-            let msg = "ON::INIT must be a shell-based script executor.";
-            return Err(Error::new(ErrorKind::Other, msg));
-        }
-        child = prepare_command_with_init_script(init_script, &cmd);
-    } else {
-        child = prepare_command_without_init_script(&cmd);
-    }
-
+    let mut child = prepare_command(&cmd);
     child = add_utility_variables(child, maskfile_path);
     child = add_flag_variables(child, &cmd);
 
     child.spawn()?.wait()
 }
 
-fn prepare_command_without_init_script(cmd: &Command) -> process::Command {
+fn prepare_command(cmd: &Command) -> process::Command {
     let executor = cmd.script.executor.clone();
     let source = cmd.script.source.clone();
 
@@ -73,47 +59,6 @@ fn prepare_command_without_init_script(cmd: &Command) -> process::Command {
             child.arg("-c").arg(source);
             child
         }
-    }
-}
-
-fn prepare_command_with_init_script(init_script: Script, cmd: &Command) -> process::Command {
-    let executor = cmd.script.executor.clone();
-
-    match executor.as_ref() {
-        "js" | "javascript" => run_with_init_script(&init_script, &cmd, "node -e"),
-        "py" | "python" => run_with_init_script(&init_script, &cmd, "python -c"),
-        "rb" | "ruby" => run_with_init_script(&init_script, &cmd, "ruby -e"),
-        "php" => run_with_init_script(&init_script, &cmd, "php -r"),
-        // Any other executor that supports -c (sh, bash, zsh, fish, dash, etc...)
-        _ => run_with_init_script(&init_script, &cmd, &format!("{} -c", executor)),
-    }
-}
-
-fn run_with_init_script(
-    init_script: &Script,
-    cmd: &Command,
-    executor_invocation: &str,
-) -> process::Command {
-    let mut child = process::Command::new(init_script.executor.clone());
-    // Combine the init script with the command to run
-    let source = format!(
-        "{}\n{} \"{}\"",
-        init_script.source.clone(),
-        executor_invocation,
-        "$MASK_CMD_SOURCE"
-    );
-    child
-        .env("MASK_CMD_SOURCE", cmd.script.source.clone())
-        .arg("-c")
-        .arg(source);
-    child
-}
-
-// Validate the subshell init script is shell-based
-fn validate_init_script(init_script: &Script) -> bool {
-    match init_script.executor.as_ref() {
-        "js" | "javascript" | "py" | "python" | "rb" | "ruby" | "php" => false,
-        _ => true,
     }
 }
 
