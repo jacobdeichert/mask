@@ -21,7 +21,7 @@ jobs:
       - name: Add Ruby for a test that requires it
         uses: actions/setup-ruby@master
         with:
-          version: 2.6.x
+          ruby-version: 2.6.x
       - name: Fetch dependencies
         run: cargo fetch
       - name: Build in test mode
