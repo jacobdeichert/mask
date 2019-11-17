@@ -1,7 +1,7 @@
-use std::env;
 use std::path::Path;
+use std::{env, io, process};
 
-use clap::{crate_name, crate_version, App, AppSettings, Arg, ArgMatches, SubCommand};
+use clap::{crate_name, crate_version, App, AppSettings, Arg, ArgMatches, Shell, SubCommand};
 use colored::*;
 
 use mask::command::Command;
@@ -24,7 +24,15 @@ fn main() {
     }
 
     let root_command = mask::parser::build_command_structure(maskfile.unwrap());
-    let matches = build_subcommands(cli_app, &root_command.subcommands).get_matches();
+    let cli_app = build_subcommands(cli_app, &root_command.subcommands);
+    let cli_app = shell_completion_subcommand(cli_app);
+    let matches = cli_app.clone().get_matches();
+
+    if let Some(shell) = matches.subcommand_matches("init") {
+        generate_shell_completion(cli_app, shell);
+        process::exit(0)
+    }
+
     let chosen_cmd = find_command(&matches, &root_command.subcommands)
         .expect("SubcommandRequired failed to work");
 
@@ -82,6 +90,36 @@ fn custom_maskfile_path_arg<'a, 'b>() -> Arg<'a, 'b> {
         .multiple(false);
 
     custom_maskfile_path
+}
+
+fn shell_completion_subcommand<'a, 'b>(cli_app: App<'a, 'b>) -> App<'a, 'b> {
+    cli_app.subcommand(
+        SubCommand::with_name("init")
+            .about("Prints the shell function used to execute `mask`")
+            .arg(
+                &Arg::with_name("shell")
+                    .value_name("SHELL")
+                    .help("The name of the currently running shell")
+                    .possible_values(&["bash", "zsh", "fish", "elvish", "powershell"])
+                    .required(true),
+            ),
+    )
+}
+
+fn generate_shell_completion<'a, 'b>(mut cli_app: App<'a, 'b>, shell: &ArgMatches) {
+    let shell_name = shell.value_of("shell").expect("Arg shell must be required");
+    cli_app.gen_completions_to(
+        crate_name!(),
+        match shell_name {
+            "bash" => Shell::Bash,
+            "zsh" => Shell::Zsh,
+            "fish" => Shell::Fish,
+            "elvish" => Shell::Elvish,
+            "powershell" => Shell::PowerShell,
+            _ => unreachable!("{} not in possible_values", shell_name),
+        },
+        &mut io::stdout(),
+    )
 }
 
 fn build_subcommands<'a, 'b>(
