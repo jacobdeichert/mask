@@ -18,7 +18,7 @@ UPLOAD_URL="https://uploads.github.com/repos/${GITHUB_REPOSITORY}/releases/${REL
 echo "Asset URL: $UPLOAD_URL"
 echo "Uploading asset '$ASSET'..."
 
-mkdir curl_output
+touch curl_log
 response_code=$(curl \
     -sSL \
     -XPOST \
@@ -26,15 +26,15 @@ response_code=$(curl \
     --upload-file "${ASSET}" \
     --header "Content-Type:application/octet-stream" \
     --write-out "%{http_code}" \
-    --output curl_output \
+    --output curl_log \
     "$UPLOAD_URL")
 
 if [ $response_code -ge 400 ]; then
     echo "ERROR: curl upload failed with status code $response_code"
-    cat curl_output && rm curl_output
+    cat curl_log && rm curl_log
     exit 1
 fi
 
-cat curl_output | jq .
-rm curl_output
+cat curl_log | jq .
+rm curl_log
 
