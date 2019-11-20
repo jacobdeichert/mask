@@ -6,7 +6,7 @@ on:
 
 jobs:
   release-linux:
-    name: Build and attach x86_64-unknown-linux-gnu
+    name: Build and attach linux binary
     runs-on: ubuntu-latest
     steps:
       - name: Checkout master
@@ -32,7 +32,7 @@ jobs:
           assets: ./*.zip
 
   release-macos:
-    name: Build and attach x86_64-apple-darwin
+    name: Build and attach macOS binary
     runs-on: macos-latest
     steps:
       - name: Checkout master
@@ -56,6 +56,8 @@ jobs:
           mv ./target/$TARGET/release/mask ./$NAME/mask
           chmod +x ./$NAME/mask
           zip -r $NAME.zip $NAME
+      # NOTE: cannot use the attach-release-assets action because macOS doesn't support docker-based actions.
+      # Luckily we can just run the bash script directly.
       - name: Attach the binary to the release
         run: ./.github/actions/attach-release-assets/run.sh ./*.zip
         env:
