@@ -22,7 +22,7 @@ To get started, follow the guide below or check out the more [advanced features]
 
 ### Precompiled binaries for linux and macOS
 
-Head to the [Releases page](/releases) and look for the latest published version. Under **Assets** you'll see zips available for download for linux and macOS. Once downloaded, you can unzip them and then move the `mask` binary to somewhere accessible in your `$PATH` like `mv mask /usr/local/bin`.
+Head to the [Releases page][releases] and look for the latest published version. Under **Assets** you'll see zips available for download for linux and macOS. Once downloaded, you can unzip them and then move the `mask` binary to somewhere accessible in your `$PATH` like `mv mask /usr/local/bin`.
 
 ### Cargo
 
@@ -433,6 +433,7 @@ Jake Deichert with the help of contributors.
 
 [github_ci]: https://github.com/jakedeichert/mask/actions?query=workflow%3ACI
 [crate]: https://crates.io/crates/mask
+[releases]: https://github.com/jakedeichert/mask/releases
 [new_issue]: https://github.com/jakedeichert/mask/issues/new
 [website]: https://jakedeichert.com
 [twitter]: https://twitter.com/jakedeichert
