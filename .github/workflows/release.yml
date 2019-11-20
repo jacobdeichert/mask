@@ -30,3 +30,35 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           assets: ./*.zip
+
+  release-macos:
+    name: Build and attach x86_64-apple-darwin
+    runs-on: macos-latest
+    steps:
+      - name: Checkout master
+        uses: actions/checkout@master
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          target: x86_64-apple-darwin
+          default: true
+      - name: Fetch dependencies
+        run: cargo fetch
+      - name: Build in release mode
+        run: cargo build --release --frozen --target x86_64-apple-darwin
+      - name: Add the version tag to the binary name
+        run: |
+          VERSION_TAG=$(jq --raw-output '.release.tag_name' "$GITHUB_EVENT_PATH")
+          TARGET=x86_64-apple-darwin
+          NAME=mask-$VERSION_TAG-$TARGET
+          mkdir $NAME
+          mv ./target/$TARGET/release/mask ./$NAME/mask
+          chmod +x ./$NAME/mask
+          zip -r $NAME.zip $NAME
+      - name: Attach the binary to the release
+        uses: ./.github/actions/attach-release-assets
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          assets: ./*.zip
