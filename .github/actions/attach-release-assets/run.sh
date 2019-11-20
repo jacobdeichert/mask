@@ -4,37 +4,34 @@ if [[ -z "$GITHUB_TOKEN" ]]; then
     exit 1
 fi
 
-# The docker entrypoint arg is "inputs.asset"
-ASSET=$1
-if [ ! -f "$ASSET" ]; then
-    echo "ERROR: cannot find the asset '$ASSET'"
-fi
-
+# A file glob of assets to upload. The docker entrypoint arg is "inputs.assets".
+ASSETS_GLOB=$1
 AUTH_HEADER="Authorization: token ${GITHUB_TOKEN}"
 RELEASE_ID=$(jq --raw-output '.release.id' "$GITHUB_EVENT_PATH")
-FILENAME=$(basename "${ASSET}")
-UPLOAD_URL="https://uploads.github.com/repos/${GITHUB_REPOSITORY}/releases/${RELEASE_ID}/assets?name=${FILENAME}"
 
-echo "Asset URL: $UPLOAD_URL"
-echo "Uploading asset '$ASSET'..."
+# Upload each asset file to the GitHub Release
+for asset_file in $ASSETS_GLOB; do
+    filename=$(basename "$asset_file")
+    upload_url="https://uploads.github.com/repos/${GITHUB_REPOSITORY}/releases/${RELEASE_ID}/assets?name=${filename}"
 
-touch curl_log
-response_code=$(curl \
-    -sSL \
-    -XPOST \
-    -H "${AUTH_HEADER}" \
-    --upload-file "${ASSET}" \
-    --header "Content-Type:application/octet-stream" \
-    --write-out "%{http_code}" \
-    --output curl_log \
-    "$UPLOAD_URL")
+    echo "Uploading asset: $asset_file"
 
-if [ $response_code -ge 400 ]; then
-    echo "ERROR: curl upload failed with status code $response_code"
-    cat curl_log && rm curl_log
-    exit 1
-fi
+    touch curl_log
+    response_code=$(curl \
+        -sSL \
+        -XPOST \
+        -H "${AUTH_HEADER}" \
+        --upload-file "${asset_file}" \
+        --header "Content-Type:application/octet-stream" \
+        --write-out "%{http_code}" \
+        --output curl_log \
+        "$upload_url")
 
-cat curl_log | jq .
-rm curl_log
+    if [ $response_code -ge 400 ]; then
+        echo "ERROR: curl upload failed with status code $response_code"
+        cat curl_log && rm curl_log
+        exit 1
+    fi
+done
+
 

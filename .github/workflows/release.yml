@@ -15,13 +15,15 @@ jobs:
         run: cargo fetch
       - name: Build in release mode
         run: cargo build --release --frozen --target x86_64-unknown-linux-gnu
-      - name: Rename binary
-        run: mv ./target/x86_64-unknown-linux-gnu/release/mask ./mask-v0.7.1-x86_64-unknown-linux-gnu
-      - name: Testing something...
-        run: echo "JQ=$(which jq) -------- $GITHUB_EVENT_PATH"
-      - name: Attach binary to release
+      - name: Add the version tag to the binary name
+        run: |
+          VERSION_TAG=$(jq --raw-output '.release.tag_name' "$GITHUB_EVENT_PATH")
+          echo "VERSION_TAG is $VERSION_TAG"
+          mkdir assets
+          mv ./target/x86_64-unknown-linux-gnu/release/mask ./assets/mask-${VERSION_TAG}-x86_64-unknown-linux-gnu
+      - name: Attach the binary to the release
         uses: ./.github/actions/attach-release-assets
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          asset: ./mask-v0.7.1-x86_64-unknown-linux-gnu
+          assets: assets/*
