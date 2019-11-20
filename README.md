@@ -18,19 +18,27 @@ To get started, follow the guide below or check out the more [advanced features]
 
 
 
+## Installation
+
+### Precompiled binaries for linux and macOS
+
+Head to the [Releases page](/releases) and look for the latest published version. Under **Assets** you'll see zips available for download for linux and macOS. Once downloaded, you can unzip them and then move the `mask` binary to somewhere accessible in your `$PATH` like `mv mask /usr/local/bin`.
+
+### Cargo
+
+`mask` is published to [crates.io][crate] which allows you to install it via `cargo install mask`.
+
+### From source
+
+If you prefer to build from source, clone this repo and then run `cargo build --release`
+
+
+
+
+
 ## Getting started
 
-Currently, `mask` is only published to [crates.io][crate] which allows you to install it with `cargo`.
-
-> `mask` is built with rust, so you'll need the [rust toolchain][rustup] installed if you don't have it already.
-
-~~~sh
-cargo install mask
-~~~
-
-> If you prefer to build from source, clone this repo and then run `cargo build --release`
-
-Next, define a simple `maskfile.md` in your project.
+First, define a simple `maskfile.md` in your project.
 
 ```markdown
 # Tasks For My Project
@@ -63,7 +71,7 @@ console.log("running project's tests")
 ~~~
 ```
 
-And finally, try running one of your commands!
+Then, try running one of your commands!
 
 ~~~sh
 mask build
@@ -428,7 +436,6 @@ Jake Deichert with the help of contributors.
 [new_issue]: https://github.com/jakedeichert/mask/issues/new
 [website]: https://jakedeichert.com
 [twitter]: https://twitter.com/jakedeichert
-[rustup]: https://rustup.rs
 [2]: https://github.com/jakedeichert/mask/issues/5
 [maid]: https://github.com/egoist/maid
 [just]: https://github.com/casey/just
