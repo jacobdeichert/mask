@@ -57,8 +57,6 @@ jobs:
           chmod +x ./$NAME/mask
           zip -r $NAME.zip $NAME
       - name: Attach the binary to the release
-        uses: ./.github/actions/attach-release-assets
+        run: ./.github/actions/attach-release-assets/run.sh ./*.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          assets: ./*.zip
