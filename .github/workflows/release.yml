@@ -18,12 +18,15 @@ jobs:
       - name: Add the version tag to the binary name
         run: |
           VERSION_TAG=$(jq --raw-output '.release.tag_name' "$GITHUB_EVENT_PATH")
-          echo "VERSION_TAG is $VERSION_TAG"
-          mkdir assets
-          mv ./target/x86_64-unknown-linux-gnu/release/mask ./assets/mask-${VERSION_TAG}-x86_64-unknown-linux-gnu
+          TARGET=x86_64-unknown-linux-gnu
+          NAME=mask-$VERSION_TAG-$TARGET
+          mkdir $NAME
+          mv ./target/$TARGET/release/mask ./$NAME/mask
+          chmod +x ./$NAME/mask
+          zip -r $NAME.zip $NAME
       - name: Attach the binary to the release
         uses: ./.github/actions/attach-release-assets
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          assets: assets/*
+          assets: *.zip
