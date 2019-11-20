@@ -16,7 +16,7 @@ jobs:
       - name: Build in release mode
         run: cargo build --release --frozen --target x86_64-unknown-linux-gnu
       - name: Rename binary
-        run: mv ./target/release/mask ./mask-v0.7.1-x86_64-unknown-linux-gnu
+        run: mv ./target/x86_64-unknown-linux-gnu/release/mask ./mask-v0.7.1-x86_64-unknown-linux-gnu
       - name: Testing something...
         run: echo "JQ=$(which jq) -------- $GITHUB_EVENT_PATH"
       - name: Attach binary to release
