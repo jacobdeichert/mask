@@ -7,7 +7,8 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
+      - name: Checkout master
+        uses: actions/checkout@master
       - name: Fetch dependencies
         run: cargo fetch
       - name: Build in release mode
@@ -17,7 +18,8 @@ jobs:
     name: Test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
+      - name: Checkout master
+        uses: actions/checkout@master
       - name: Add Ruby for a test that requires it
         uses: actions/setup-ruby@master
         with:
@@ -35,6 +37,7 @@ jobs:
     name: Format
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
+      - name: Checkout master
+        uses: actions/checkout@master
       - name: Verify formatting is correct
         run: cargo fmt --all -- --check

@@ -1,0 +1,15 @@
+name: attach-release-assets
+description: Attaches files/assets/binaries to a GitHub Release
+author: Jake Deichert
+branding:
+  icon: file-plus
+  color: orange
+inputs:
+  asset:
+    description: A path to an asset to be attached to the release
+    required: true
+runs:
+  using: docker
+  image: Dockerfile
+  args:
+    - ${{ inputs.asset }}

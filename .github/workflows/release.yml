@@ -1,0 +1,19 @@
+name: New Release
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  attach:
+    name: Attach release assets
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout master
+        uses: actions/checkout@master
+      - name: Attach release assets
+        uses: ./.github/actions/attach-release-assets
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          asset: README.md
