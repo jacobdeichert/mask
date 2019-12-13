@@ -7,6 +7,20 @@
 
 
 
+## v0.7.1 (2019-12-13)
+
+### Fixed
+
+* Fix typo in README [#39](https://github.com/jakedeichert/mask/pull/39) ([@nicoder](https://github.com/nicoder))
+
+### Added
+
+* Automated GitHub Releases and attached precompiled binaries for macOS and linux
+
+
+
+
+
 ## v0.7.0 (2019-10-13)
 
 ### Breaking Changes
