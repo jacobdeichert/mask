@@ -16,11 +16,9 @@ If you're logging a bug, please be as detailed as possible. It's highly recommen
 
 ## Submitting Pull Requests
 
-A final decision always must be made by a maintainer within an issue before work begins on a PR for the chosen solution. After a maintainer has signed-off on a solution, please leave a comment if you're interested in tackling it unless someone before you already has indicated so. Pull requests that don't have a corresponding issue may be closed.
+If you're tackling a larger feature or bug, please leave a comment on the corresponding issue unless someone before you already has indicated so. If there is no issue yet, please create one so it can be discussed, before you start working on a PR. This is to save you time and energy, and to ensure we're all on the same page with the chosen solution! 🙂
 
 Adding tests is highly recommended, though not always necessary depending on the scope of changes made.
-
-When submitting a pull request, please fill in all of the details within the PR template.
 
 
 
