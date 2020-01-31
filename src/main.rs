@@ -22,15 +22,22 @@ fn main() {
         cli_app.get_matches();
         return;
     }
-
     let root_command = mask::parser::build_command_structure(maskfile.unwrap());
-    let cli_app = build_subcommands(cli_app, &root_command.subcommands);
-    let matches = cli_app.clone().get_matches();
 
+    // register all subcommands first without any AppSettings::SubcommandRequired to avoid panic
+    let matches = build_subcommands(cli_app.clone(), &root_command.subcommands, &[]).get_matches();
     if let Some(shell) = matches.value_of("shell") {
-        generate_shell_completion(cli_app, shell);
+        let cmd = filter_subcommand(root_command.clone(), matches.subcommand());
+        generate_shell_completion(build_subcommands(cli_app, &cmd.subcommands, &[]), shell);
         return;
     }
+
+    let matches = build_subcommands(
+        cli_app.setting(AppSettings::SubcommandRequired),
+        &root_command.subcommands,
+        &[AppSettings::SubcommandRequired],
+    )
+    .get_matches();
 
     let chosen_cmd = find_command(&matches, &root_command.subcommands)
         .expect("SubcommandRequired failed to work");
@@ -118,6 +125,7 @@ fn generate_shell_completion<'a, 'b>(mut cli_app: App<'a, 'b>, shell_name: &str)
 fn build_subcommands<'a, 'b>(
     mut cli_app: App<'a, 'b>,
     subcommands: &'a Vec<Command>,
+    settings: &[AppSettings], // multiple AppSettings reserved for future use cases
 ) -> App<'a, 'b> {
     for c in subcommands {
         let mut subcmd = SubCommand::with_name(&c.name)
@@ -125,9 +133,9 @@ fn build_subcommands<'a, 'b>(
             .setting(AppSettings::ColoredHelp)
             .setting(AppSettings::AllowNegativeNumbers);
         if !c.subcommands.is_empty() {
-            subcmd = build_subcommands(subcmd, &c.subcommands);
+            subcmd = build_subcommands(subcmd, &c.subcommands, settings);
             // If this parent command has no script source, require a subcommand.
-            if c.script.source == "" {
+            if c.script.source == "" && settings.contains(&AppSettings::SubcommandRequired) {
                 subcmd = subcmd.setting(AppSettings::SubcommandRequired);
             }
         }
@@ -171,6 +179,29 @@ fn find_command<'a>(matches: &ArgMatches, subcommands: &Vec<Command>) -> Option<
     }
 
     return command;
+}
+
+fn filter_subcommand<'a>(
+    mut root_command: Command,
+    matches_subcommand: (&str, Option<&ArgMatches<'a>>),
+) -> Command {
+    // recursive filter while preserve the path (since rust doesn't support recursive closure)
+    fn filter_apply(cmd: &mut Command, cmd_level: u8, subcmd_name: &str) {
+        if cmd.cmd_level >= cmd_level && cmd.subcommands.iter().any(|c| c.name == subcmd_name) {
+            cmd.subcommands.retain(|c| c.name == subcmd_name);
+        } else {
+            filter_apply(&mut cmd.subcommands[0], cmd_level, subcmd_name);
+        }
+    }
+
+    match matches_subcommand {
+        (_, None) => root_command,
+        (subcmd, Some(matches)) => {
+            let level = root_command.cmd_level;
+            filter_apply(&mut root_command, level, subcmd);
+            filter_subcommand(root_command, matches.subcommand())
+        }
+    }
 }
 
 fn get_command_options(mut cmd: Command, matches: &ArgMatches) -> Command {
