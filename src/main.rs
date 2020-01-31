@@ -1,5 +1,5 @@
 use std::path::Path;
-use std::{env, io, process};
+use std::{env, io};
 
 use clap::{crate_name, crate_version, App, AppSettings, Arg, ArgMatches, Shell, SubCommand};
 use colored::*;
@@ -11,9 +11,9 @@ fn main() {
     let cli_app = App::new(crate_name!())
         .setting(AppSettings::VersionlessSubcommands)
         .setting(AppSettings::AllowNegativeNumbers)
-        .setting(AppSettings::SubcommandRequired)
         .setting(AppSettings::ColoredHelp)
         .version(crate_version!())
+        .arg(shell_completion_arg())
         .arg(custom_maskfile_path_arg());
 
     let (maskfile, maskfile_path) = find_maskfile();
@@ -25,12 +25,11 @@ fn main() {
 
     let root_command = mask::parser::build_command_structure(maskfile.unwrap());
     let cli_app = build_subcommands(cli_app, &root_command.subcommands);
-    let cli_app = shell_completion_subcommand(cli_app);
     let matches = cli_app.clone().get_matches();
 
-    if let Some(shell) = matches.subcommand_matches("init") {
+    if let Some(shell) = matches.value_of("shell") {
         generate_shell_completion(cli_app, shell);
-        process::exit(0)
+        return;
     }
 
     let chosen_cmd = find_command(&matches, &root_command.subcommands)
@@ -92,22 +91,16 @@ fn custom_maskfile_path_arg<'a, 'b>() -> Arg<'a, 'b> {
     custom_maskfile_path
 }
 
-fn shell_completion_subcommand<'a, 'b>(cli_app: App<'a, 'b>) -> App<'a, 'b> {
-    cli_app.subcommand(
-        SubCommand::with_name("init")
-            .about("Prints the shell function used to execute `mask`")
-            .arg(
-                &Arg::with_name("shell")
-                    .value_name("SHELL")
-                    .help("The name of the currently running shell")
-                    .possible_values(&["bash", "zsh", "fish", "elvish", "powershell"])
-                    .required(true),
-            ),
-    )
+fn shell_completion_arg<'a, 'b>() -> Arg<'a, 'b> {
+    Arg::with_name("shell")
+        .help("Prints auto completion script in the current scope")
+        .long("completion")
+        .possible_values(&["bash", "zsh", "fish", "elvish", "powershell"])
+        .takes_value(true)
+        .multiple(false)
 }
 
-fn generate_shell_completion<'a, 'b>(mut cli_app: App<'a, 'b>, shell: &ArgMatches) {
-    let shell_name = shell.value_of("shell").expect("Arg shell must be required");
+fn generate_shell_completion<'a, 'b>(mut cli_app: App<'a, 'b>, shell_name: &str) {
     cli_app.gen_completions_to(
         crate_name!(),
         match shell_name {
