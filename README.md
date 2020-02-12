@@ -5,6 +5,7 @@
 
 [![build status](https://github.com/jakedeichert/mask/workflows/CI/badge.svg?branch=master)][github_ci]
 [![mask version](https://img.shields.io/crates/v/mask.svg)][crate]
+[![mask crate downloads](https://img.shields.io/crates/d/mask.svg)][crate]
 
 `mask` is a CLI task runner which is defined by a simple markdown file. It searches for a `maskfile.md` in the current directory which it then parses for commands and arguments.
 
