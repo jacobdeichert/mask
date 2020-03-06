@@ -53,6 +53,12 @@ fn prepare_command(cmd: &Command) -> process::Command {
             child.arg("-r").arg(source);
             child
         }
+        #[cfg(windows)]
+        "cmd" | "batch" => {
+            let mut child = process::Command::new("cmd.exe");
+            child.arg("/c").arg(source);
+            child
+        }
         // Any other executor that supports -c (sh, bash, zsh, fish, dash, etc...)
         _ => {
             let mut child = process::Command::new(executor);
