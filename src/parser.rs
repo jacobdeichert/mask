@@ -27,6 +27,13 @@ pub fn build_command_structure(maskfile_contents: String) -> Command {
                         }
                         current_command = Command::new(heading_level as u8);
                     }
+                    #[cfg(not(windows))]
+                    Tag::CodeBlock(lang_code) => {
+                        if lang_code.to_string() != "powershell" {
+                            current_command.script.executor = lang_code.to_string();
+                        }
+                    }
+                    #[cfg(windows)]
                     Tag::CodeBlock(lang_code) => {
                         current_command.script.executor = lang_code.to_string();
                     }
