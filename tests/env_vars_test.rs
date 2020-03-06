@@ -20,10 +20,22 @@ mod env_var_mask {
 $MASK test
 ~~~
 
+~~~powershell
+$path = $env:MASK.replace("\\?\", "")
+$pos = $path.IndexOf(" ");
+$arglist = $path.Substring($pos + 1);
+
+Start-Process mask.exe -ArgumentList "$arglist test" -wait -NoNewWindow -PassThru
+~~~
+
 ## test
 
 ~~~bash
 echo "tests passed"
+~~~
+
+~~~powershell
+Write-Output "tests passed"
 ~~~
 "#,
         );
@@ -45,15 +57,26 @@ echo "tests passed"
 ~~~bash
 echo "mask = $MASK"
 ~~~
+
+~~~powershell
+$var = "$env:mask /"
+Write-Output "mask = $var"
+~~~
+
 "#,
         );
+
+        #[cfg(windows)]
+        let predicate = contains("mask = mask --maskfile \\");
+        #[cfg(not(windows))]
+        let predicate = contains("mask = mask --maskfile /");
 
         common::run_mask(&maskfile_path)
             .current_dir(".github")
             .command("run")
             .assert()
             // Absolute maskfile path starts with /
-            .stdout(contains("mask = mask --maskfile /"))
+            .stdout(predicate)
             // And ends with maskfile.md
             .stdout(contains("maskfile.md"))
             .success();
@@ -72,6 +95,11 @@ mod env_var_maskfile_dir {
 
 ~~~bash
 echo "maskfile_dir = $MASKFILE_DIR"
+~~~
+
+~~~powershell
+$var = $env:maskfile_dir
+Write-Output "maskfile_dir = /$var"
 ~~~
 "#,
         );

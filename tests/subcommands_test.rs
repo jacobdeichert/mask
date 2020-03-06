@@ -22,6 +22,10 @@ fn positional_arguments() {
 echo "Starting service $service_name"
 ~~~
 
+~~~powershell
+Write-Output "Starting service $env:service_name"
+~~~
+
 ### services stop (service_name)
 
 > Stop a service.
@@ -48,13 +52,17 @@ fn exits_with_error_when_missing_subcommand() {
 "#,
     );
 
+    #[cfg(not(windows))]
+    let predicate =
+        contains("error: 'mask service' requires a subcommand, but one was not provided");
+    #[cfg(windows)]
+    let predicate =
+        contains("error: 'mask.exe service' requires a subcommand, but one was not provided");
     common::run_mask(&maskfile_path)
         .command("service")
         .assert()
         .code(1)
-        .stderr(contains(
-            "error: 'mask service' requires a subcommand, but one was not provided",
-        ))
+        .stderr(predicate)
         .failure();
 }
 
