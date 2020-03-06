@@ -9,7 +9,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        platform: [ubuntu-latest, macos-latest, windows-latest]
+        platform: [ubuntu-latest, windows-latest]
     steps:
       - name: Checkout master
         uses: actions/checkout@master
@@ -23,7 +23,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        platform: [ubuntu-latest, macos-latest, windows-latest]
+        platform: [ubuntu-latest, windows-latest]
         include: 
           - platform: windows-latest
             copy: copy ./target/debug/mask.exe ~/.cargo/bin/
@@ -41,9 +41,12 @@ jobs:
         run: cargo fetch
       - name: Build in test mode
         run: cargo build --tests --frozen
-      - name: Make mask available globally for certain test suites that depend on it
-        run: | 
-          ${{ matrix.copy }}
+      - name: Make mask available globally (windows)
+        run: copy ./target/debug/mask.exe ~/.cargo/bin/
+        if: ${{matrix.os}} == windows-latest
+      - name: Make mask available globally (linux)
+        run: cp ./target/debug/mask ~/.cargo/bin
+        if: ${{matrix.os}} == ubuntu-latest
       - name: Run tests
         run: cargo test --frozen
 
