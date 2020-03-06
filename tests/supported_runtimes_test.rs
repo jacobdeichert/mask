@@ -27,6 +27,27 @@ echo "this won't do anything..."
         .failure();
 }
 
+#[cfg(windows)]
+#[test]
+fn powershell() {
+    let (_temp, maskfile_path) = common::maskfile(
+        r#"
+## powershell
+~~~powershell
+Write-Output "Hello, $env:name!"
+~~~
+"#,
+    );
+
+    common::run_mask(&maskfile_path)
+        .command("powershell")
+        .env("name", "World")
+        .assert()
+        .stdout(contains("Hello, World!"))
+        .success();
+}
+
+#[cfg(not(windows))]
 #[test]
 fn sh() {
     let (_temp, maskfile_path) = common::maskfile(
@@ -46,6 +67,7 @@ echo Hello, $name!
         .success();
 }
 
+#[cfg(not(windows))]
 #[test]
 fn bash() {
     let (_temp, maskfile_path) = common::maskfile(
