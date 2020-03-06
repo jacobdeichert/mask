@@ -5,7 +5,16 @@ on: [push, pull_request]
 jobs:
   build:
     name: Build
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [ubuntu-latest, macos-latest, windows-latest]
+        include: 
+          - platform: windows-latest
+            copy: copy ./target/debug/mask.exe ~/.cargo/bin/
+          - platform: ubuntu-latest
+            copy: cp ./target/debug/mask ~/.cargo/bin
     steps:
       - name: Checkout master
         uses: actions/checkout@master
@@ -29,7 +38,7 @@ jobs:
       - name: Build in test mode
         run: cargo build --tests --frozen
       - name: Make mask available globally for certain test suites that depend on it
-        run: cp ./target/debug/mask /usr/share/rust/.cargo/bin
+        run: ${{format('{0}', matrix.copy) }}
       - name: Run tests
         run: cargo test --frozen
 
