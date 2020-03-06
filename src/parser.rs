@@ -29,7 +29,10 @@ pub fn build_command_structure(maskfile_contents: String) -> Command {
                     }
                     #[cfg(not(windows))]
                     Tag::CodeBlock(lang_code) => {
-                        if lang_code.to_string() != "powershell" | "batch" | "cmd" {
+                        if lang_code.to_string() != "powershell"
+                            || lang_code.to_string() != "batch"
+                            || lang_code.to_string() != "cmd"
+                        {
                             current_command.script.executor = lang_code.to_string();
                         }
                     }
@@ -61,7 +64,10 @@ pub fn build_command_structure(maskfile_contents: String) -> Command {
                 }
                 #[cfg(not(windows))]
                 Tag::CodeBlock(lang_code) => {
-                    if lang_code.to_string() != "powershell" | "batch" | "cmd" {
+                    if lang_code.to_string() != "powershell"
+                        || lang_code.to_string() != "batch"
+                        || lang_code.to_string() != "cmd"
+                    {
                         current_command.script.source = text.to_string();
                     }
                 }
