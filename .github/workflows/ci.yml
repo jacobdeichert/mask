@@ -4,7 +4,7 @@ on: [push, pull_request]
 
 jobs:
   build:
-    name: Build
+    name: ${{ matrix.os }}-build
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -24,8 +24,8 @@ jobs:
         run: cargo build --release --frozen
 
   test:
-    name: Test
-    runs-on: ubuntu-latest
+    name: ${{ matrix.os }}-test
+    runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout master
         uses: actions/checkout@master
@@ -38,15 +38,8 @@ jobs:
       - name: Build in test mode
         run: cargo build --tests --frozen
       - name: Make mask available globally for certain test suites that depend on it
-        run: ${{format('{0}', matrix.copy) }}
+        run: | 
+          ${{ matrix.copy }}
       - name: Run tests
         run: cargo test --frozen
 
-  format:
-    name: Format
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout master
-        uses: actions/checkout@master
-      - name: Verify formatting is correct
-        run: cargo fmt --all -- --check
