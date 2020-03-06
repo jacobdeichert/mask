@@ -10,11 +10,6 @@ jobs:
       fail-fast: false
       matrix:
         platform: [ubuntu-latest, macos-latest, windows-latest]
-        include: 
-          - platform: windows-latest
-            copy: copy ./target/debug/mask.exe ~/.cargo/bin/
-          - platform: ubuntu-latest
-            copy: cp ./target/debug/mask ~/.cargo/bin
     steps:
       - name: Checkout master
         uses: actions/checkout@master
@@ -26,6 +21,15 @@ jobs:
   test:
     name: ${{ matrix.os }}-test
     runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        platform: [ubuntu-latest, macos-latest, windows-latest]
+        include: 
+          - platform: windows-latest
+            copy: copy ./target/debug/mask.exe ~/.cargo/bin/
+          - platform: ubuntu-latest
+            copy: cp ./target/debug/mask ~/.cargo/bin
+    
     steps:
       - name: Checkout master
         uses: actions/checkout@master
@@ -42,4 +46,5 @@ jobs:
           ${{ matrix.copy }}
       - name: Run tests
         run: cargo test --frozen
+
 
