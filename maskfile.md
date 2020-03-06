@@ -27,6 +27,20 @@ else
 fi
 ~~~
 
+}
+~~~powershell
+param (
+    [string] $watch = $env:watch | $env:w
+)
+$cargo_cmd = "cargo run -- $env:markfile_command"
+$extra_args = "--exts rs --restart $cargo_cmd"
+
+if ($watch == "true") {
+    watchexec $extra_args
+} else {
+    cargo run -- $env:markfile_command
+}
+~~~
 
 
 ## build
@@ -37,7 +51,9 @@ fi
 cargo build --release
 ~~~
 
-
+~~~powershell
+cargo build --release
+~~~
 
 ## link
 
@@ -47,6 +63,9 @@ cargo build --release
 cargo install --force --path .
 ~~~
 
+~~~powershell
+cargo install --path . --force
+~~~
 
 
 ## test
@@ -78,7 +97,25 @@ fi
 echo "Tests passed!"
 ~~~
 
+~~~powershell
+$verbose = $env:verbose 
+$file = $env:file
+$extra_args = ""
 
+
+if ($verbose -eq "true") {
+    $extra_args = "-- --nocapture --test-threads=1"
+}
+
+Write-Output "Running tests..."
+if (!$file) {
+    cargo test $extra_args
+} else {
+    cargo test --test $file $extra_args
+}
+Write-Output "Tests passed!"
+
+~~~
 
 ## deps
 
@@ -92,6 +129,9 @@ echo "Tests passed!"
 cargo update
 ~~~
 
+~~~powershell
+cargo update
+~~~
 
 
 ## format
@@ -111,6 +151,17 @@ else
 fi
 ~~~
 
+~~~powershell
+param (
+    [string] $c   
+)
+
+if ($env:check -eq "true" -or $c -eq "true") {
+    cargo fmt --all -- --check
+} else {
+    cargo fmt
+}
+~~~
 
 
 ## lint
@@ -118,5 +169,9 @@ fi
 > Lint the project with clippy
 
 ~~~bash
+cargo clippy
+~~~
+
+~~~powershell
 cargo clippy
 ~~~
