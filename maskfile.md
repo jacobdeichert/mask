@@ -27,18 +27,18 @@ else
 fi
 ~~~
 
-}
 ~~~powershell
-param (
-    [string] $watch = $env:watch | $env:w
-)
-$cargo_cmd = "cargo run -- $env:markfile_command"
+$watch = $env:watch
+$w = $env:w
+$maskfile_command = $env:maskfile_command
+
+$cargo_cmd = "cargo run -- $maskfile_command"
 $extra_args = "--exts rs --restart $cargo_cmd"
 
-if ($watch == "true") {
-    watchexec $extra_args
+if ($watch -Or $w) {
+    Start-Process watchexec -ArgumentList $extra_args -NoNewWindow -PassThru
 } else {
-    cargo run -- $env:markfile_command
+    cargo run -- $maskfile_command
 }
 ~~~
 
@@ -64,7 +64,7 @@ cargo install --force --path .
 ~~~
 
 ~~~powershell
-cargo install --path . --force
+[Diagnostics.Process]::Start("cargo", "install --force --path .").WaitForExit()
 ~~~
 
 
@@ -100,10 +100,14 @@ echo "Tests passed!"
 ~~~powershell
 $verbose = $env:verbose 
 $file = $env:file
+$f = $env:f
 $extra_args = ""
 
+if ($f) {
+    $file = $f
+}
 
-if ($verbose -eq "true") {
+if ($verbose) {
     $extra_args = "-- --nocapture --test-threads=1"
 }
 
@@ -152,11 +156,10 @@ fi
 ~~~
 
 ~~~powershell
-param (
-    [string] $c   
-)
+$check = $env:check
+$c = $env:c
 
-if ($env:check -eq "true" -or $c -eq "true") {
+if ($env:check -or $c) {
     cargo fmt --all -- --check
 } else {
     cargo fmt
