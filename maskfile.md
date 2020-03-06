@@ -118,7 +118,6 @@ if (!$file) {
     cargo test --test $file $extra_args
 }
 Write-Output "Tests passed!"
-
 ~~~
 
 ## deps
