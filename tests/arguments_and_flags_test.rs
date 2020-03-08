@@ -19,7 +19,12 @@ echo "Testing $test_case in $file"
 ~~~
 
 ~~~powershell
-Write-Output "Testing $env:test_case in $env:file"
+param (
+    $test_case = $env:test_case,
+    $file = $env:file
+)
+
+Write-Output "Testing $test_case in $file"
 ~~~
 "#,
     );
@@ -76,7 +81,7 @@ param (
     $port = $env:port
 )
 
-if ($env:verbose -eq "true") {
+if ($env:verbose) {
     Write-Output "Starting an http server on PORT: $port"
 } else {
     Write-Output $port
@@ -117,7 +122,11 @@ echo $(($a + $b))
 ~~~
 
 ~~~powershell
-$sum = "$([int]$env:a + [int]$env:b)"
+param (
+    [int]$a = $env:a,
+    [int]$b = $env:b
+)
+$sum = "$($a + $b)"
 
 Write-Host $sum
 ~~~
@@ -150,7 +159,11 @@ echo $(($a + $b))
 ~~~
 
 ~~~powershell
-$sum = "$([int]$env:a + $env:b)"
+param (
+    [int]$a = $env:a,
+    [int]$b = $env:b
+)
+$sum = "$($a + $b)"
 
 Write-Output $sum
 ~~~
@@ -184,7 +197,9 @@ echo "Value: $val"
 ~~~
 
 ~~~powershell
-$in = $env:val
+param (
+    $in = $env:val
+)
 Write-Output "Value: $in"
 ~~~
 "#,
@@ -213,7 +228,10 @@ echo "Value: $val"
 ~~~
 
 ~~~powershell
-$in = [int]$env:val
+param (
+    [int]$in = $env:val
+)
+
 Write-Output "Value: $in"
 ~~~
 "#,
@@ -242,7 +260,9 @@ echo "Value: $val"
 ~~~
 
 ~~~powershell
-[Double]$in = [Double]$env:val
+param (
+    [Double]$in = $env:val
+)
 Write-Output "Value: $in"
 ~~~
 "#,

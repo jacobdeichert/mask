@@ -34,13 +34,57 @@ fn powershell() {
         r#"
 ## powershell
 ~~~powershell
-Write-Output "Hello, $env:name!"
+param (
+    $name = $env:name
+)
+
+Write-Output "Hello, $name!"
 ~~~
 "#,
     );
 
     common::run_mask(&maskfile_path)
         .command("powershell")
+        .env("name", "World")
+        .assert()
+        .stdout(contains("Hello, World!"))
+        .success();
+}
+
+#[cfg(windows)]
+#[test]
+fn batch() {
+    let (_temp, maskfile_path) = common::maskfile(
+        r#"
+## batch
+~~~batch
+echo "Hello, %name%!"
+~~~
+"#,
+    );
+
+    common::run_mask(&maskfile_path)
+        .command("batch")
+        .env("name", "World")
+        .assert()
+        .stdout(contains("Hello, World!"))
+        .success();
+}
+
+#[cfg(windows)]
+#[test]
+fn cmd() {
+    let (_temp, maskfile_path) = common::maskfile(
+        r#"
+## cmd
+~~~cmd
+echo "Hello, %name%!"
+~~~
+"#,
+    );
+
+    common::run_mask(&maskfile_path)
+        .command("cmd")
         .env("name", "World")
         .assert()
         .stdout(contains("Hello, World!"))

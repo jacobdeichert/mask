@@ -128,6 +128,10 @@ mod exits_with_the_child_process_status_code {
 ~~~sh
 exit 0
 ~~~
+
+~~~powershell
+Exit 0
+~~~
 "#,
         );
 
@@ -147,6 +151,10 @@ exit 0
 ~~~sh
 exit 1
 ~~~
+
+~~~powershell
+Exit 1
+~~~
 "#,
         );
 
@@ -165,6 +173,10 @@ exit 1
 
 ~~~sh
 exit 2
+~~~
+
+~~~powershell
+Exit 2
 ~~~
 "#,
         );
