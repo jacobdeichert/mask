@@ -128,7 +128,7 @@ param (
 )
 $sum = "$($a + $b)"
 
-Write-Host $sum
+Write-Output $sum
 ~~~
 "#,
         );
