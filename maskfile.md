@@ -28,14 +28,20 @@ fi
 ~~~
 
 ~~~powershell
-$watch = $env:watch
-$w = $env:w
-$maskfile_command = $env:maskfile_command
+param (
+    $maskfile_command = $env:maskfile_command,
+    $watch = $env:watch,
+    $w = $env:w
+)
+
+if ($w) {
+    $watch = $w
+}
 
 $cargo_cmd = "cargo run -- $maskfile_command"
 $extra_args = "--exts rs --restart $cargo_cmd"
 
-if ($watch -Or $w) {
+if ($watch) {
     Start-Process watchexec -ArgumentList $extra_args -NoNewWindow -PassThru
 } else {
     cargo run -- $maskfile_command
@@ -98,10 +104,13 @@ echo "Tests passed!"
 ~~~
 
 ~~~powershell
-$verbose = $env:verbose 
-$file = $env:file
-$f = $env:f
+param (
+    $file = $env:file,
+    $f = $env:f
+)
+
 $extra_args = ""
+$verbose = $env:verbose 
 
 if ($f) {
     $file = $f
@@ -155,10 +164,16 @@ fi
 ~~~
 
 ~~~powershell
-$check = $env:check
-$c = $env:c
+param (
+    $check = $env:check,
+    $c = $env:c
+)
 
-if ($env:check -or $c) {
+if ($c) {
+    $check = $c
+}
+
+if ($check) {
     cargo fmt --all -- --check
 } else {
     cargo fmt
