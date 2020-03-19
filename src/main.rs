@@ -101,10 +101,10 @@ fn build_subcommands<'a, 'b>(
             }
         }
 
-        // Add all required arguments
-        for a in &c.required_args {
-            let arg = Arg::with_name(&a.name).required(true);
-            subcmd = subcmd.arg(arg);
+        // Add all required and optional arguments
+        for a in &c.args {
+            let arg = Arg::with_name(&a.name);
+            subcmd = subcmd.arg(arg.required(a.required));
         }
 
         // Add all optional flags
@@ -116,6 +116,12 @@ fn build_subcommands<'a, 'b>(
                 .takes_value(f.takes_value)
                 .multiple(f.multiple);
             subcmd = subcmd.arg(arg);
+        }
+        if c.name.starts_with('_') {
+            subcmd = subcmd.setting(AppSettings::Hidden);
+        }
+        if c.alias != "" {
+            subcmd = subcmd.visible_alias(c.alias.as_str());
         }
         cli_app = cli_app.subcommand(subcmd);
     }
@@ -144,7 +150,7 @@ fn find_command<'a>(matches: &ArgMatches, subcommands: &Vec<Command>) -> Option<
 
 fn get_command_options(mut cmd: Command, matches: &ArgMatches) -> Command {
     // Check all required args
-    for arg in &mut cmd.required_args {
+    for arg in &mut cmd.args {
         arg.val = matches.value_of(arg.name.clone()).unwrap().to_string();
     }
 

@@ -94,7 +94,7 @@ fn add_utility_variables(mut child: process::Command, maskfile_path: String) -> 
 
 fn add_flag_variables(mut child: process::Command, cmd: &Command) -> process::Command {
     // Add all required args as environment variables
-    for arg in &cmd.required_args {
+    for arg in &cmd.args {
         child.env(arg.name.clone(), arg.val.clone());
     }
 

@@ -3,7 +3,7 @@ use pulldown_cmark::{
     Options, Parser, Tag,
 };
 
-use crate::command::{Command, OptionFlag, RequiredArg};
+use crate::command::{Arg, Command, OptionFlag};
 
 // Woof. This is ugly. I'm planning on giving this a rewrite at some point...
 // At least we have some decent tests in place.
@@ -44,10 +44,10 @@ pub fn build_command_structure(maskfile_contents: String) -> Command {
             }
             End(tag) => match tag {
                 Tag::Header(heading_level) => {
-                    let (name, required_args) =
-                        parse_command_name_and_required_args(heading_level, text.clone());
+                    let (name, alias, args) = parse_heading_to_cmd(heading_level, text.clone());
                     current_command.name = name;
-                    current_command.required_args = required_args;
+                    current_command.args = args;
+                    current_command.alias = alias;
                 }
                 Tag::BlockQuote => {
                     current_command.desc = text.clone();
@@ -183,10 +183,7 @@ fn treeify_commands(commands: Vec<Command>) -> Vec<Command> {
     command_tree
 }
 
-fn parse_command_name_and_required_args(
-    heading_level: i32,
-    text: String,
-) -> (String, Vec<RequiredArg>) {
+fn parse_heading_to_cmd(heading_level: i32, text: String) -> (String, String, Vec<Arg>) {
     // Why heading_level > 2? Because level 1 is the root command title (unused)
     // and level 2 can't be a subcommand so no need to split.
     let name = if heading_level > 2 {
@@ -207,21 +204,36 @@ fn parse_command_name_and_required_args(
     // Find any required arguments. They look like this: (required_arg_name)
     let name_and_args: Vec<&str> = name.split(|c| c == '(' || c == ')').collect();
     let (name, args) = name_and_args.split_at(1);
-    let name = name.join(" ").trim().to_string();
-    let mut required_args: Vec<RequiredArg> = vec![];
+
+    let name = name.join(" ");
+    let mut name_and_alias = name.trim().splitn(2, "//").into_iter();
+    let name = match name_and_alias.next() {
+        Some(n) => String::from(n),
+        _ => "".to_string(),
+    };
+    let alias = match name_and_alias.next() {
+        Some(a) => a.to_string(),
+        _ => "".to_string(),
+    };
+
+    let mut out_args: Vec<Arg> = vec![];
 
     // TODO: some how support infinite args? https://github.com/jakedeichert/mask/issues/4
-    // TODO: support optional args https://github.com/jakedeichert/mask/issues/5
     if !args.is_empty() {
         let args = args.join("");
         let args: Vec<&str> = args.split(" ").collect();
-        required_args = args
-            .iter()
-            .map(|a| RequiredArg::new(a.to_string()))
-            .collect();
+        for arg in args.iter() {
+            if arg.ends_with("?") {
+                let mut arg = arg.to_string();
+                arg.pop();
+                out_args.push(Arg::new(arg, false));
+            } else {
+                out_args.push(Arg::new(arg.to_string(), true));
+            }
+        }
     }
 
-    (name, required_args)
+    (name, alias, out_args)
 }
 
 #[cfg(test)]
@@ -290,8 +302,8 @@ mod build_command_structure {
             .iter()
             .find(|cmd| cmd.name == "serve")
             .expect("serve command missing");
-        assert_eq!(serve_command.required_args.len(), 1);
-        assert_eq!(serve_command.required_args[0].name, "port");
+        assert_eq!(serve_command.args.len(), 1);
+        assert_eq!(serve_command.args[0].name, "port");
     }
 
     #[test]

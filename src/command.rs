@@ -2,10 +2,11 @@
 pub struct Command {
     pub cmd_level: u8,
     pub name: String,
+    pub alias: String,
     pub desc: String,
     pub script: Script,
     pub subcommands: Vec<Command>,
-    pub required_args: Vec<RequiredArg>,
+    pub args: Vec<Arg>,
     pub option_flags: Vec<OptionFlag>,
 }
 
@@ -14,10 +15,11 @@ impl Command {
         Self {
             cmd_level,
             name: "".to_string(),
+            alias: "".to_string(),
             desc: "".to_string(),
             script: Script::new(),
             subcommands: vec![],
-            required_args: vec![],
+            args: vec![],
             option_flags: vec![],
         }
     }
@@ -62,16 +64,18 @@ impl Script {
 }
 
 #[derive(Debug, Clone)]
-pub struct RequiredArg {
+pub struct Arg {
     pub name: String,
     pub val: String,
+    pub required: bool,
 }
 
-impl RequiredArg {
-    pub fn new(name: String) -> Self {
-        Self {
+impl Arg {
+    pub fn new(name: String, required: bool) -> Self {
+        Arg {
             name,
             val: "".to_string(),
+            required,
         }
     }
 }
