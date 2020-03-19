@@ -1,0 +1,159 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "lldb",
+      "request": "launch",
+      "name": "Debug unit tests in library 'mask'",
+      "cargo": {
+        "args": [
+          "test",
+          "--no-run",
+          "--lib",
+          "--package=mask"
+        ],
+        "filter": {
+          "name": "mask",
+          "kind": "lib"
+        }
+      },
+      "args": [],
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "type": "lldb",
+      "request": "launch",
+      "name": "Debug executable 'mask'",
+      "cargo": {
+        "args": [
+          "build",
+          "--bin=mask",
+          "--package=mask"
+        ],
+        "filter": {
+          "name": "mask",
+          "kind": "bin"
+        }
+      },
+      "args": [],
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "type": "lldb",
+      "request": "launch",
+      "name": "Debug unit tests in executable 'mask'",
+      "cargo": {
+        "args": [
+          "test",
+          "--no-run",
+          "--bin=mask",
+          "--package=mask"
+        ],
+        "filter": {
+          "name": "mask",
+          "kind": "bin"
+        }
+      },
+      "args": [],
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "type": "lldb",
+      "request": "launch",
+      "name": "Debug integration test 'subcommands_test'",
+      "cargo": {
+        "args": [
+          "test",
+          "--no-run",
+          "--test=subcommands_test",
+          "--package=mask"
+        ],
+        "filter": {
+          "name": "subcommands_test",
+          "kind": "test"
+        }
+      },
+      "args": [],
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "type": "lldb",
+      "request": "launch",
+      "name": "Debug integration test 'supported_runtimes_test'",
+      "cargo": {
+        "args": [
+          "test",
+          "--no-run",
+          "--test=supported_runtimes_test",
+          "--package=mask"
+        ],
+        "filter": {
+          "name": "supported_runtimes_test",
+          "kind": "test"
+        }
+      },
+      "args": [],
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "type": "lldb",
+      "request": "launch",
+      "name": "Debug integration test 'integration_test'",
+      "cargo": {
+        "args": [
+          "test",
+          "--no-run",
+          "--test=integration_test",
+          "--package=mask"
+        ],
+        "filter": {
+          "name": "integration_test",
+          "kind": "test"
+        }
+      },
+      "args": [],
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "type": "lldb",
+      "request": "launch",
+      "name": "Debug integration test 'env_vars_test'",
+      "cargo": {
+        "args": [
+          "test",
+          "--no-run",
+          "--test=env_vars_test",
+          "--package=mask"
+        ],
+        "filter": {
+          "name": "env_vars_test",
+          "kind": "test"
+        }
+      },
+      "args": [],
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "type": "lldb",
+      "request": "launch",
+      "name": "Debug integration test 'arguments_and_flags_test'",
+      "cargo": {
+        "args": [
+          "test",
+          "--no-run",
+          "--test=arguments_and_flags_test",
+          "--package=mask"
+        ],
+        "filter": {
+          "name": "arguments_and_flags_test",
+          "kind": "test"
+        }
+      },
+      "args": [],
+      "cwd": "${workspaceFolder}"
+    }
+  ]
+}

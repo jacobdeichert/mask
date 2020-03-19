@@ -1,0 +1,4 @@
+{
+  "lldb.dereferencePointers": true,
+  "lldb.displayFormat": "auto"
+}
