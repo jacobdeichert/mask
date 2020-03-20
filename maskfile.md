@@ -27,6 +27,8 @@ else
 fi
 ~~~
 
+**Note:** On Windows platforms, `mask` falls back to running `powershell` code blocks.
+
 ~~~powershell
 param (
     $maskfile_command = $env:maskfile_command,
