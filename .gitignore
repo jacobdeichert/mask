@@ -22,6 +22,16 @@ $RECYCLE.BIN/
 # node
 #######################################
 package-lock.json
+node_modules
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# VSCode
+# Ignore all local history of files
+.vscode/*
+.history
 
 # Logs
 logs
@@ -31,6 +41,3 @@ logs
 pids
 *.pid
 *.seed
-
-# Dependency directory
-node_modules
