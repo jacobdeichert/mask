@@ -33,7 +33,7 @@ fi
 param (
     $maskfile_command = $env:maskfile_command,
     $watch = $env:watch,
-    $w = $env:w
+    $w
 )
 
 if ($w) {
@@ -108,7 +108,7 @@ echo "Tests passed!"
 ~~~powershell
 param (
     $file = $env:file,
-    $f = $env:f
+    $f
 )
 
 $extra_args = ""
@@ -168,7 +168,7 @@ fi
 ~~~powershell
 param (
     $check = $env:check,
-    $c = $env:c
+    $c
 )
 
 if ($c) {
