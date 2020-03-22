@@ -32,13 +32,8 @@ fi
 ~~~powershell
 param (
     $maskfile_command = $env:maskfile_command,
-    $watch = $env:watch,
-    $w
+    $watch = $env:watch
 )
-
-if ($w) {
-    $watch = $w
-}
 
 $cargo_cmd = "cargo run -- $maskfile_command"
 $extra_args = "--exts rs --restart $cargo_cmd"
@@ -107,16 +102,11 @@ echo "Tests passed!"
 
 ~~~powershell
 param (
-    $file = $env:file,
-    $f
+    $file = $env:file
 )
 
 $extra_args = ""
 $verbose = $env:verbose 
-
-if ($f) {
-    $file = $f
-}
 
 if ($verbose) {
     $extra_args = "-- --nocapture --test-threads=1"
@@ -167,13 +157,8 @@ fi
 
 ~~~powershell
 param (
-    $check = $env:check,
-    $c
+    $check = $env:check
 )
-
-if ($c) {
-    $check = $c
-}
 
 if ($check) {
     cargo fmt --all -- --check
