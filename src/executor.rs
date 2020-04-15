@@ -59,6 +59,12 @@ fn prepare_command(cmd: &Command) -> process::Command {
             child.arg("/c").arg(source);
             child
         }
+        #[cfg(windows)]
+        "powershell" => {
+            let mut child = process::Command::new("powershell.exe");
+            child.arg("-c").arg(source);
+            child
+        }
         // Any other executor that supports -c (sh, bash, zsh, fish, dash, etc...)
         _ => {
             let mut child = process::Command::new(executor);
