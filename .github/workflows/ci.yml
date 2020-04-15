@@ -43,7 +43,7 @@ jobs:
         run: cp ./target/debug/mask ~/.cargo/bin
         if: matrix.platform == 'ubuntu-latest'
       - name: Make mask available globally (mac)
-        run: cp .target/debug/mask ~/.cargo/bin
+        run: cp ./target/debug/mask ~/.cargo/bin
         if: matrix.platform == 'macos-latest'
       - name: Run tests
         run: cargo test --frozen
