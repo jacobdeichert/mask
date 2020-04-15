@@ -59,7 +59,10 @@ echo "mask = $MASK"
 ~~~
 
 ~~~powershell
-$var = "$env:mask /"
+param (
+    $var = "$env:mask /"
+)
+
 Write-Output "mask = $var"
 ~~~
 
@@ -98,7 +101,10 @@ echo "maskfile_dir = $MASKFILE_DIR"
 ~~~
 
 ~~~powershell
-$var = $env:maskfile_dir
+param (
+    $var = $env:maskfile_dir
+)
+
 Write-Output "maskfile_dir = /$var"
 ~~~
 "#,

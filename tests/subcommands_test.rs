@@ -23,7 +23,11 @@ echo "Starting service $service_name"
 ~~~
 
 ~~~powershell
-Write-Output "Starting service $env:service_name"
+param(
+    $service_name = $env:service_name
+)
+
+Write-Output "Starting service $service_name"
 ~~~
 
 ### services stop (service_name)
@@ -32,6 +36,14 @@ Write-Output "Starting service $env:service_name"
 
 ~~~bash
 echo "Stopping service $service_name"
+~~~
+
+~~~powershell
+param(
+    $service_name = $service_name
+)
+
+Write-Output "Stopping service $service_name"
 ~~~
 "#,
     );

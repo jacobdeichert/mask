@@ -27,15 +27,18 @@ else
 fi
 ~~~
 
+**Note:** On Windows platforms, `mask` falls back to running `powershell` code blocks.
+
 ~~~powershell
-$watch = $env:watch
-$w = $env:w
-$maskfile_command = $env:maskfile_command
+param (
+    $maskfile_command = $env:maskfile_command,
+    $watch = $env:watch
+)
 
 $cargo_cmd = "cargo run -- $maskfile_command"
 $extra_args = "--exts rs --restart $cargo_cmd"
 
-if ($watch -Or $w) {
+if ($watch) {
     Start-Process watchexec -ArgumentList $extra_args -NoNewWindow -PassThru
 } else {
     cargo run -- $maskfile_command
@@ -98,14 +101,12 @@ echo "Tests passed!"
 ~~~
 
 ~~~powershell
-$verbose = $env:verbose 
-$file = $env:file
-$f = $env:f
-$extra_args = ""
+param (
+    $file = $env:file
+)
 
-if ($f) {
-    $file = $f
-}
+$extra_args = ""
+$verbose = $env:verbose 
 
 if ($verbose) {
     $extra_args = "-- --nocapture --test-threads=1"
@@ -118,7 +119,6 @@ if (!$file) {
     cargo test --test $file $extra_args
 }
 Write-Output "Tests passed!"
-
 ~~~
 
 ## deps
@@ -156,10 +156,11 @@ fi
 ~~~
 
 ~~~powershell
-$check = $env:check
-$c = $env:c
+param (
+    $check = $env:check
+)
 
-if ($env:check -or $c) {
+if ($check) {
     cargo fmt --all -- --check
 } else {
     cargo fmt
