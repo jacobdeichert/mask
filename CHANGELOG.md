@@ -4,6 +4,16 @@
 ## UNRELEASED
 
 
+## v0.8.0 (2020-04-26)
+
+### Added
+
+* Windows powershell and batch support [#58](https://github.com/jakedeichert/mask/pull/58) ([@tensor-programming](https://github.com/tensor-programming))
+
+### Fixed
+
+* Re-add formatting CI [#60](https://github.com/jakedeichert/mask/pull/60)
+
 
 
 
