@@ -252,6 +252,26 @@ echo "Hello, " . $name . "!\n";
 ~~~
 ```
 
+#### Windows support
+
+You can even add powershell or batch code blocks alongside linux/macOS ones. Depending on which platform this runs on, the correct code block will be executed.
+
+**Example:**
+
+```markdown
+## link
+
+> Build and link the binary globally
+
+~~~bash
+cargo install --force --path .
+~~~
+
+~~~powershell
+[Diagnostics.Process]::Start("cargo", "install --force --path .").WaitForExit()
+~~~
+```
+
 ### Automatic help and usage output
 
 You don't have to spend time writing out help info manually. `mask` uses your command descriptions and options to automatically generate help output. For every command, it adds `-h, --help` flags and an alternative `help <name>` command.
@@ -388,10 +408,6 @@ You want a global utility CLI for a variety of system tasks such as backing up d
 
 
 ## FAQ
-
-### Windows support?
-
-Currently, this is [unknown][windows_issue]. I'm pretty sure the executor logic will need to be adjusted for Windows. Git Bash and Ubuntu on Windows have been reported to work but they are not actively being tested.
 
 ### Is `mask` available as a lib?
 
