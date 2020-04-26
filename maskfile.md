@@ -27,6 +27,23 @@ else
 fi
 ~~~
 
+**Note:** On Windows platforms, `mask` falls back to running `powershell` code blocks.
+
+~~~powershell
+param (
+    $maskfile_command = $env:maskfile_command,
+    $watch = $env:watch
+)
+
+$cargo_cmd = "cargo run -- $maskfile_command"
+$extra_args = "--exts rs --restart $cargo_cmd"
+
+if ($watch) {
+    Start-Process watchexec -ArgumentList $extra_args -NoNewWindow -PassThru
+} else {
+    cargo run -- $maskfile_command
+}
+~~~
 
 
 ## build
@@ -37,7 +54,9 @@ fi
 cargo build --release
 ~~~
 
-
+~~~powershell
+cargo build --release
+~~~
 
 ## link
 
@@ -47,6 +66,9 @@ cargo build --release
 cargo install --force --path .
 ~~~
 
+~~~powershell
+[Diagnostics.Process]::Start("cargo", "install --force --path .").WaitForExit()
+~~~
 
 
 ## test
@@ -78,7 +100,26 @@ fi
 echo "Tests passed!"
 ~~~
 
+~~~powershell
+param (
+    $file = $env:file
+)
 
+$extra_args = ""
+$verbose = $env:verbose 
+
+if ($verbose) {
+    $extra_args = "-- --nocapture --test-threads=1"
+}
+
+Write-Output "Running tests..."
+if (!$file) {
+    cargo test $extra_args
+} else {
+    cargo test --test $file $extra_args
+}
+Write-Output "Tests passed!"
+~~~
 
 ## deps
 
@@ -92,6 +133,9 @@ echo "Tests passed!"
 cargo update
 ~~~
 
+~~~powershell
+cargo update
+~~~
 
 
 ## format
@@ -111,6 +155,17 @@ else
 fi
 ~~~
 
+~~~powershell
+param (
+    $check = $env:check
+)
+
+if ($check) {
+    cargo fmt --all -- --check
+} else {
+    cargo fmt
+}
+~~~
 
 
 ## lint
@@ -118,5 +173,9 @@ fi
 > Lint the project with clippy
 
 ~~~bash
+cargo clippy
+~~~
+
+~~~powershell
 cargo clippy
 ~~~

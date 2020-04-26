@@ -17,6 +17,15 @@ fn positional_arguments() {
 ~~~bash
 echo "Testing $test_case in $file"
 ~~~
+
+~~~powershell
+param (
+    $test_case = $env:test_case,
+    $file = $env:file
+)
+
+Write-Output "Testing $test_case in $file"
+~~~
 "#,
     );
 
@@ -64,6 +73,20 @@ else
     echo $PORT
 fi
 ```
+
+```powershell
+param (
+    [string]
+    [Parameter(Mandatory = $false)]
+    $port = $env:port
+)
+
+if ($env:verbose) {
+    Write-Output "Starting an http server on PORT: $port"
+} else {
+    Write-Output $port
+}
+```
 "#,
     );
 
@@ -97,6 +120,16 @@ mod when_entering_negative_numbers {
 ~~~bash
 echo $(($a + $b))
 ~~~
+
+~~~powershell
+param (
+    [int]$a = $env:a,
+    [int]$b = $env:b
+)
+$sum = "$($a + $b)"
+
+Write-Output $sum
+~~~
 "#,
         );
 
@@ -123,6 +156,16 @@ echo $(($a + $b))
 
 ~~~bash
 echo $(($a + $b))
+~~~
+
+~~~powershell
+param (
+    [int]$a = $env:a,
+    [int]$b = $env:b
+)
+$sum = "$($a + $b)"
+
+Write-Output $sum
 ~~~
 "#,
         );
@@ -152,6 +195,13 @@ mod numerical_option_flag {
 ~~~bash
 echo "Value: $val"
 ~~~
+
+~~~powershell
+param (
+    $in = $env:val
+)
+Write-Output "Value: $in"
+~~~
 "#,
         );
 
@@ -175,6 +225,14 @@ echo "Value: $val"
 
 ~~~bash
 echo "Value: $val"
+~~~
+
+~~~powershell
+param (
+    [int]$in = $env:val
+)
+
+Write-Output "Value: $in"
 ~~~
 "#,
         );
@@ -200,6 +258,13 @@ echo "Value: $val"
 ~~~bash
 echo "Value: $val"
 ~~~
+
+~~~powershell
+param (
+    [Double]$in = $env:val
+)
+Write-Output "Value: $in"
+~~~
 "#,
         );
 
@@ -223,6 +288,10 @@ echo "Value: $val"
 
 ~~~bash
 echo "This shouldn't render"
+~~~
+
+~~~powershell
+Write-Output "This shouldn't render"
 ~~~
 "#,
         );
@@ -250,6 +319,10 @@ echo "This shouldn't render"
 
 ~~~bash
 echo "No arg this time"
+~~~
+
+~~~powershell
+Write-Output "No arg this time"
 ~~~
 "#,
         );

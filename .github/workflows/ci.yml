@@ -4,8 +4,12 @@ on: [push, pull_request]
 
 jobs:
   build:
-    name: Build
-    runs-on: ubuntu-latest
+    name: ${{ matrix.platform }}-build
+    runs-on: ${{ matrix.platform }}
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [ubuntu-latest, windows-latest, macos-latest]
     steps:
       - name: Checkout master
         uses: actions/checkout@master
@@ -15,8 +19,12 @@ jobs:
         run: cargo build --release --frozen
 
   test:
-    name: Test
-    runs-on: ubuntu-latest
+    name: ${{ matrix.platform }}-test
+    runs-on: ${{ matrix.platform }}
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [ubuntu-latest, windows-latest, macos-latest]
     steps:
       - name: Checkout master
         uses: actions/checkout@master
@@ -28,16 +36,16 @@ jobs:
         run: cargo fetch
       - name: Build in test mode
         run: cargo build --tests --frozen
-      - name: Make mask available globally for certain test suites that depend on it
-        run: cp ./target/debug/mask /usr/share/rust/.cargo/bin
+      - name: Make mask available globally (windows)
+        run: copy ./target/debug/mask.exe ~/.cargo/bin/
+        if: matrix.platform == 'windows-latest'
+      - name: Make mask available globally (linux)
+        run: cp ./target/debug/mask ~/.cargo/bin
+        if: matrix.platform == 'ubuntu-latest'
+      - name: Make mask available globally (mac)
+        run: cp ./target/debug/mask ~/.cargo/bin
+        if: matrix.platform == 'macos-latest'
       - name: Run tests
         run: cargo test --frozen
 
-  format:
-    name: Format
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout master
-        uses: actions/checkout@master
-      - name: Verify formatting is correct
-        run: cargo fmt --all -- --check
+
