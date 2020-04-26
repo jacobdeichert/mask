@@ -39,12 +39,9 @@ jobs:
       - name: Make mask available globally (windows)
         run: copy ./target/debug/mask.exe ~/.cargo/bin/
         if: matrix.platform == 'windows-latest'
-      - name: Make mask available globally (linux)
+      - name: Make mask available globally (linux / mac)
         run: cp ./target/debug/mask ~/.cargo/bin
-        if: matrix.platform == 'ubuntu-latest'
-      - name: Make mask available globally (mac)
-        run: cp ./target/debug/mask ~/.cargo/bin
-        if: matrix.platform == 'macos-latest'
+        if: matrix.platform != 'windows-latest'
       - name: Run tests
         run: cargo test --frozen
 
