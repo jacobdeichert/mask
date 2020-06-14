@@ -25,6 +25,10 @@ To get started, follow the guide below or check out the more [advanced features]
 
 Head to the [Releases page][releases] and look for the latest published version. Under **Assets** you'll see zips available for download for linux and macOS. Once downloaded, you can unzip them and then move the `mask` binary to somewhere accessible in your `$PATH` like `mv mask /usr/local/bin`.
 
+### Homebrew
+
+`mask` is submitted to [Homebrew][homebrew] which allows you to install it via `brew install mask`.
+
 ### Cargo
 
 `mask` is published to [crates.io][crate] which allows you to install it via `cargo install mask`.
@@ -449,6 +453,7 @@ Jake Deichert with the help of contributors.
 
 
 [github_ci]: https://github.com/jakedeichert/mask/actions?query=workflow%3ACI
+[homebrew]: https://formulae.brew.sh/formula/mask#default
 [crate]: https://crates.io/crates/mask
 [releases]: https://github.com/jakedeichert/mask/releases
 [new_issue]: https://github.com/jakedeichert/mask/issues/new
