@@ -200,6 +200,10 @@ fn treeify_commands(commands: Vec<Command>) -> Vec<Command> {
         }
     }
 
+    // the command or any one of its subcommands must have script to be included in the tree
+    // root level commands must be retained
+    command_tree.retain(|c| c.script.has_script() || !c.subcommands.is_empty() || c.cmd_level == 1);
+
     command_tree
 }
 
