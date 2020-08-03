@@ -173,15 +173,14 @@ fn treeify_commands(commands: Vec<Command>) -> Vec<Command> {
 
         // This must be a subcommand
         if c.cmd_level > current_command.cmd_level {
-
             if c.name.starts_with(&current_command.name) {
                 // remove parent command name prefixes from subcommand
                 c.name = c
-                .name
-                .strip_prefix(&current_command.name)
-                .unwrap()
-                .trim()
-                .to_string();
+                    .name
+                    .strip_prefix(&current_command.name)
+                    .unwrap()
+                    .trim()
+                    .to_string();
             }
             current_command.subcommands.push(c);
         }
