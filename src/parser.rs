@@ -54,8 +54,7 @@ pub fn build_command_structure(maskfile_contents: String) -> Command {
             }
             End(tag) => match tag {
                 Tag::Header(_) => {
-                    let (name, required_args) =
-                        parse_command_name_and_required_args(text.clone());
+                    let (name, required_args) = parse_command_name_and_required_args(text.clone());
                     current_command.name = name;
                     current_command.required_args = required_args;
                 }
@@ -177,7 +176,12 @@ fn treeify_commands(commands: Vec<Command>) -> Vec<Command> {
 
             if c.name.starts_with(&current_command.name) {
                 // remove parent command name prefixes from subcommand
-                c.name = c.name.strip_prefix(&current_command.name).unwrap().trim().to_string();
+                c.name = c
+                .name
+                .strip_prefix(&current_command.name)
+                .unwrap()
+                .trim()
+                .to_string();
             }
             current_command.subcommands.push(c);
         }
@@ -206,7 +210,6 @@ fn treeify_commands(commands: Vec<Command>) -> Vec<Command> {
 }
 
 fn parse_command_name_and_required_args(text: String) -> (String, Vec<RequiredArg>) {
-
     // Find any required arguments. They look like this: (required_arg_name)
     let name_and_args: Vec<&str> = text.split(|c| c == '(' || c == ')').collect();
     let (name, args) = name_and_args.split_at(1);
