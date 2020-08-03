@@ -53,9 +53,9 @@ pub fn build_command_structure(maskfile_contents: String) -> Command {
                 text = "".to_string();
             }
             End(tag) => match tag {
-                Tag::Header(heading_level) => {
+                Tag::Header(_) => {
                     let (name, required_args) =
-                        parse_command_name_and_required_args(heading_level, text.clone());
+                        parse_command_name_and_required_args(text.clone());
                     current_command.name = name;
                     current_command.required_args = required_args;
                 }
@@ -170,28 +170,30 @@ fn treeify_commands(commands: Vec<Command>) -> Vec<Command> {
     let num_commands = commands.len();
 
     for i in 0..num_commands {
-        let c = &commands[i];
-        let is_last_cmd = i == num_commands - 1;
+        let mut c = commands[i].clone();
 
         // This must be a subcommand
         if c.cmd_level > current_command.cmd_level {
-            current_command.subcommands.push(c.clone());
+
+            if c.name.starts_with(&current_command.name) {
+                // remove parent command name prefixes from subcommand
+                c.name = c.name.strip_prefix(&current_command.name).unwrap().trim().to_string();
+            }
+            current_command.subcommands.push(c);
         }
         // This must be a sibling command
         else if c.cmd_level == current_command.cmd_level {
             // Make sure the initial command doesn't skip itself before it finds children
             if i > 0 {
                 // Found a sibling, so the current command has found all children.
-                command_tree.push(current_command.clone());
-                current_command = c.clone();
+                command_tree.push(current_command);
+                current_command = c;
             }
         }
-
-        // The last command needs to be added regardless, since there's not another iteration of the loop to do so
-        if is_last_cmd && c.cmd_level >= current_command.cmd_level {
-            command_tree.push(current_command.clone());
-        }
     }
+
+    // Adding last command which was not added in the above loop
+    command_tree.push(current_command);
 
     // Treeify all subcommands recursively
     for c in &mut command_tree {
@@ -203,29 +205,10 @@ fn treeify_commands(commands: Vec<Command>) -> Vec<Command> {
     command_tree
 }
 
-fn parse_command_name_and_required_args(
-    heading_level: i32,
-    text: String,
-) -> (String, Vec<RequiredArg>) {
-    // Why heading_level > 2? Because level 1 is the root command title (unused)
-    // and level 2 can't be a subcommand so no need to split.
-    let name = if heading_level > 2 {
-        // Takes a subcommand name like this:
-        // "#### db flush postgres (required_arg_name)"
-        // and returns "postgres (required_arg_name)" as the actual name
-        text.clone()
-            .split(" ")
-            .collect::<Vec<&str>>()
-            // Get subcommand after the parent command name
-            .split_at(heading_level as usize - 2)
-            .1
-            .join(" ")
-    } else {
-        text.clone()
-    };
+fn parse_command_name_and_required_args(text: String) -> (String, Vec<RequiredArg>) {
 
     // Find any required arguments. They look like this: (required_arg_name)
-    let name_and_args: Vec<&str> = name.split(|c| c == '(' || c == ')').collect();
+    let name_and_args: Vec<&str> = text.split(|c| c == '(' || c == ')').collect();
     let (name, args) = name_and_args.split_at(1);
     let name = name.join(" ").trim().to_string();
     let mut required_args: Vec<RequiredArg> = vec![];
