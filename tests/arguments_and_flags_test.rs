@@ -356,7 +356,7 @@ mod version_flag {
 ## foo
 
 ~~~bash
-echo "This subcommand should exist
+echo "This subcommand should exist"
 ~~~
 "#,
         );
