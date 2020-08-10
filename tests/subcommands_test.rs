@@ -107,3 +107,27 @@ echo "system, online"
             .failure();
     }
 }
+
+mod when_subcommands_do_not_include_their_parent_command_prefix {
+    use super::*;
+
+    #[test]
+    fn subcommand_works() {
+        let (_temp, maskfile_path) = common::maskfile(
+            r#"
+## services
+### start
+#### all
+~~~bash
+echo "Start all services"
+~~~
+"#,
+        );
+
+        common::run_mask(&maskfile_path)
+            .cli("services start all")
+            .assert()
+            .stdout(contains("Start all services"))
+            .success();
+    }
+}
