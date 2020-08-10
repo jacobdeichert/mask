@@ -3,6 +3,12 @@
 
 ## UNRELEASED
 
+### Fixed
+
+* Remove commands without code blocks [#70](https://github.com/jakedeichert/mask/pull/70) ([@twitu](https://github.com/twitu))
+
+
+
 
 ## v0.8.0 (2020-04-26)
 

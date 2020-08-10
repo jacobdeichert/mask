@@ -61,6 +61,10 @@ fn exits_with_error_when_missing_subcommand() {
         r#"
 ## service
 ### service start
+
+~~~bash
+echo "subcommand should exist"
+~~~
 "#,
     );
 
@@ -98,25 +102,6 @@ echo "system, online"
             .code(1)
             .stderr(contains(format!(
                 "{} Command script requires a lang code which determines which executor to use.",
-                "ERROR:".red()
-            )))
-            .failure();
-    }
-
-    #[test]
-    fn exits_with_error_when_it_has_no_subcommands() {
-        let (_temp, maskfile_path) = common::maskfile(
-            r#"
-## start
-"#,
-        );
-
-        common::run_mask(&maskfile_path)
-            .command("start")
-            .assert()
-            .code(1)
-            .stderr(contains(format!(
-                "{} Command has no script.",
                 "ERROR:".red()
             )))
             .failure();

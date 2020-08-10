@@ -393,6 +393,19 @@ This is useful when [running mask within a script](#running-mask-from-within-a-s
 
 This variable is an absolute path to the maskfile's parent directory. Having the parent directory available allows us to load files relative to the maskfile itself which can be useful when you have commands that depend on other external files.
 
+### Documentation sections
+
+If a heading doesn't have a code block, it will be treated as documentation and completely ignored.
+
+**Example:**
+
+~~~markdown
+## This is a heading with no script
+
+It's useful as a place to document things like a setup guide or required dependencies
+or tools that your commands may rely on.
+~~~
+
 
 
 
