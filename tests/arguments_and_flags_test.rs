@@ -351,7 +351,15 @@ mod version_flag {
 
     #[test]
     fn exits_with_error_when_subcommand_has_version_flag() {
-        let (_temp, maskfile_path) = common::maskfile("## foo");
+        let (_temp, maskfile_path) = common::maskfile(
+            r#"
+## foo
+
+~~~bash
+echo "This subcommand should exist"
+~~~
+"#,
+        );
 
         // The setting "VersionlessSubcommands" removes the version flags (-V, --version)
         // from subcommands. Only the root command has a version flag.

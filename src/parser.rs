@@ -200,6 +200,10 @@ fn treeify_commands(commands: Vec<Command>) -> Vec<Command> {
         }
     }
 
+    // the command or any one of its subcommands must have script to be included in the tree
+    // root level commands must be retained
+    command_tree.retain(|c| c.script.has_script() || !c.subcommands.is_empty() || c.cmd_level == 1);
+
     command_tree
 }
 
@@ -375,14 +379,13 @@ mod build_command_structure {
     }
 
     #[test]
-    fn does_not_add_verbose_optional_flag_to_command_with_no_script() {
+    fn does_not_add_command_with_no_script() {
         let tree = build_command_structure(TEST_MASKFILE.to_string());
-        let no_script_command = tree
-            .subcommands
-            .iter()
-            .find(|cmd| cmd.name == "no_script")
-            .expect("no_script command missing");
+        let no_script_command = tree.subcommands.iter().find(|cmd| cmd.name == "no_script");
 
-        assert_eq!(no_script_command.option_flags.len(), 0);
+        assert!(
+            no_script_command.is_none(),
+            "no_script command should not exist"
+        )
     }
 }
