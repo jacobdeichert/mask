@@ -3,6 +3,10 @@
 
 ## UNRELEASED
 
+### Added
+
+* Allow absolute naming for headings [#71](https://github.com/jakedeichert/mask/pull/71) ([@lsampras](https://github.com/lsampras))
+
 ### Fixed
 
 * Remove commands without code blocks [#70](https://github.com/jakedeichert/mask/pull/70) ([@twitu](https://github.com/twitu))
