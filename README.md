@@ -402,7 +402,8 @@ If a heading doesn't have a code block, it will be treated as documentation and 
 ~~~markdown
 ## This is a heading with no script
 
-It's useful as a place to document things like a setup guide or required dependencies or tools that your commands may rely on.
+It's useful as a place to document things like a setup guide or required dependencies
+or tools that your commands may rely on.
 ~~~
 
 
