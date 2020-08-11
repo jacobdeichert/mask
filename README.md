@@ -178,13 +178,13 @@ Important to note that `mask` auto injects a very common `boolean` flag called `
 
 ### Subcommands
 
-Nested command structures can easily be created since they are simply defined by the level of markdown heading. H2 (`##`) is where you define your top-level commands. Every level after that is a subcommand. The only requirement is that subcommands must have all ancestor commands present in their heading.
+Nested command structures can easily be created since they are simply defined by the level of markdown heading. H2 (`##`) is where you define your top-level commands. Every level after that is a subcommand.
 
 **Example:**
 ```markdown
 ## services
 
-> Commands related to starting, stopping, and restarting services
+> Commands related to starting and stopping services
 
 ### services start (service_name)
 
@@ -195,6 +195,31 @@ echo "Starting service $service_name"
 ~~~
 
 ### services stop (service_name)
+
+> Stop a service.
+
+~~~bash
+echo "Stopping service $service_name"
+~~~
+```
+
+You may notice above that the `start` and `stop` commands are prefixed with their parent command `services`. Prefixing subcommands with their ancestor commands may help readability in some cases, however, it is completely optional. The example below is the same as above, but without prefixing.
+
+**Example:**
+```markdown
+## services
+
+> Commands related to starting and stopping services
+
+### start (service_name)
+
+> Start a service.
+
+~~~bash
+echo "Starting service $service_name"
+~~~
+
+### stop (service_name)
 
 > Stop a service.
 
