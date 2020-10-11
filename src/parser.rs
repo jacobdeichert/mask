@@ -129,6 +129,9 @@ pub fn build_command_structure(maskfile_contents: String) -> Command {
                                 }
                             }
                         }
+                        "required" => {
+                            current_option_flag.required = true;
+                        }
                         _ => (),
                     };
                 }
