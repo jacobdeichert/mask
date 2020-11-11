@@ -61,6 +61,10 @@ fn exits_with_error_when_missing_subcommand() {
         r#"
 ## service
 ### service start
+
+~~~bash
+echo "subcommand should exist"
+~~~
 "#,
     );
 
@@ -102,23 +106,28 @@ echo "system, online"
             )))
             .failure();
     }
+}
+
+mod when_subcommands_do_not_include_their_parent_command_prefix {
+    use super::*;
 
     #[test]
-    fn exits_with_error_when_it_has_no_subcommands() {
+    fn subcommand_works() {
         let (_temp, maskfile_path) = common::maskfile(
             r#"
-## start
+## services
+### start
+#### all
+~~~bash
+echo "Start all services"
+~~~
 "#,
         );
 
         common::run_mask(&maskfile_path)
-            .command("start")
+            .cli("services start all")
             .assert()
-            .code(1)
-            .stderr(contains(format!(
-                "{} Command has no script.",
-                "ERROR:".red()
-            )))
-            .failure();
+            .stdout(contains("Start all services"))
+            .success();
     }
 }

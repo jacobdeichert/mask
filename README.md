@@ -27,7 +27,7 @@ Head to the [Releases page][releases] and look for the latest published version.
 
 ### Homebrew
 
-`mask` is submitted to [Homebrew][homebrew] which allows you to install it via `brew install mask`.
+`mask` is available in [Homebrew][homebrew] which allows you to install it via `brew install mask`.
 
 ### Cargo
 
@@ -109,8 +109,6 @@ echo "Testing $test_case in $file"
 
 You can define a list of optional flags for your commands. The flag name is injected into the script's scope as an environment variable.
 
-Important to note that `mask` auto injects a very common `boolean` flag called `verbose` into every single command even if it's not used. This saves a bit of typing for you! This means every command implicitly has a `-v` and `--verbose` flag already. The value of the `$verbose` environment variable is either `"true"` or simply unset/non-existent.
-
 **Example:**
 
 ```markdown
@@ -156,15 +154,37 @@ echo "Total: $(($price * $TAX))"
 ~~~
 ```
 
+If you exclude the `type` field, `mask` will treat it as a `boolean` flag. If the flag is passed, its environment variable will be `"true"`, otherwise it will be unset/non-existent.
+
+Important to note that `mask` auto injects a very common `boolean` flag called `verbose` into every single command even if it's not used, which saves a bit of typing for you. This means every command implicitly has a `-v` and `--verbose` flag already.
+
+**Example:**
+
+```markdown
+## test
+
+> Run the test suite
+
+**OPTIONS**
+* watch
+    * flags: -w --watch
+    * desc: Run tests on file change
+
+~~~bash
+[[ "$watch" == "true" ]] && echo "Starting in watch mode..."
+[[ "$verbose" == "true" ]] && echo "Running with extra logs..."
+~~~
+```
+
 ### Subcommands
 
-Nested command structures can easily be created since they are simply defined by the level of markdown heading. H2 (`##`) is where you define your top-level commands. Every level after that is a subcommand. The only requirement is that subcommands must have all ancestor commands present in their heading.
+Nested command structures can easily be created since they are simply defined by the level of markdown heading. H2 (`##`) is where you define your top-level commands. Every level after that is a subcommand.
 
 **Example:**
 ```markdown
 ## services
 
-> Commands related to starting, stopping, and restarting services
+> Commands related to starting and stopping services
 
 ### services start (service_name)
 
@@ -181,13 +201,30 @@ echo "Starting service $service_name"
 ~~~bash
 echo "Stopping service $service_name"
 ~~~
+```
 
-#### services stop all
+You may notice above that the `start` and `stop` commands are prefixed with their parent command `services`. Prefixing subcommands with their ancestor commands may help readability in some cases, however, it is completely optional. The example below is the same as above, but without prefixing.
 
-> Stop everything.
+**Example:**
+```markdown
+## services
+
+> Commands related to starting and stopping services
+
+### start (service_name)
+
+> Start a service.
 
 ~~~bash
-echo "Stopping everything"
+echo "Starting service $service_name"
+~~~
+
+### stop (service_name)
+
+> Stop a service.
+
+~~~bash
+echo "Stopping service $service_name"
 ~~~
 ```
 
@@ -381,6 +418,19 @@ This is useful when [running mask within a script](#running-mask-from-within-a-s
 
 This variable is an absolute path to the maskfile's parent directory. Having the parent directory available allows us to load files relative to the maskfile itself which can be useful when you have commands that depend on other external files.
 
+### Documentation sections
+
+If a heading doesn't have a code block, it will be treated as documentation and completely ignored.
+
+**Example:**
+
+~~~markdown
+## This is a heading with no script
+
+It's useful as a place to document things like a setup guide or required dependencies
+or tools that your commands may rely on.
+~~~
+
 
 
 
@@ -453,7 +503,7 @@ Jake Deichert with the help of contributors.
 
 
 [github_ci]: https://github.com/jakedeichert/mask/actions?query=workflow%3ACI
-[homebrew]: https://formulae.brew.sh/formula/mask#default
+[homebrew]: https://formulae.brew.sh/formula/mask
 [crate]: https://crates.io/crates/mask
 [releases]: https://github.com/jakedeichert/mask/releases
 [new_issue]: https://github.com/jakedeichert/mask/issues/new
