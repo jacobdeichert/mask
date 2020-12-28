@@ -3,6 +3,12 @@
 
 ## UNRELEASED
 
+### Added
+
+* Allow marking named flags (previously called optional flags) as required [#74](https://github.com/jakedeichert/mask/pull/74) ([@cherusk](https://github.com/cherusk))
+
+
+
 
 ## v0.9.0 (2020-08-10)
 
