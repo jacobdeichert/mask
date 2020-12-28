@@ -7,6 +7,8 @@
 
 * Allow marking named flags (previously called optional flags) as required [#74](https://github.com/jakedeichert/mask/pull/74) ([@cherusk](https://github.com/cherusk))
 
+* Automatically bump Homebrew formula on new release [#74](https://github.com/jakedeichert/mask/pull/64) ([@vladimyr](https://github.com/vladimyr))
+
 
 
 
