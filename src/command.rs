@@ -32,6 +32,7 @@ impl Command {
                 long: "verbose".to_string(),
                 multiple: false,
                 takes_value: false,
+                required: false,
                 validate_as_number: false,
                 val: "".to_string(),
             });
@@ -85,6 +86,7 @@ pub struct OptionFlag {
     pub multiple: bool,           // Can it have multiple values? (-vvv OR -i one -i two)
     pub takes_value: bool,        // Does it take a value? (-i value)
     pub validate_as_number: bool, // Should we validate it as a number?
+    pub required: bool,
     pub val: String,
 }
 
@@ -97,6 +99,7 @@ impl OptionFlag {
             long: "".to_string(),
             multiple: false,
             takes_value: false,
+            required: false,
             validate_as_number: false,
             val: "".to_string(),
         }

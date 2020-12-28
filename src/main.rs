@@ -101,20 +101,21 @@ fn build_subcommands<'a, 'b>(
             }
         }
 
-        // Add all required arguments
+        // Add all positional arguments
         for a in &c.required_args {
             let arg = Arg::with_name(&a.name).required(true);
             subcmd = subcmd.arg(arg);
         }
 
-        // Add all optional flags
+        // Add all named flags
         for f in &c.option_flags {
             let arg = Arg::with_name(&f.name)
                 .help(&f.desc)
                 .short(&f.short)
                 .long(&f.long)
                 .takes_value(f.takes_value)
-                .multiple(f.multiple);
+                .multiple(f.multiple)
+                .required(f.required);
             subcmd = subcmd.arg(arg);
         }
         cli_app = cli_app.subcommand(subcmd);
