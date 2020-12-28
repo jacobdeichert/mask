@@ -374,3 +374,70 @@ echo "This subcommand should exist"
             .failure();
     }
 }
+
+mod required_option_flag {
+    use super::*;
+
+    #[test]
+    fn properly_runs_when_required_option_is_supplied() {
+        let (_temp, maskfile_path) = common::maskfile(
+            r#"
+## required_val
+
+**OPTIONS**
+* val
+    * flags: --val
+    * type: string
+    * required
+
+~~~bash
+echo "Value: $val"
+~~~
+
+~~~powershell
+param (
+    $in = $env:val
+)
+Write-Output "Value: $in"
+~~~
+"#,
+        );
+
+        common::run_mask(&maskfile_path)
+            .cli("required_val --val december")
+            .assert()
+            .stdout(contains("Value: december"))
+            .success();
+    }
+
+    #[test]
+    fn errors_when_val_is_not_supplied() {
+        let (_temp, maskfile_path) = common::maskfile(
+            r#"
+## required_val
+
+**OPTIONS**
+* val
+    * flags: --val
+    * type: string
+    * required
+
+~~~bash
+echo "This shouldn't render"
+~~~
+
+~~~powershell
+Write-Output "This shouldn't render"
+~~~
+"#,
+        );
+
+        common::run_mask(&maskfile_path)
+            .cli("required_val")
+            .assert()
+            .stderr(contains(
+                "error: The following required arguments were not provided:\n    --val <val>",
+            ))
+            .failure();
+    }
+}
