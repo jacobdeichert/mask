@@ -106,7 +106,7 @@ param (
 )
 
 $extra_args = ""
-$verbose = $env:verbose 
+$verbose = $env:verbose
 
 if ($verbose) {
     $extra_args = "-- --nocapture --test-threads=1"

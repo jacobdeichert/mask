@@ -68,11 +68,11 @@ echo "building project..."
 You can also write documentation anywhere you want. Only certain types of markdown patterns
 are parsed to determine the command structure.
 
-Note this code block below is defined as js. So far, mask supports node,
-python, ruby and php as scripting runtimes!
+This code block below is defined as js which means it will be ran with node. Mask also
+supports other scripting runtimes including python, ruby and php!
 
 ~~~js
-console.log("running project's tests")
+console.log("running tests...")
 ~~~
 ```
 
@@ -105,9 +105,9 @@ echo "Testing $test_case in $file"
 ~~~
 ```
 
-### Optional flags
+### Named flags
 
-You can define a list of optional flags for your commands. The flag name is injected into the script's scope as an environment variable.
+You can define a list of named flags for your commands. The flag name is injected into the script's scope as an environment variable.
 
 **Example:**
 
@@ -173,6 +173,25 @@ Important to note that `mask` auto injects a very common `boolean` flag called `
 ~~~bash
 [[ "$watch" == "true" ]] && echo "Starting in watch mode..."
 [[ "$verbose" == "true" ]] && echo "Running with extra logs..."
+~~~
+```
+
+Flags are optional by default. If you add `required` to your flag definition, `mask` will error if it isn't supplied by the user.
+
+**Example:**
+
+```markdown
+## ping
+
+**OPTIONS**
+* domain
+    * flags: -d --domain
+    * type: string
+    * desc: Which domain to ping
+    * required
+
+~~~sh
+ping $domain
 ~~~
 ```
 
@@ -430,15 +449,6 @@ If a heading doesn't have a code block, it will be treated as documentation and 
 It's useful as a place to document things like a setup guide or required dependencies
 or tools that your commands may rely on.
 ~~~
-
-
-
-
-
-## Upcoming features
-
-* [ ] [Optional (non-required) positional arguments][2]
-* [ ] [Infinite positional args](https://github.com/jakedeichert/mask/issues/4)
 
 
 
