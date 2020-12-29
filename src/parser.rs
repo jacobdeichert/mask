@@ -21,9 +21,12 @@ pub fn build_command_structure(maskfile_contents: String) -> Command {
                 match tag {
                     Tag::Header(heading_level) => {
                         // Add the last command before starting a new one.
-                        // Don't add the first command during the first iteration.
+                        // Don't add commands for level 1 heading blocks (the title).
                         if heading_level > 1 {
                             commands.push(current_command.build());
+                        } else if heading_level == 1 && commands.len() > 0 {
+                            // Found another level 1 heading block, so quit parsing.
+                            break;
                         }
                         current_command = Command::new(heading_level as u8);
                     }
