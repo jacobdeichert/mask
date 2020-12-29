@@ -3,11 +3,20 @@
 
 ## UNRELEASED
 
+
+
+
+## v0.10.0 (2020-12-29)
+
 ### Added
 
 * Allow marking named flags (previously called optional flags) as required [#74](https://github.com/jakedeichert/mask/pull/74) ([@cherusk](https://github.com/cherusk))
 
 * Automatically bump Homebrew formula on new release [#74](https://github.com/jakedeichert/mask/pull/64) ([@vladimyr](https://github.com/vladimyr))
+
+### Fixed
+
+* Fix issue where command before level 1 heading was ignored [#77](https://github.com/jakedeichert/mask/pull/77)
 
 
 
