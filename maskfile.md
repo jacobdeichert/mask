@@ -6,8 +6,11 @@
 
 
 
-## run (maskfile_command)
 
+
+
+
+## run (maskfile_command)
 > Build and run mask in development mode
 
 **NOTE:** This uses `cargo run` to build and run `mask` in development mode. You must have a `maskfile` in the current directory (this file) and must supply a valid command for that `maskfile` (`maskfile_command`) in order to test the changes you've made to `mask`. Since you can only test against this `maskfile` for now, you can add subcommands to the bottom and run against those instead of running one of the existing commands.
@@ -46,8 +49,18 @@ if ($watch) {
 ~~~
 
 
-## build
 
+
+
+
+
+
+
+
+
+
+
+## build
 > Build a release version of mask
 
 ~~~bash
@@ -58,8 +71,15 @@ cargo build --release
 cargo build --release
 ~~~
 
-## link
 
+
+
+
+
+
+
+
+## link
 > Build mask and replace your globally installed version with it for testing
 
 ~~~bash
@@ -71,8 +91,15 @@ cargo install --force --path .
 ~~~
 
 
-## test
 
+
+
+
+
+
+
+
+## test
 > Run all tests
 
 **OPTIONS**
@@ -121,25 +148,20 @@ if (!$file) {
 Write-Output "Tests passed!"
 ~~~
 
-## deps
 
-> Commands related to cargo dependencies
 
-### deps upgrade
 
-> Update the cargo dependencies
 
-~~~bash
-cargo update
-~~~
 
-~~~powershell
-cargo update
-~~~
+
+
+
+
+
+
 
 
 ## format
-
 > Format all source files
 
 **OPTIONS**
@@ -168,8 +190,15 @@ if ($check) {
 ~~~
 
 
-## lint
 
+
+
+
+
+
+
+
+## lint
 > Lint the project with clippy
 
 ~~~bash
