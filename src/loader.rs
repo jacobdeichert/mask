@@ -32,7 +32,7 @@ mod read_maskfile {
         let contents = maskfile.unwrap();
 
         // Basic test to make sure the maskfile.md contents are at least right
-        let expected_root_description = "> Development tasks for mask";
+        let expected_root_description = "Development tasks for mask.";
         assert!(
             contents.contains(expected_root_description),
             "description wasn't found in maskfile contents"

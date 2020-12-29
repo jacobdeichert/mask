@@ -1,6 +1,6 @@
 # Tasks
 
-> Development tasks for mask
+Development tasks for mask.
 
 
 
