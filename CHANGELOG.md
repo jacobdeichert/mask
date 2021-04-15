@@ -3,6 +3,10 @@
 
 ## UNRELEASED
 
+### Added
+
+* Split parsing logic into separate crate (mask-parser) [#83](https://github.com/jakedeichert/mask/pull/83)
+
 
 
 
