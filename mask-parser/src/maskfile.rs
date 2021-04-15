@@ -1,13 +1,22 @@
-#[derive(Debug, Clone)]
+use serde::Serialize;
+use serde_json::Value;
+
+#[derive(Debug, Serialize, Clone)]
 pub struct Maskfile {
     pub title: String,
     pub description: String,
     pub commands: Vec<Command>,
 }
 
-#[derive(Debug, Clone)]
+impl Maskfile {
+    pub fn to_json(&self) -> Result<Value, serde_json::Error> {
+        serde_json::to_value(&self)
+    }
+}
+
+#[derive(Debug, Serialize, Clone)]
 pub struct Command {
-    pub cmd_level: u8,
+    pub level: u8,
     pub name: String,
     pub description: String,
     pub script: Script,
@@ -17,9 +26,9 @@ pub struct Command {
 }
 
 impl Command {
-    pub fn new(cmd_level: u8) -> Self {
+    pub fn new(level: u8) -> Self {
         Self {
-            cmd_level,
+            level,
             name: "".to_string(),
             description: "".to_string(),
             script: Script::new(),
@@ -48,7 +57,7 @@ impl Command {
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Serialize, Clone)]
 pub struct Script {
     // The executor to run the source with
     pub executor: String, // shell, node, ruby, python, etc...
@@ -69,9 +78,11 @@ impl Script {
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Serialize, Clone)]
 pub struct RequiredArg {
     pub name: String,
+    /// Used within mask. TODO: store in a different place within mask instead of here.
+    #[serde(skip)]
     pub val: String,
 }
 
@@ -84,7 +95,7 @@ impl RequiredArg {
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Serialize, Clone)]
 pub struct OptionFlag {
     pub name: String,
     pub description: String,
@@ -94,6 +105,8 @@ pub struct OptionFlag {
     pub takes_value: bool,        // Does it take a value? (-i value)
     pub validate_as_number: bool, // Should we validate it as a number?
     pub required: bool,
+    /// Used within mask. TODO: store in a different place within mask instead of here.
+    #[serde(skip)]
     pub val: String,
 }
 

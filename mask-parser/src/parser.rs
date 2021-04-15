@@ -176,7 +176,7 @@ fn treeify_commands(commands: Vec<Command>) -> Vec<Command> {
         let mut c = commands[i].clone();
 
         // This must be a subcommand
-        if c.cmd_level > current_command.cmd_level {
+        if c.level > current_command.level {
             if c.name.starts_with(&current_command.name) {
                 // remove parent command name prefixes from subcommand
                 c.name = c
@@ -189,7 +189,7 @@ fn treeify_commands(commands: Vec<Command>) -> Vec<Command> {
             current_command.subcommands.push(c);
         }
         // This must be a sibling command
-        else if c.cmd_level == current_command.cmd_level {
+        else if c.level == current_command.level {
             // Make sure the initial command doesn't skip itself before it finds children
             if i > 0 {
                 // Found a sibling, so the current command has found all children.
@@ -211,7 +211,7 @@ fn treeify_commands(commands: Vec<Command>) -> Vec<Command> {
 
     // the command or any one of its subcommands must have script to be included in the tree
     // root level commands must be retained
-    command_tree.retain(|c| c.script.has_script() || !c.subcommands.is_empty() || c.cmd_level == 1);
+    command_tree.retain(|c| c.script.has_script() || !c.subcommands.is_empty() || c.level == 1);
 
     command_tree
 }
@@ -249,7 +249,6 @@ This is an example maskfile for the tests below.
 echo "Serving on port $port"
 ~~~
 
-
 ## node (name)
 
 > An example node script
@@ -261,7 +260,6 @@ const { name } = process.env;
 console.log(`Hello, ${name}!`);
 ```
 
-
 ## no_script
 
 This command has no source/script.
@@ -270,109 +268,63 @@ This command has no source/script.
 #[cfg(test)]
 mod parse {
     use super::*;
+    use serde_json::json;
 
     #[test]
-    fn parses_serve_command_name() {
-        let tree = parse(TEST_MASKFILE.to_string());
-        let serve_command = &tree
-            .commands
-            .iter()
-            .find(|cmd| cmd.name == "serve")
-            .expect("serve command missing");
-        assert_eq!(serve_command.name, "serve");
-    }
+    fn parses_the_maskfile_structure() {
+        let maskfile = parse(TEST_MASKFILE.to_string());
 
-    #[test]
-    fn parses_serve_command_description() {
-        let tree = parse(TEST_MASKFILE.to_string());
-        let serve_command = &tree
-            .commands
-            .iter()
-            .find(|cmd| cmd.name == "serve")
-            .expect("serve command missing");
-        assert_eq!(serve_command.description, "Serve the app on the `port`");
-    }
+        let verbose_flag = json!({
+            "name": "verbose",
+            "description": "Sets the level of verbosity",
+            "short": "v",
+            "long": "verbose",
+            "multiple": false,
+            "takes_value": false,
+            "required": false,
+            "validate_as_number": false,
+        });
 
-    #[test]
-    fn parses_serve_required_positional_arguments() {
-        let tree = parse(TEST_MASKFILE.to_string());
-        let serve_command = &tree
-            .commands
-            .iter()
-            .find(|cmd| cmd.name == "serve")
-            .expect("serve command missing");
-        assert_eq!(serve_command.required_args.len(), 1);
-        assert_eq!(serve_command.required_args[0].name, "port");
-    }
-
-    #[test]
-    fn parses_serve_command_executor() {
-        let tree = parse(TEST_MASKFILE.to_string());
-        let serve_command = &tree
-            .commands
-            .iter()
-            .find(|cmd| cmd.name == "serve")
-            .expect("serve command missing");
-        assert_eq!(serve_command.script.executor, "bash");
-    }
-
-    #[test]
-    fn parses_serve_command_source_with_tildes() {
-        let tree = parse(TEST_MASKFILE.to_string());
-        let serve_command = &tree
-            .commands
-            .iter()
-            .find(|cmd| cmd.name == "serve")
-            .expect("serve command missing");
         assert_eq!(
-            serve_command.script.source,
-            "echo \"Serving on port $port\"\n"
+            json!({
+                "title": "Document Title",
+                "description": "",
+                "commands": [
+                    {
+                        "level": 2,
+                        "name": "serve",
+                        "description": "Serve the app on the `port`",
+                        "script": {
+                            "executor": "bash",
+                            "source": "echo \"Serving on port $port\"\n",
+                        },
+                        "subcommands": [],
+                        "required_args": [
+                            {
+                                "name": "port"
+                            }
+                        ],
+                        "option_flags": [verbose_flag],
+                    },
+                    {
+                        "level": 2,
+                        "name": "node",
+                        "description": "An example node script",
+                        "script": {
+                            "executor": "js",
+                            "source": "const { name } = process.env;\nconsole.log(`Hello, ${name}!`);\n",
+                        },
+                        "subcommands": [],
+                        "required_args": [
+                            {
+                                "name": "name"
+                            }
+                        ],
+                        "option_flags": [verbose_flag],
+                    }
+                ]
+            }),
+            maskfile.to_json().expect("should have serialized to json")
         );
-    }
-
-    #[test]
-    fn parses_node_command_source_with_backticks() {
-        let tree = parse(TEST_MASKFILE.to_string());
-        let node_command = &tree
-            .commands
-            .iter()
-            .find(|cmd| cmd.name == "node")
-            .expect("node command missing");
-        assert_eq!(
-            node_command.script.source,
-            "const { name } = process.env;\nconsole.log(`Hello, ${name}!`);\n"
-        );
-    }
-
-    #[test]
-    fn adds_verbose_optional_flag_to_command_with_script() {
-        let tree = parse(TEST_MASKFILE.to_string());
-        let node_command = tree
-            .commands
-            .iter()
-            .find(|cmd| cmd.name == "node")
-            .expect("node command missing");
-
-        assert_eq!(node_command.option_flags.len(), 1);
-        assert_eq!(node_command.option_flags[0].name, "verbose");
-        assert_eq!(
-            node_command.option_flags[0].description,
-            "Sets the level of verbosity"
-        );
-        assert_eq!(node_command.option_flags[0].short, "v");
-        assert_eq!(node_command.option_flags[0].long, "verbose");
-        assert_eq!(node_command.option_flags[0].multiple, false);
-        assert_eq!(node_command.option_flags[0].takes_value, false);
-    }
-
-    #[test]
-    fn does_not_add_command_with_no_script() {
-        let tree = parse(TEST_MASKFILE.to_string());
-        let no_script_command = tree.commands.iter().find(|cmd| cmd.name == "no_script");
-
-        assert!(
-            no_script_command.is_none(),
-            "no_script command should not exist"
-        )
     }
 }
