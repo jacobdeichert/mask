@@ -22,7 +22,7 @@ pub struct Command {
     pub script: Option<Script>,
     pub subcommands: Vec<Command>,
     pub required_args: Vec<RequiredArg>,
-    pub option_flags: Vec<OptionFlag>,
+    pub named_flags: Vec<NamedFlag>,
 }
 
 impl Command {
@@ -34,7 +34,7 @@ impl Command {
             script: Some(Script::new()),
             subcommands: vec![],
             required_args: vec![],
-            option_flags: vec![],
+            named_flags: vec![],
         }
     }
 
@@ -48,7 +48,7 @@ impl Command {
 
         // Auto add common flags like verbose for commands that have a script source
         if self.script.is_some() {
-            self.option_flags.push(OptionFlag {
+            self.named_flags.push(NamedFlag {
                 name: "verbose".to_string(),
                 description: "Sets the level of verbosity".to_string(),
                 short: "v".to_string(),
@@ -99,7 +99,7 @@ impl RequiredArg {
 }
 
 #[derive(Debug, Serialize, Clone)]
-pub struct OptionFlag {
+pub struct NamedFlag {
     pub name: String,
     pub description: String,
     pub short: String,            // v        (used as -v)
@@ -113,7 +113,7 @@ pub struct OptionFlag {
     pub val: String,
 }
 
-impl OptionFlag {
+impl NamedFlag {
     pub fn new() -> Self {
         Self {
             name: "".to_string(),

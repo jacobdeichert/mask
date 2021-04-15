@@ -6,7 +6,7 @@ pub fn parse(maskfile_contents: String) -> Maskfile {
     let parser = create_markdown_parser(&maskfile_contents);
     let mut commands = vec![];
     let mut current_command = Command::new(1);
-    let mut current_option_flag = OptionFlag::new();
+    let mut current_option_flag = NamedFlag::new();
     let mut text = "".to_string();
     let mut list_level = 0;
 
@@ -88,9 +88,9 @@ pub fn parse(maskfile_contents: String) -> Maskfile {
                     if list_level == 1 {
                         // Add the current one to the list and start a new one
                         current_command
-                            .option_flags
+                            .named_flags
                             .push(current_option_flag.clone());
-                        current_option_flag = OptionFlag::new();
+                        current_option_flag = NamedFlag::new();
                     }
                 }
                 _ => (),
@@ -320,7 +320,7 @@ mod parse {
                                 "name": "port"
                             }
                         ],
-                        "option_flags": [verbose_flag],
+                        "named_flags": [verbose_flag],
                     },
                     {
                         "level": 2,
@@ -336,7 +336,7 @@ mod parse {
                                 "name": "name"
                             }
                         ],
-                        "option_flags": [verbose_flag],
+                        "named_flags": [verbose_flag],
                     },
                     {
                         "level": 2,
@@ -354,11 +354,11 @@ mod parse {
                                 },
                                 "subcommands": [],
                                 "required_args": [],
-                                "option_flags": [verbose_flag],
+                                "named_flags": [verbose_flag],
                             }
                         ],
                         "required_args": [],
-                        "option_flags": [],
+                        "named_flags": [],
                     }
                 ]
             }),

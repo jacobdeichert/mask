@@ -108,7 +108,7 @@ fn build_subcommands<'a, 'b>(
         }
 
         // Add all named flags
-        for f in &c.option_flags {
+        for f in &c.named_flags {
             let arg = Arg::with_name(&f.name)
                 .help(&f.description)
                 .short(&f.short)
@@ -149,8 +149,8 @@ fn get_command_options(mut cmd: Command, matches: &ArgMatches) -> Command {
         arg.val = matches.value_of(arg.name.clone()).unwrap().to_string();
     }
 
-    // Check all optional flags
-    for flag in &mut cmd.option_flags {
+    // Check all named flags
+    for flag in &mut cmd.named_flags {
         flag.val = if flag.takes_value {
             // Extract the value
             let raw_value = matches

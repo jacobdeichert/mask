@@ -48,7 +48,7 @@ Write-Output "Testing $test_case in $file"
 }
 
 #[test]
-fn optional_flags() {
+fn named_flags() {
     let (_temp, maskfile_path) = common::maskfile(
         r#"
 ## serve
