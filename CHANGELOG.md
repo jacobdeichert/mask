@@ -3,6 +3,11 @@
 
 ## UNRELEASED
 
+
+
+
+## v0.11.0 (2021-04-15)
+
 ### Added
 
 * Split parsing logic into separate crate (`mask-parser`) [#83](https://github.com/jakedeichert/mask/pull/83)
