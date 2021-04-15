@@ -7,7 +7,7 @@
 
 
 ## test
-> Run all tests
+> Run tests
 
 **OPTIONS**
 * file
