@@ -1,6 +1,8 @@
+mod executor;
+mod loader;
 use clap::{crate_name, crate_version, App, AppSettings, Arg, ArgMatches, SubCommand};
 use colored::*;
-use mask::executor::execute_command;
+use executor::execute_command;
 use mask_parser::maskfile::Command;
 use std::env;
 use std::path::Path;
@@ -50,7 +52,7 @@ fn find_maskfile() -> (Result<String, String>, String) {
         _ => Path::new("./maskfile.md"),
     };
 
-    let maskfile = mask::loader::read_maskfile(maskfile_path);
+    let maskfile = loader::read_maskfile(maskfile_path);
 
     if maskfile.is_err() {
         if let Some(p) = maskfile_path.to_str() {

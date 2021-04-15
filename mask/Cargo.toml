@@ -10,10 +10,6 @@ categories = ["command-line-interface", "command-line-utilities", "development-t
 edition = "2018"
 license = "MIT"
 
-[lib]
-name = "mask"
-path = "src/lib.rs"
-
 [dependencies]
 colored = "2"                                                           # https://github.com/mackwic/colored
 mask-parser = { path = "../mask-parser" }
