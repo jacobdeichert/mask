@@ -11,7 +11,7 @@
 
 A `maskfile.md` is both a **human-readable document** and a **command definition**! Being documentation focused allows others to easily get started with your project's development setup by simply reading your `maskfile.md`. A nice advantage of using markdown is that syntax highlighting for code blocks is built-in to many editors and renderers like GitHub itself.
 
-Here's the [maskfile.md](/mask/maskfile.md) that `mask` itself uses as an example!
+Here's the [maskfile.md](/maskfile.md) that `mask` itself uses as an example!
 
 To get started, follow the guide below or check out the more [advanced features](#features) `mask` has like **positional args**, **optional flags**, **subcommands**, other **scripting runtimes** and more!
 
