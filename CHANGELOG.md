@@ -13,6 +13,7 @@
 
 * Rename option_flags to named_flags [#84](https://github.com/jakedeichert/mask/pull/84)
 
+* Rename `--maskfile-introspect` flag to `--introspect` [#86](https://github.com/jakedeichert/mask/pull/86)
 
 
 
