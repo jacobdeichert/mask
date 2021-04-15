@@ -16,14 +16,14 @@ name = "mask"
 path = "src/lib.rs"
 
 [dependencies]
-colored = "1.8.0"                                                       # https://github.com/mackwic/colored
+colored = "2"                                                           # https://github.com/mackwic/colored
 mask_parser = { path = "../mask-parser" }
 
 [dependencies.clap]                                                     # https://github.com/clap-rs/clap
-version = "2.33.0"
+version = "2.33"
 features = ["wrap_help"]
 
 [dev-dependencies]
-assert_cmd = "0.11.1"                                                   # https://github.com/assert-rs/assert_cmd
-assert_fs = "0.11.3"                                                    # https://github.com/assert-rs/assert_fs
-predicates = "1.0.1"                                                    # https://github.com/assert-rs/predicates-rs
+assert_cmd = "1"                                                        # https://github.com/assert-rs/assert_cmd
+assert_fs = "1"                                                         # https://github.com/assert-rs/assert_fs
+predicates = "1"                                                        # https://github.com/assert-rs/predicates-rs
