@@ -83,11 +83,11 @@ cargo build --release
 > Build mask and replace your globally installed version with it for testing
 
 ~~~bash
-cargo install --force --path .
+cargo install --force --path ./mask
 ~~~
 
 ~~~powershell
-[Diagnostics.Process]::Start("cargo", "install --force --path .").WaitForExit()
+[Diagnostics.Process]::Start("cargo", "install --force --path ./mask").WaitForExit()
 ~~~
 
 
