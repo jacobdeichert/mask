@@ -82,7 +82,7 @@ fn find_maskfile() -> (Result<String, String>, String) {
 fn is_introspecting() -> bool {
     let args: Vec<String> = env::args().collect();
     for a in args {
-        if a == "--maskfile-introspect" {
+        if a == "--introspect" {
             return true;
         }
     }
@@ -103,9 +103,9 @@ fn custom_maskfile_path_arg<'a, 'b>() -> Arg<'a, 'b> {
 
 /// Print out the maskfile structure in json
 fn introspect_arg<'a, 'b>() -> Arg<'a, 'b> {
-    Arg::with_name("maskfile-introspect")
+    Arg::with_name("introspect")
         .help("Print out the maskfile command structure in json")
-        .long("maskfile-introspect")
+        .long("introspect")
         .multiple(false)
 }
 

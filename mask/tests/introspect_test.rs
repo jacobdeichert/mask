@@ -49,7 +49,7 @@ echo something
     });
 
     common::run_mask(&maskfile_path)
-        .arg("--maskfile-introspect")
+        .arg("--introspect")
         .assert()
         .code(0)
         .stdout(contains(
