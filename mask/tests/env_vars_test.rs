@@ -1,12 +1,11 @@
-use assert_cmd::prelude::*;
-use predicates::str::contains;
-
 mod common;
+use assert_cmd::prelude::*;
 use common::MaskCommandExt;
+use predicates::str::contains;
 
 // NOTE: This test suite depends on the mask binary being available in the current shell
 
-// Using current_dir(".github") to make sure the default maskfile.md can't be found
+// Using current_dir("tests") to make sure the default maskfile.md can't be found
 mod env_var_mask {
     use super::*;
 
@@ -41,7 +40,7 @@ Write-Output "tests passed"
         );
 
         common::run_mask(&maskfile_path)
-            .current_dir(".github")
+            .current_dir("tests")
             .command("ci")
             .assert()
             .stdout(contains("tests passed"))
@@ -75,7 +74,7 @@ Write-Output "mask = $var"
         let predicate = contains("mask = mask --maskfile /");
 
         common::run_mask(&maskfile_path)
-            .current_dir(".github")
+            .current_dir("tests")
             .command("run")
             .assert()
             // Absolute maskfile path starts with /
@@ -86,7 +85,7 @@ Write-Output "mask = $var"
     }
 }
 
-// Using current_dir(".github") to make sure the default maskfile.md can't be found
+// Using current_dir("tests) to make sure the default maskfile.md can't be found
 mod env_var_maskfile_dir {
     use super::*;
 
@@ -111,7 +110,7 @@ Write-Output "maskfile_dir = /$var"
         );
 
         common::run_mask(&maskfile_path)
-            .current_dir(".github")
+            .current_dir("tests")
             .command("run")
             .assert()
             // Absolute maskfile path starts with /

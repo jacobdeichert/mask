@@ -37,7 +37,10 @@ pub fn maskfile(content: &'static str) -> (assert_fs::TempDir, PathBuf) {
 pub fn run_mask(maskfile: &PathBuf) -> Command {
     let mut mask = Command::cargo_bin(crate_name!()).expect("Was not able to find binary");
 
-    mask.arg("--maskfile").arg(maskfile);
+    mask.arg("--maskfile")
+        .arg(maskfile)
+        // Force "colored" to output colored text for tests
+        .env("CLICOLOR_FORCE", "1");
 
     mask
 }

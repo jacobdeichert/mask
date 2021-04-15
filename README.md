@@ -475,7 +475,7 @@ You want a global utility CLI for a variety of system tasks such as backing up d
 
 ### Is `mask` available as a lib?
 
-`mask` was designed as a lib from the beginning and is accessible. However, it's very undocumented and will need to be cleaned up before it's considered stable.
+The [mask-parser][mask_parser] crate is available. However, it's not yet documented nor considered stable.
 
 ### Where did the inspiration come from?
 
@@ -513,6 +513,7 @@ Jake Deichert with the help of contributors.
 
 
 [github_ci]: https://github.com/jakedeichert/mask/actions?query=workflow%3ACI
+[mask_parser]: https://crates.io/crates/mask-parser
 [homebrew]: https://formulae.brew.sh/formula/mask
 [crate]: https://crates.io/crates/mask
 [releases]: https://github.com/jakedeichert/mask/releases

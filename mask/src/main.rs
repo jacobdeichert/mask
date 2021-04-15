@@ -1,11 +1,11 @@
-use std::env;
-use std::path::Path;
-
+mod executor;
+mod loader;
 use clap::{crate_name, crate_version, App, AppSettings, Arg, ArgMatches, SubCommand};
 use colored::*;
-
-use mask::command::Command;
-use mask::executor::execute_command;
+use executor::execute_command;
+use mask_parser::maskfile::Command;
+use std::env;
+use std::path::Path;
 
 fn main() {
     let cli_app = App::new(crate_name!())
@@ -23,10 +23,10 @@ fn main() {
         return;
     }
 
-    let root_command = mask::parser::build_command_structure(maskfile.unwrap());
-    let matches = build_subcommands(cli_app, &root_command.subcommands).get_matches();
-    let chosen_cmd = find_command(&matches, &root_command.subcommands)
-        .expect("SubcommandRequired failed to work");
+    let root = mask_parser::parse(maskfile.unwrap());
+    let matches = build_subcommands(cli_app, &root.commands).get_matches();
+    let chosen_cmd =
+        find_command(&matches, &root.commands).expect("SubcommandRequired failed to work");
 
     match execute_command(chosen_cmd, maskfile_path) {
         Ok(status) => match status.code() {
@@ -52,7 +52,7 @@ fn find_maskfile() -> (Result<String, String>, String) {
         _ => Path::new("./maskfile.md"),
     };
 
-    let maskfile = mask::loader::read_maskfile(maskfile_path);
+    let maskfile = loader::read_maskfile(maskfile_path);
 
     if maskfile.is_err() {
         if let Some(p) = maskfile_path.to_str() {
@@ -90,13 +90,13 @@ fn build_subcommands<'a, 'b>(
 ) -> App<'a, 'b> {
     for c in subcommands {
         let mut subcmd = SubCommand::with_name(&c.name)
-            .about(c.desc.as_ref())
+            .about(c.description.as_ref())
             .setting(AppSettings::ColoredHelp)
             .setting(AppSettings::AllowNegativeNumbers);
         if !c.subcommands.is_empty() {
             subcmd = build_subcommands(subcmd, &c.subcommands);
-            // If this parent command has no script source, require a subcommand.
-            if c.script.source == "" {
+            // If this parent command has no script, require a subcommand.
+            if c.script.is_none() {
                 subcmd = subcmd.setting(AppSettings::SubcommandRequired);
             }
         }
@@ -110,7 +110,7 @@ fn build_subcommands<'a, 'b>(
         // Add all named flags
         for f in &c.option_flags {
             let arg = Arg::with_name(&f.name)
-                .help(&f.desc)
+                .help(&f.description)
                 .short(&f.short)
                 .long(&f.long)
                 .takes_value(f.takes_value)

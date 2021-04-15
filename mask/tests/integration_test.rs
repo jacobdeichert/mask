@@ -1,12 +1,10 @@
-use std::path::PathBuf;
-
+mod common;
 use assert_cmd::prelude::*;
 use clap::{crate_name, crate_version};
 use colored::*;
-use predicates::str::contains;
-
-mod common;
 use common::MaskCommandExt;
+use predicates::str::contains;
+use std::path::PathBuf;
 
 #[test]
 fn specifying_a_maskfile_in_a_different_dir() {
@@ -25,14 +23,14 @@ fn specifying_a_maskfile_in_a_different_dir() {
         .success();
 }
 
-// Using current_dir(".github") to make sure the default maskfile.md can't be found
+// Using current_dir("tests") to make sure the default maskfile.md can't be found
 mod when_no_maskfile_found_in_current_directory {
     use super::*;
 
     #[test]
     fn logs_warning_about_missing_maskfile() {
         common::run_mask(&PathBuf::from("./maskfile.md"))
-            .current_dir(".github")
+            .current_dir("tests")
             .command("-V")
             .assert()
             .stdout(contains(format!(
@@ -44,7 +42,7 @@ mod when_no_maskfile_found_in_current_directory {
     #[test]
     fn exits_without_error_for_help() {
         common::run_mask(&PathBuf::from("./maskfile.md"))
-            .current_dir(".github")
+            .current_dir("tests")
             .command("--help")
             .assert()
             .stdout(contains("USAGE:"))
@@ -54,7 +52,7 @@ mod when_no_maskfile_found_in_current_directory {
     #[test]
     fn exits_without_error_for_version() {
         common::run_mask(&PathBuf::from("./maskfile.md"))
-            .current_dir(".github")
+            .current_dir("tests")
             .command("--version")
             .assert()
             .stdout(contains(format!("{} {}", crate_name!(), crate_version!())))
@@ -64,7 +62,7 @@ mod when_no_maskfile_found_in_current_directory {
     #[test]
     fn exits_with_error_for_any_other_command() {
         common::run_mask(&PathBuf::from("./maskfile.md"))
-            .current_dir(".github")
+            .current_dir("tests")
             .command("nothing")
             .assert()
             .code(1)

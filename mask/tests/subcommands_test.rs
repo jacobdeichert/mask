@@ -1,9 +1,8 @@
+mod common;
 use assert_cmd::prelude::*;
 use colored::*;
-use predicates::str::contains;
-
-mod common;
 use common::MaskCommandExt;
+use predicates::str::contains;
 
 #[test]
 fn positional_arguments() {
@@ -101,7 +100,7 @@ echo "system, online"
             .assert()
             .code(1)
             .stderr(contains(format!(
-                "{} Command script requires a lang code which determines which executor to use.",
+                "{} Command is missing script or lang code which determines which executor to use.",
                 "ERROR:".red()
             )))
             .failure();

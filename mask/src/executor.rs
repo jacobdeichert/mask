@@ -1,3 +1,5 @@
+use clap::crate_name;
+use mask_parser::maskfile::Command;
 use std::fs::canonicalize;
 use std::io::Result;
 use std::io::{Error, ErrorKind};
@@ -5,18 +7,10 @@ use std::path::{Path, PathBuf};
 use std::process;
 use std::process::ExitStatus;
 
-use clap::crate_name;
-
-use crate::command::Command;
-
 pub fn execute_command(cmd: Command, maskfile_path: String) -> Result<ExitStatus> {
-    if cmd.script.source == "" {
-        let msg = "Command has no script.";
-        return Err(Error::new(ErrorKind::Other, msg));
-    }
-
-    if cmd.script.executor == "" {
-        let msg = "Command script requires a lang code which determines which executor to use.";
+    let script = cmd.script.clone().expect("script should exist");
+    if script.source.is_empty() || script.executor.is_empty() {
+        let msg = "Command is missing script or lang code which determines which executor to use.";
         return Err(Error::new(ErrorKind::Other, msg));
     }
 
@@ -28,8 +22,9 @@ pub fn execute_command(cmd: Command, maskfile_path: String) -> Result<ExitStatus
 }
 
 fn prepare_command(cmd: &Command) -> process::Command {
-    let executor = cmd.script.executor.clone();
-    let source = cmd.script.source.clone();
+    let script = cmd.script.clone().expect("script should exist");
+    let executor = script.executor.clone();
+    let source = script.source.clone();
 
     match executor.as_ref() {
         "js" | "javascript" => {
