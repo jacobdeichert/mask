@@ -7,6 +7,10 @@
 
 * Split parsing logic into separate crate (mask-parser) [#83](https://github.com/jakedeichert/mask/pull/83)
 
+### Fixed
+
+* Rename option_flags to named_flags [#84](https://github.com/jakedeichert/mask/pull/84)
+
 
 
 
