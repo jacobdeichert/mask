@@ -1,11 +1,9 @@
-use std::env;
-use std::path::Path;
-
 use clap::{crate_name, crate_version, App, AppSettings, Arg, ArgMatches, SubCommand};
 use colored::*;
-
-use mask::command::Command;
 use mask::executor::execute_command;
+use mask_parser::command::Command;
+use std::env;
+use std::path::Path;
 
 fn main() {
     let cli_app = App::new(crate_name!())

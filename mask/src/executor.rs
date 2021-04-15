@@ -1,13 +1,11 @@
+use clap::crate_name;
+use mask_parser::command::Command;
 use std::fs::canonicalize;
 use std::io::Result;
 use std::io::{Error, ErrorKind};
 use std::path::{Path, PathBuf};
 use std::process;
 use std::process::ExitStatus;
-
-use clap::crate_name;
-
-use crate::command::Command;
 
 pub fn execute_command(cmd: Command, maskfile_path: String) -> Result<ExitStatus> {
     if cmd.script.source == "" {
