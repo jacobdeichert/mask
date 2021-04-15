@@ -5,7 +5,9 @@
 
 ### Added
 
-* Split parsing logic into separate crate (mask-parser) [#83](https://github.com/jakedeichert/mask/pull/83)
+* Split parsing logic into separate crate (`mask-parser`) [#83](https://github.com/jakedeichert/mask/pull/83)
+
+* Add `--maskfile-introspect` flag to print out the maskfile command structure as json [#85](https://github.com/jakedeichert/mask/pull/85)
 
 ### Fixed
 
