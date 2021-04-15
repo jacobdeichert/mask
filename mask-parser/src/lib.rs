@@ -1,2 +1,4 @@
 pub mod command;
-pub mod parser;
+mod parser;
+
+pub use parser::parse;

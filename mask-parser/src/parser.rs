@@ -2,7 +2,7 @@ use crate::command::{Command, OptionFlag, RequiredArg};
 use pulldown_cmark::Event::{Code, End, InlineHtml, Start, Text};
 use pulldown_cmark::{Options, Parser, Tag};
 
-pub fn build_command_structure(maskfile_contents: String) -> Command {
+pub fn parse(maskfile_contents: String) -> Command {
     let parser = create_markdown_parser(&maskfile_contents);
     let mut commands = vec![];
     let mut current_command = Command::new(1);
@@ -57,7 +57,7 @@ pub fn build_command_structure(maskfile_contents: String) -> Command {
                     current_command.required_args = required_args;
                 }
                 Tag::BlockQuote => {
-                    current_command.desc = text.clone();
+                    current_command.description = text.clone();
                 }
                 #[cfg(not(windows))]
                 Tag::CodeBlock(lang_code) => {
@@ -100,7 +100,7 @@ pub fn build_command_structure(maskfile_contents: String) -> Command {
                     let param = config_split.next().unwrap_or("").trim();
                     let val = config_split.next().unwrap_or("").trim();
                     match param {
-                        "desc" => current_option_flag.desc = val.to_string(),
+                        "desc" => current_option_flag.description = val.to_string(),
                         "type" => {
                             if val == "string" || val == "number" {
                                 current_option_flag.takes_value = true;
@@ -220,8 +220,6 @@ fn parse_command_name_and_required_args(text: String) -> (String, Vec<RequiredAr
     let name = name.join(" ").trim().to_string();
     let mut required_args: Vec<RequiredArg> = vec![];
 
-    // TODO: some how support infinite args? https://github.com/jakedeichert/mask/issues/4
-    // TODO: support optional args https://github.com/jakedeichert/mask/issues/5
     if !args.is_empty() {
         let args = args.join("");
         let args: Vec<&str> = args.split(" ").collect();
@@ -267,12 +265,12 @@ This command has no source/script.
 "#;
 
 #[cfg(test)]
-mod build_command_structure {
+mod parse {
     use super::*;
 
     #[test]
     fn parses_serve_command_name() {
-        let tree = build_command_structure(TEST_MASKFILE.to_string());
+        let tree = parse(TEST_MASKFILE.to_string());
         let serve_command = &tree
             .subcommands
             .iter()
@@ -283,18 +281,18 @@ mod build_command_structure {
 
     #[test]
     fn parses_serve_command_description() {
-        let tree = build_command_structure(TEST_MASKFILE.to_string());
+        let tree = parse(TEST_MASKFILE.to_string());
         let serve_command = &tree
             .subcommands
             .iter()
             .find(|cmd| cmd.name == "serve")
             .expect("serve command missing");
-        assert_eq!(serve_command.desc, "Serve the app on the `port`");
+        assert_eq!(serve_command.description, "Serve the app on the `port`");
     }
 
     #[test]
     fn parses_serve_required_positional_arguments() {
-        let tree = build_command_structure(TEST_MASKFILE.to_string());
+        let tree = parse(TEST_MASKFILE.to_string());
         let serve_command = &tree
             .subcommands
             .iter()
@@ -306,7 +304,7 @@ mod build_command_structure {
 
     #[test]
     fn parses_serve_command_executor() {
-        let tree = build_command_structure(TEST_MASKFILE.to_string());
+        let tree = parse(TEST_MASKFILE.to_string());
         let serve_command = &tree
             .subcommands
             .iter()
@@ -317,7 +315,7 @@ mod build_command_structure {
 
     #[test]
     fn parses_serve_command_source_with_tildes() {
-        let tree = build_command_structure(TEST_MASKFILE.to_string());
+        let tree = parse(TEST_MASKFILE.to_string());
         let serve_command = &tree
             .subcommands
             .iter()
@@ -331,7 +329,7 @@ mod build_command_structure {
 
     #[test]
     fn parses_node_command_source_with_backticks() {
-        let tree = build_command_structure(TEST_MASKFILE.to_string());
+        let tree = parse(TEST_MASKFILE.to_string());
         let node_command = &tree
             .subcommands
             .iter()
@@ -345,7 +343,7 @@ mod build_command_structure {
 
     #[test]
     fn adds_verbose_optional_flag_to_command_with_script() {
-        let tree = build_command_structure(TEST_MASKFILE.to_string());
+        let tree = parse(TEST_MASKFILE.to_string());
         let node_command = tree
             .subcommands
             .iter()
@@ -355,7 +353,7 @@ mod build_command_structure {
         assert_eq!(node_command.option_flags.len(), 1);
         assert_eq!(node_command.option_flags[0].name, "verbose");
         assert_eq!(
-            node_command.option_flags[0].desc,
+            node_command.option_flags[0].description,
             "Sets the level of verbosity"
         );
         assert_eq!(node_command.option_flags[0].short, "v");
@@ -366,7 +364,7 @@ mod build_command_structure {
 
     #[test]
     fn does_not_add_command_with_no_script() {
-        let tree = build_command_structure(TEST_MASKFILE.to_string());
+        let tree = parse(TEST_MASKFILE.to_string());
         let no_script_command = tree.subcommands.iter().find(|cmd| cmd.name == "no_script");
 
         assert!(

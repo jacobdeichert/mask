@@ -21,7 +21,7 @@ fn main() {
         return;
     }
 
-    let root_command = mask_parser::parser::build_command_structure(maskfile.unwrap());
+    let root_command = mask_parser::parse(maskfile.unwrap());
     let matches = build_subcommands(cli_app, &root_command.subcommands).get_matches();
     let chosen_cmd = find_command(&matches, &root_command.subcommands)
         .expect("SubcommandRequired failed to work");
@@ -88,7 +88,7 @@ fn build_subcommands<'a, 'b>(
 ) -> App<'a, 'b> {
     for c in subcommands {
         let mut subcmd = SubCommand::with_name(&c.name)
-            .about(c.desc.as_ref())
+            .about(c.description.as_ref())
             .setting(AppSettings::ColoredHelp)
             .setting(AppSettings::AllowNegativeNumbers);
         if !c.subcommands.is_empty() {
@@ -108,7 +108,7 @@ fn build_subcommands<'a, 'b>(
         // Add all named flags
         for f in &c.option_flags {
             let arg = Arg::with_name(&f.name)
-                .help(&f.desc)
+                .help(&f.description)
                 .short(&f.short)
                 .long(&f.long)
                 .takes_value(f.takes_value)

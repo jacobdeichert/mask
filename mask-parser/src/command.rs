@@ -2,7 +2,7 @@
 pub struct Command {
     pub cmd_level: u8,
     pub name: String,
-    pub desc: String,
+    pub description: String,
     pub script: Script,
     pub subcommands: Vec<Command>,
     pub required_args: Vec<RequiredArg>,
@@ -14,7 +14,7 @@ impl Command {
         Self {
             cmd_level,
             name: "".to_string(),
-            desc: "".to_string(),
+            description: "".to_string(),
             script: Script::new(),
             subcommands: vec![],
             required_args: vec![],
@@ -27,7 +27,7 @@ impl Command {
         if !self.script.source.is_empty() {
             self.option_flags.push(OptionFlag {
                 name: "verbose".to_string(),
-                desc: "Sets the level of verbosity".to_string(),
+                description: "Sets the level of verbosity".to_string(),
                 short: "v".to_string(),
                 long: "verbose".to_string(),
                 multiple: false,
@@ -80,7 +80,7 @@ impl RequiredArg {
 #[derive(Debug, Clone)]
 pub struct OptionFlag {
     pub name: String,
-    pub desc: String,
+    pub description: String,
     pub short: String,            // v        (used as -v)
     pub long: String,             // verbose  (used as --verbose)
     pub multiple: bool,           // Can it have multiple values? (-vvv OR -i one -i two)
@@ -94,7 +94,7 @@ impl OptionFlag {
     pub fn new() -> Self {
         Self {
             name: "".to_string(),
-            desc: "".to_string(),
+            description: "".to_string(),
             short: "".to_string(),
             long: "".to_string(),
             multiple: false,
