@@ -254,12 +254,12 @@ dependencies = [
  "assert_fs",
  "clap",
  "colored",
- "mask_parser",
+ "mask-parser",
  "predicates",
 ]
 
 [[package]]
-name = "mask_parser"
+name = "mask-parser"
 version = "0.1.0"
 dependencies = [
  "pulldown-cmark",
