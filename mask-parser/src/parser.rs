@@ -1,8 +1,8 @@
-use crate::command::{Command, OptionFlag, RequiredArg};
+use crate::maskfile::*;
 use pulldown_cmark::Event::{Code, End, InlineHtml, Start, Text};
 use pulldown_cmark::{Options, Parser, Tag};
 
-pub fn parse(maskfile_contents: String) -> Command {
+pub fn parse(maskfile_contents: String) -> Maskfile {
     let parser = create_markdown_parser(&maskfile_contents);
     let mut commands = vec![];
     let mut current_command = Command::new(1);
@@ -151,8 +151,11 @@ pub fn parse(maskfile_contents: String) -> Command {
     let all = treeify_commands(commands);
     let root_command = all.first().expect("root command must exist");
 
-    // The command root and a possible init script
-    root_command.clone()
+    Maskfile {
+        title: root_command.name.clone(),
+        description: root_command.description.clone(),
+        commands: root_command.subcommands.clone(),
+    }
 }
 
 fn create_markdown_parser<'a>(maskfile_contents: &'a String) -> Parser<'a> {
@@ -272,7 +275,7 @@ mod parse {
     fn parses_serve_command_name() {
         let tree = parse(TEST_MASKFILE.to_string());
         let serve_command = &tree
-            .subcommands
+            .commands
             .iter()
             .find(|cmd| cmd.name == "serve")
             .expect("serve command missing");
@@ -283,7 +286,7 @@ mod parse {
     fn parses_serve_command_description() {
         let tree = parse(TEST_MASKFILE.to_string());
         let serve_command = &tree
-            .subcommands
+            .commands
             .iter()
             .find(|cmd| cmd.name == "serve")
             .expect("serve command missing");
@@ -294,7 +297,7 @@ mod parse {
     fn parses_serve_required_positional_arguments() {
         let tree = parse(TEST_MASKFILE.to_string());
         let serve_command = &tree
-            .subcommands
+            .commands
             .iter()
             .find(|cmd| cmd.name == "serve")
             .expect("serve command missing");
@@ -306,7 +309,7 @@ mod parse {
     fn parses_serve_command_executor() {
         let tree = parse(TEST_MASKFILE.to_string());
         let serve_command = &tree
-            .subcommands
+            .commands
             .iter()
             .find(|cmd| cmd.name == "serve")
             .expect("serve command missing");
@@ -317,7 +320,7 @@ mod parse {
     fn parses_serve_command_source_with_tildes() {
         let tree = parse(TEST_MASKFILE.to_string());
         let serve_command = &tree
-            .subcommands
+            .commands
             .iter()
             .find(|cmd| cmd.name == "serve")
             .expect("serve command missing");
@@ -331,7 +334,7 @@ mod parse {
     fn parses_node_command_source_with_backticks() {
         let tree = parse(TEST_MASKFILE.to_string());
         let node_command = &tree
-            .subcommands
+            .commands
             .iter()
             .find(|cmd| cmd.name == "node")
             .expect("node command missing");
@@ -345,7 +348,7 @@ mod parse {
     fn adds_verbose_optional_flag_to_command_with_script() {
         let tree = parse(TEST_MASKFILE.to_string());
         let node_command = tree
-            .subcommands
+            .commands
             .iter()
             .find(|cmd| cmd.name == "node")
             .expect("node command missing");
@@ -365,7 +368,7 @@ mod parse {
     #[test]
     fn does_not_add_command_with_no_script() {
         let tree = parse(TEST_MASKFILE.to_string());
-        let no_script_command = tree.subcommands.iter().find(|cmd| cmd.name == "no_script");
+        let no_script_command = tree.commands.iter().find(|cmd| cmd.name == "no_script");
 
         assert!(
             no_script_command.is_none(),

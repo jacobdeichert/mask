@@ -1,7 +1,7 @@
 use clap::{crate_name, crate_version, App, AppSettings, Arg, ArgMatches, SubCommand};
 use colored::*;
 use mask::executor::execute_command;
-use mask_parser::command::Command;
+use mask_parser::maskfile::Command;
 use std::env;
 use std::path::Path;
 
@@ -21,10 +21,10 @@ fn main() {
         return;
     }
 
-    let root_command = mask_parser::parse(maskfile.unwrap());
-    let matches = build_subcommands(cli_app, &root_command.subcommands).get_matches();
-    let chosen_cmd = find_command(&matches, &root_command.subcommands)
-        .expect("SubcommandRequired failed to work");
+    let root = mask_parser::parse(maskfile.unwrap());
+    let matches = build_subcommands(cli_app, &root.commands).get_matches();
+    let chosen_cmd =
+        find_command(&matches, &root.commands).expect("SubcommandRequired failed to work");
 
     match execute_command(chosen_cmd, maskfile_path) {
         Ok(status) => match status.code() {

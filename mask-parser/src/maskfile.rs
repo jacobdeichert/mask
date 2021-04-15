@@ -1,4 +1,11 @@
 #[derive(Debug, Clone)]
+pub struct Maskfile {
+    pub title: String,
+    pub description: String,
+    pub commands: Vec<Command>,
+}
+
+#[derive(Debug, Clone)]
 pub struct Command {
     pub cmd_level: u8,
     pub name: String,

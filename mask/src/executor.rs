@@ -1,5 +1,5 @@
 use clap::crate_name;
-use mask_parser::command::Command;
+use mask_parser::maskfile::Command;
 use std::fs::canonicalize;
 use std::io::Result;
 use std::io::{Error, ErrorKind};
