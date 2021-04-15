@@ -31,12 +31,16 @@ pub fn parse(maskfile_contents: String) -> Maskfile {
                             && lang_code.to_string() != "batch"
                             && lang_code.to_string() != "cmd"
                         {
-                            current_command.script.executor = lang_code.to_string();
+                            if let Some(s) = &mut current_command.script {
+                                s.executor = lang_code.to_string();
+                            }
                         }
                     }
                     #[cfg(windows)]
                     Tag::CodeBlock(lang_code) => {
-                        current_command.script.executor = lang_code.to_string();
+                        if let Some(s) = &mut current_command.script {
+                            s.executor = lang_code.to_string();
+                        }
                     }
                     Tag::List(_) => {
                         // We're in an options list if the current text above it is "OPTIONS"
@@ -65,12 +69,16 @@ pub fn parse(maskfile_contents: String) -> Maskfile {
                         && lang_code.to_string() != "batch"
                         && lang_code.to_string() != "cmd"
                     {
-                        current_command.script.source = text.to_string();
+                        if let Some(s) = &mut current_command.script {
+                            s.source = text.to_string();
+                        }
                     }
                 }
                 #[cfg(windows)]
                 Tag::CodeBlock(_) => {
-                    current_command.script.source = text.to_string();
+                    if let Some(s) = &mut current_command.script {
+                        s.source = text.to_string();
+                    }
                 }
                 Tag::List(_) => {
                     // Don't go lower than zero (for cases where it's a non-OPTIONS list)
@@ -211,7 +219,7 @@ fn treeify_commands(commands: Vec<Command>) -> Vec<Command> {
 
     // the command or any one of its subcommands must have script to be included in the tree
     // root level commands must be retained
-    command_tree.retain(|c| c.script.has_script() || !c.subcommands.is_empty() || c.level == 1);
+    command_tree.retain(|c| c.script.is_some() || !c.subcommands.is_empty() || c.level == 1);
 
     command_tree
 }
@@ -259,6 +267,14 @@ Valid lang codes: js, javascript
 const { name } = process.env;
 console.log(`Hello, ${name}!`);
 ```
+
+## parent
+### parent subcommand
+> This is a subcommand
+
+~~~bash
+echo hey
+~~~
 
 ## no_script
 
@@ -321,6 +337,28 @@ mod parse {
                             }
                         ],
                         "option_flags": [verbose_flag],
+                    },
+                    {
+                        "level": 2,
+                        "name": "parent",
+                        "description": "",
+                        "script": null,
+                        "subcommands": [
+                            {
+                                "level": 3,
+                                "name": "subcommand",
+                                "description": "This is a subcommand",
+                                "script": {
+                                    "executor": "bash",
+                                    "source": "echo hey\n",
+                                },
+                                "subcommands": [],
+                                "required_args": [],
+                                "option_flags": [verbose_flag],
+                            }
+                        ],
+                        "required_args": [],
+                        "option_flags": [],
                     }
                 ]
             }),

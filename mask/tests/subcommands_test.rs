@@ -100,7 +100,7 @@ echo "system, online"
             .assert()
             .code(1)
             .stderr(contains(format!(
-                "{} Command script requires a lang code which determines which executor to use.",
+                "{} Command is missing script or lang code which determines which executor to use.",
                 "ERROR:".red()
             )))
             .failure();

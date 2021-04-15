@@ -19,7 +19,7 @@ pub struct Command {
     pub level: u8,
     pub name: String,
     pub description: String,
-    pub script: Script,
+    pub script: Option<Script>,
     pub subcommands: Vec<Command>,
     pub required_args: Vec<RequiredArg>,
     pub option_flags: Vec<OptionFlag>,
@@ -31,7 +31,7 @@ impl Command {
             level,
             name: "".to_string(),
             description: "".to_string(),
-            script: Script::new(),
+            script: Some(Script::new()),
             subcommands: vec![],
             required_args: vec![],
             option_flags: vec![],
@@ -39,8 +39,15 @@ impl Command {
     }
 
     pub fn build(mut self) -> Self {
+        // Set to None if there is no source and executor
+        if let Some(s) = &mut self.script {
+            if s.source.is_empty() && s.executor.is_empty() {
+                self.script = None;
+            }
+        }
+
         // Auto add common flags like verbose for commands that have a script source
-        if !self.script.source.is_empty() {
+        if self.script.is_some() {
             self.option_flags.push(OptionFlag {
                 name: "verbose".to_string(),
                 description: "Sets the level of verbosity".to_string(),
@@ -71,10 +78,6 @@ impl Script {
             executor: "".to_string(),
             source: "".to_string(),
         }
-    }
-
-    pub fn has_script(&self) -> bool {
-        !self.source.is_empty()
     }
 }
 

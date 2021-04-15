@@ -93,8 +93,8 @@ fn build_subcommands<'a, 'b>(
             .setting(AppSettings::AllowNegativeNumbers);
         if !c.subcommands.is_empty() {
             subcmd = build_subcommands(subcmd, &c.subcommands);
-            // If this parent command has no script source, require a subcommand.
-            if c.script.source == "" {
+            // If this parent command has no script, require a subcommand.
+            if c.script.is_none() {
                 subcmd = subcmd.setting(AppSettings::SubcommandRequired);
             }
         }
