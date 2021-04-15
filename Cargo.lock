@@ -292,19 +292,14 @@ dependencies = [
  "assert_fs",
  "clap",
  "colored",
+ "mask_parser",
  "predicates",
- "pulldown-cmark",
 ]
 
 [[package]]
 name = "mask_parser"
 version = "0.1.0"
 dependencies = [
- "assert_cmd",
- "assert_fs",
- "clap",
- "colored",
- "predicates",
  "pulldown-cmark",
 ]
 

@@ -21,7 +21,7 @@ fn main() {
         return;
     }
 
-    let root_command = mask::parser::build_command_structure(maskfile.unwrap());
+    let root_command = mask_parser::parser::build_command_structure(maskfile.unwrap());
     let matches = build_subcommands(cli_app, &root_command.subcommands).get_matches();
     let chosen_cmd = find_command(&matches, &root_command.subcommands)
         .expect("SubcommandRequired failed to work");
