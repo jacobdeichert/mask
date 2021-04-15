@@ -2,9 +2,6 @@ use std::fs::File;
 use std::io::prelude::*;
 use std::path::Path;
 
-// TODO: try to find maskfile in current directory and maybe parent directories?
-// https://github.com/jakedeichert/mask/issues/7
-
 pub fn read_maskfile(maskfile: &Path) -> Result<String, String> {
     let file = File::open(maskfile);
     if file.is_err() {
@@ -25,7 +22,7 @@ mod read_maskfile {
 
     #[test]
     fn reads_root_maskfile() {
-        let maskfile = read_maskfile(Path::new("./maskfile.md"));
+        let maskfile = read_maskfile(Path::new("../maskfile.md"));
 
         assert!(maskfile.is_ok(), "maskfile was ok");
 
