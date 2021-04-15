@@ -1,12 +1,10 @@
-use std::path::PathBuf;
-
+mod common;
 use assert_cmd::prelude::*;
 use clap::{crate_name, crate_version};
 use colored::*;
-use predicates::str::contains;
-
-mod common;
 use common::MaskCommandExt;
+use predicates::str::contains;
+use std::path::PathBuf;
 
 #[test]
 fn specifying_a_maskfile_in_a_different_dir() {

@@ -1,12 +1,7 @@
-use pulldown_cmark::{
-    Event::{Code, End, InlineHtml, Start, Text},
-    Options, Parser, Tag,
-};
-
 use crate::command::{Command, OptionFlag, RequiredArg};
+use pulldown_cmark::Event::{Code, End, InlineHtml, Start, Text};
+use pulldown_cmark::{Options, Parser, Tag};
 
-// Woof. This is ugly. I'm planning on giving this a rewrite at some point...
-// At least we have some decent tests in place.
 pub fn build_command_structure(maskfile_contents: String) -> Command {
     let parser = create_markdown_parser(&maskfile_contents);
     let mut commands = vec![];

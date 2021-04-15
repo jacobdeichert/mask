@@ -1,8 +1,7 @@
-use assert_cmd::prelude::*;
-use predicates::str::contains;
-
 mod common;
+use assert_cmd::prelude::*;
 use common::MaskCommandExt;
+use predicates::str::contains;
 
 // NOTE: This test suite depends on the mask binary being available in the current shell
 
