@@ -256,6 +256,7 @@ dependencies = [
  "colored",
  "mask-parser",
  "predicates",
+ "serde_json",
 ]
 
 [[package]]

@@ -14,7 +14,8 @@ fn main() {
         .setting(AppSettings::SubcommandRequired)
         .setting(AppSettings::ColoredHelp)
         .version(crate_version!())
-        .arg(custom_maskfile_path_arg());
+        .arg(custom_maskfile_path_arg())
+        .arg(introspect_arg());
 
     let (maskfile, maskfile_path) = find_maskfile();
     if maskfile.is_err() {
@@ -24,6 +25,13 @@ fn main() {
     }
 
     let root = mask_parser::parse(maskfile.unwrap());
+
+    if is_introspecting() {
+        let json = root.to_json().expect("to_json failed");
+        println!("{}", serde_json::to_string_pretty(&json).unwrap());
+        return;
+    }
+
     let matches = build_subcommands(cli_app, &root.commands).get_matches();
     let chosen_cmd =
         find_command(&matches, &root.commands).expect("SubcommandRequired failed to work");
@@ -71,17 +79,34 @@ fn find_maskfile() -> (Result<String, String>, String) {
     (maskfile, maskfile_path.to_str().unwrap().to_string())
 }
 
+fn is_introspecting() -> bool {
+    let args: Vec<String> = env::args().collect();
+    for a in args {
+        if a == "--maskfile-introspect" {
+            return true;
+        }
+    }
+    false
+}
+
+/// Load a maskfile from another directory
 fn custom_maskfile_path_arg<'a, 'b>() -> Arg<'a, 'b> {
     // This is needed to prevent clap from complaining about the custom flag check
     // within find_maskfile(). It should be removed once clap 3.x is released.
     // See https://github.com/clap-rs/clap/issues/748
-    let custom_maskfile_path = Arg::with_name("maskfile")
+    Arg::with_name("maskfile")
         .help("Path to a different maskfile you want to use")
         .long("maskfile")
         .takes_value(true)
-        .multiple(false);
+        .multiple(false)
+}
 
-    custom_maskfile_path
+/// Print out the maskfile structure in json
+fn introspect_arg<'a, 'b>() -> Arg<'a, 'b> {
+    Arg::with_name("maskfile-introspect")
+        .help("Print out the maskfile command structure in json")
+        .long("maskfile-introspect")
+        .multiple(false)
 }
 
 fn build_subcommands<'a, 'b>(
