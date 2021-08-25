@@ -505,9 +505,8 @@ Also, please review and follow the rules within our [Code of Conduct](CODE_OF_CO
 
 ## Author
 
-Jake Deichert with the help of contributors.
+[Jake Deichert][website] with the help of contributors.
 
-[@jakedeichert][twitter] on Twitter · [Website][website]
 
 
 
