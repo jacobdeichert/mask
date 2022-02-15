@@ -42,7 +42,10 @@ jobs:
       - name: Fetch dependencies
         run: cargo fetch
       - name: Build in release mode
-        run: cargo build --release --frozen --target aarch64-apple-darwin
+        run: |
+          SDKROOT=$(xcrun -sdk macosx --show-sdk-path)
+          MACOSX_DEPLOYMENT_TARGET=$(xcrun -sdk macosx --show-sdk-platform-version)
+          cargo build --release --frozen --target aarch64-apple-darwin
       - name: Add the version tag to the binary name
         run: |
           VERSION_TAG=$(jq --raw-output '.release.tag_name' "$GITHUB_EVENT_PATH")
