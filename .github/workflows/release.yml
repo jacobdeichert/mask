@@ -6,11 +6,9 @@ on:
 
 jobs:
   release-linux:
-    name: Build and attach linux binary
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout master
-        uses: actions/checkout@master
+      - uses: actions/checkout@v2
       - name: Fetch dependencies
         run: cargo fetch
       - name: Build in release mode
@@ -31,12 +29,43 @@ jobs:
         with:
           assets: ./*.zip
 
-  release-macos:
-    name: Build and attach macOS binary
+  release-macos-aarch64:
     runs-on: macos-latest
     steps:
-      - name: Checkout master
-        uses: actions/checkout@master
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          target: aarch64-apple-darwin
+          default: true
+      - name: Fetch dependencies
+        run: cargo fetch
+      - name: Build in release mode
+        run: |
+          SDKROOT=$(xcrun -sdk macosx --show-sdk-path)
+          MACOSX_DEPLOYMENT_TARGET=$(xcrun -sdk macosx --show-sdk-platform-version)
+          cargo build --release --frozen --target aarch64-apple-darwin
+      - name: Add the version tag to the binary name
+        run: |
+          VERSION_TAG=$(jq --raw-output '.release.tag_name' "$GITHUB_EVENT_PATH")
+          TARGET=aarch64-apple-darwin
+          NAME=mask-$VERSION_TAG-$TARGET
+          mkdir $NAME
+          mv ./target/$TARGET/release/mask ./$NAME/mask
+          chmod +x ./$NAME/mask
+          zip -r $NAME.zip $NAME
+      # NOTE: cannot use the attach-release-assets action because macOS doesn't support docker-based actions.
+      # Luckily we can just run the bash script directly.
+      - name: Attach the binary to the release
+        run: ./.github/actions/attach-release-assets/run.sh ./*.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  release-macos-x86-64:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
       - uses: actions-rs/toolchain@v1
         with:
           profile: minimal
@@ -62,10 +91,16 @@ jobs:
         run: ./.github/actions/attach-release-assets/run.sh ./*.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
+  release-homebrew:
+    needs: release-macos-x86-64
+    runs-on: ubuntu-latest
+    steps:
       - name: Bump homebrew-core formula
         uses: mislav/bump-homebrew-formula-action@v1
         if: "!contains(github.ref, '-')" # skip prereleases
         env:
           COMMITTER_TOKEN: ${{ secrets.HOMEBREW_GITHUB_API_TOKEN }}
         with:
+          # Sends a PR to homebrew-core to update the formula 
           formula-name: mask

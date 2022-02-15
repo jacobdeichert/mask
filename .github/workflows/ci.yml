@@ -11,8 +11,7 @@ jobs:
       matrix:
         platform: [ubuntu-latest, windows-latest, macos-latest]
     steps:
-      - name: Checkout master
-        uses: actions/checkout@master
+      - uses: actions/checkout@v2
       - name: Fetch dependencies
         run: cargo fetch
       - name: Build in release mode
@@ -28,8 +27,7 @@ jobs:
     env:
       CLICOLOR_FORCE: 1
     steps:
-      - name: Checkout master
-        uses: actions/checkout@master
+      - uses: actions/checkout@v2
       - name: Add Ruby for a test that requires it
         uses: actions/setup-ruby@master
         with:
@@ -48,10 +46,8 @@ jobs:
         run: cargo test --frozen
 
   format:
-    name: Format
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout master
-        uses: actions/checkout@master
+      - uses: actions/checkout@v2
       - name: Verify formatting is correct
         run: cargo fmt --all -- --check
