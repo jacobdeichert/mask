@@ -5,6 +5,13 @@
 
 
 
+## v0.11.1 (2022-02-14)
+
+### Added
+
+* Add Apple Silicon (M1) binary to releases [#88](https://github.com/jakedeichert/mask/pull/88)
+
+
 
 ## v0.11.0 (2021-04-15)
 

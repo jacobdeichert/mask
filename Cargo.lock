@@ -248,7 +248,7 @@ dependencies = [
 
 [[package]]
 name = "mask"
-version = "0.11.0"
+version = "0.11.1"
 dependencies = [
  "assert_cmd",
  "assert_fs",
