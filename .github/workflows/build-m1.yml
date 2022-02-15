@@ -1,0 +1,22 @@
+name: Build M1
+
+on: workflow_dispatch 
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          target: aarch64-apple-darwin
+          default: true
+      - name: Fetch dependencies
+        run: cargo fetch
+      - name: Build in release mode
+        run: cargo build --release --frozen --target aarch64-apple-darwin
+      - name: list file
+        run: ls -al ./target/aarch64-apple-darwin/release/
+       
