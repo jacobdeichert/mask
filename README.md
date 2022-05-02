@@ -505,7 +505,7 @@ Also, please review and follow the rules within our [Code of Conduct](CODE_OF_CO
 
 ## Author
 
-[Jake Deichert][website] with the help of contributors.
+Jacob Deichert with the help of contributors.
 
 
 
@@ -517,8 +517,6 @@ Also, please review and follow the rules within our [Code of Conduct](CODE_OF_CO
 [crate]: https://crates.io/crates/mask
 [releases]: https://github.com/jakedeichert/mask/releases
 [new_issue]: https://github.com/jakedeichert/mask/issues/new
-[website]: https://jakedeichert.com
-[twitter]: https://twitter.com/jakedeichert
 [2]: https://github.com/jakedeichert/mask/issues/5
 [maid]: https://github.com/egoist/maid
 [just]: https://github.com/casey/just
