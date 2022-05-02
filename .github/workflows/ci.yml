@@ -29,9 +29,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Add Ruby for a test that requires it
-        uses: actions/setup-ruby@master
+        uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 2.6.x
+          ruby-version: 2.6
       - name: Fetch dependencies
         run: cargo fetch
       - name: Build in test mode
