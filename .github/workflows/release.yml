@@ -91,7 +91,7 @@ jobs:
         run: ./.github/actions/attach-release-assets/run.sh ./*.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      
+
   release-homebrew:
     needs: release-macos-x86-64
     runs-on: ubuntu-latest
@@ -102,5 +102,30 @@ jobs:
         env:
           COMMITTER_TOKEN: ${{ secrets.HOMEBREW_GITHUB_API_TOKEN }}
         with:
-          # Sends a PR to homebrew-core to update the formula 
+          # Sends a PR to homebrew-core to update the formula
           formula-name: mask
+
+  release-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Fetch dependencies
+        run: cargo fetch
+      - name: Build in release mode
+        run: cargo build --release --frozen --target x86_64-pc-windows-msvc
+      - name: Add the version tag to the binary name
+        shell: bash
+        run: |
+          VERSION_TAG=$(jq --raw-output '.release.tag_name' "$GITHUB_EVENT_PATH")
+          TARGET=x86_64-pc-windows-msvc
+          NAME=mask-$VERSION_TAG-$TARGET
+          mkdir $NAME
+          mv ./target/$TARGET/release/mask.exe ./$NAME/mask.exe
+          7z a $NAME.zip $NAME
+      # NOTE: cannot use the attach-release-assets action because windows doesn't support docker-based actions.
+      # Luckily we can just run the bash script directly.
+      - name: TEST Attach the binary to the release
+        shell: bash
+        run: ./.github/actions/attach-release-assets/run.sh ./*.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
