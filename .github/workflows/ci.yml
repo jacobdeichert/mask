@@ -70,7 +70,9 @@ jobs:
           mv ./target/$TARGET/release/mask.exe ./$NAME/mask.exe
           7z a $NAME.zip $NAME
           ls -al
-      - uses: actions/upload-artifact@v3
+      - name: TEST Attach the binary to the release
+        uses: ./.github/actions/attach-release-assets
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          name: mask-result
-          path: mask-null-x86_64-pc-windows-msvc.zip
+          assets: ./*.zip
