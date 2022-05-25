@@ -3,77 +3,51 @@ name: CI
 on: [push, pull_request]
 
 jobs:
-  # build:
-  #   name: ${{ matrix.platform }}-build
-  #   runs-on: ${{ matrix.platform }}
-  #   strategy:
-  #     fail-fast: false
-  #     matrix:
-  #       platform: [ubuntu-latest, windows-latest, macos-latest]
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #     - name: Fetch dependencies
-  #       run: cargo fetch
-  #     - name: Build in release mode
-  #       run: cargo build --release --frozen
-
-  # test:
-  #   name: ${{ matrix.platform }}-test
-  #   runs-on: ${{ matrix.platform }}
-  #   strategy:
-  #     fail-fast: false
-  #     matrix:
-  #       platform: [ubuntu-latest, windows-latest, macos-latest]
-  #   env:
-  #     CLICOLOR_FORCE: 1
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #     - name: Add Ruby for a test that requires it
-  #       uses: ruby/setup-ruby@v1
-  #       with:
-  #         ruby-version: 2.6
-  #     - name: Fetch dependencies
-  #       run: cargo fetch
-  #     - name: Build in test mode
-  #       run: cargo build --tests --frozen
-  #     - name: Make mask available globally (windows)
-  #       run: copy ./target/debug/mask.exe ~/.cargo/bin/
-  #       if: matrix.platform == 'windows-latest'
-  #     - name: Make mask available globally (linux / mac)
-  #       run: cp ./target/debug/mask ~/.cargo/bin
-  #       if: matrix.platform != 'windows-latest'
-  #     - name: Run tests
-  #       run: cargo test --frozen
-
-  # format:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #     - name: Verify formatting is correct
-  #       run: cargo fmt --all -- --check
-
-  test-release-windows:
-    runs-on: windows-latest
+  build:
+    name: ${{ matrix.platform }}-build
+    runs-on: ${{ matrix.platform }}
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [ubuntu-latest, windows-latest, macos-latest]
     steps:
       - uses: actions/checkout@v2
       - name: Fetch dependencies
         run: cargo fetch
       - name: Build in release mode
-        run: cargo build --release --frozen --target x86_64-pc-windows-msvc
-      - name: Add the version tag to the binary name
-        shell: bash
-        run: |
-          VERSION_TAG=$(jq --raw-output '.release.tag_name' "$GITHUB_EVENT_PATH")
-          TARGET=x86_64-pc-windows-msvc
-          NAME=mask-$VERSION_TAG-$TARGET
-          mkdir $NAME
-          mv ./target/$TARGET/release/mask.exe ./$NAME/mask.exe
-          7z a $NAME.zip $NAME
-          ls -al
-      # NOTE: cannot use the attach-release-assets action because windows doesn't support docker-based actions.
-      # Luckily we can just run the bash script directly.
-      - name: TEST Attach the binary to the release
-        shell: bash
-        run: ./.github/actions/attach-release-assets/run.sh ./*.zip
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: cargo build --release --frozen
+
+  test:
+    name: ${{ matrix.platform }}-test
+    runs-on: ${{ matrix.platform }}
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [ubuntu-latest, windows-latest, macos-latest]
+    env:
+      CLICOLOR_FORCE: 1
+    steps:
+      - uses: actions/checkout@v2
+      - name: Add Ruby for a test that requires it
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.6
+      - name: Fetch dependencies
+        run: cargo fetch
+      - name: Build in test mode
+        run: cargo build --tests --frozen
+      - name: Make mask available globally (windows)
+        run: copy ./target/debug/mask.exe ~/.cargo/bin/
+        if: matrix.platform == 'windows-latest'
+      - name: Make mask available globally (linux / mac)
+        run: cp ./target/debug/mask ~/.cargo/bin
+        if: matrix.platform != 'windows-latest'
+      - name: Run tests
+        run: cargo test --frozen
+
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Verify formatting is correct
+        run: cargo fmt --all -- --check
