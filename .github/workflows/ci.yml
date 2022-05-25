@@ -68,5 +68,5 @@ jobs:
           NAME=mask-$VERSION_TAG-$TARGET
           mkdir $NAME
           mv ./target/$TARGET/release/mask.exe ./$NAME/mask.exe
-          zip -r $NAME.zip $NAME
+          7z a $NAME.zip $NAME
           ls -al
