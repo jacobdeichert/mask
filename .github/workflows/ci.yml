@@ -70,9 +70,10 @@ jobs:
           mv ./target/$TARGET/release/mask.exe ./$NAME/mask.exe
           7z a $NAME.zip $NAME
           ls -al
+      # NOTE: cannot use the attach-release-assets action because windows doesn't support docker-based actions.
+      # Luckily we can just run the bash script directly.
       - name: TEST Attach the binary to the release
-        uses: ./.github/actions/attach-release-assets
+        shell: bash
+        run: ./.github/actions/attach-release-assets/run.sh ./*.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          assets: ./*.zip
