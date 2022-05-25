@@ -51,3 +51,21 @@ jobs:
       - uses: actions/checkout@v2
       - name: Verify formatting is correct
         run: cargo fmt --all -- --check
+
+  test-release-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Fetch dependencies
+        run: cargo fetch
+      - name: Build in release mode
+        run: cargo build --release --frozen --target x86_64-pc-windows-msvc
+      - name: Add the version tag to the binary name
+        run: |
+          VERSION_TAG=$(jq --raw-output '.release.tag_name' "$GITHUB_EVENT_PATH")
+          TARGET=x86_64-pc-windows-msvc
+          NAME=mask-$VERSION_TAG-$TARGET
+          mkdir $NAME
+          move ./target/$TARGET/release/mask.exe ./$NAME/mask.exe
+          zip -r $NAME.zip $NAME
+          dir
