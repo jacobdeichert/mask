@@ -3,54 +3,54 @@ name: CI
 on: [push, pull_request]
 
 jobs:
-  build:
-    name: ${{ matrix.platform }}-build
-    runs-on: ${{ matrix.platform }}
-    strategy:
-      fail-fast: false
-      matrix:
-        platform: [ubuntu-latest, windows-latest, macos-latest]
-    steps:
-      - uses: actions/checkout@v2
-      - name: Fetch dependencies
-        run: cargo fetch
-      - name: Build in release mode
-        run: cargo build --release --frozen
+  # build:
+  #   name: ${{ matrix.platform }}-build
+  #   runs-on: ${{ matrix.platform }}
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       platform: [ubuntu-latest, windows-latest, macos-latest]
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - name: Fetch dependencies
+  #       run: cargo fetch
+  #     - name: Build in release mode
+  #       run: cargo build --release --frozen
 
-  test:
-    name: ${{ matrix.platform }}-test
-    runs-on: ${{ matrix.platform }}
-    strategy:
-      fail-fast: false
-      matrix:
-        platform: [ubuntu-latest, windows-latest, macos-latest]
-    env:
-      CLICOLOR_FORCE: 1
-    steps:
-      - uses: actions/checkout@v2
-      - name: Add Ruby for a test that requires it
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: 2.6
-      - name: Fetch dependencies
-        run: cargo fetch
-      - name: Build in test mode
-        run: cargo build --tests --frozen
-      - name: Make mask available globally (windows)
-        run: copy ./target/debug/mask.exe ~/.cargo/bin/
-        if: matrix.platform == 'windows-latest'
-      - name: Make mask available globally (linux / mac)
-        run: cp ./target/debug/mask ~/.cargo/bin
-        if: matrix.platform != 'windows-latest'
-      - name: Run tests
-        run: cargo test --frozen
+  # test:
+  #   name: ${{ matrix.platform }}-test
+  #   runs-on: ${{ matrix.platform }}
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       platform: [ubuntu-latest, windows-latest, macos-latest]
+  #   env:
+  #     CLICOLOR_FORCE: 1
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - name: Add Ruby for a test that requires it
+  #       uses: ruby/setup-ruby@v1
+  #       with:
+  #         ruby-version: 2.6
+  #     - name: Fetch dependencies
+  #       run: cargo fetch
+  #     - name: Build in test mode
+  #       run: cargo build --tests --frozen
+  #     - name: Make mask available globally (windows)
+  #       run: copy ./target/debug/mask.exe ~/.cargo/bin/
+  #       if: matrix.platform == 'windows-latest'
+  #     - name: Make mask available globally (linux / mac)
+  #       run: cp ./target/debug/mask ~/.cargo/bin
+  #       if: matrix.platform != 'windows-latest'
+  #     - name: Run tests
+  #       run: cargo test --frozen
 
-  format:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Verify formatting is correct
-        run: cargo fmt --all -- --check
+  # format:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - name: Verify formatting is correct
+  #       run: cargo fmt --all -- --check
 
   test-release-windows:
     runs-on: windows-latest
