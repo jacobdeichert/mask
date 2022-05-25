@@ -61,11 +61,12 @@ jobs:
       - name: Build in release mode
         run: cargo build --release --frozen --target x86_64-pc-windows-msvc
       - name: Add the version tag to the binary name
+        shell: bash
         run: |
           VERSION_TAG=$(jq --raw-output '.release.tag_name' "$GITHUB_EVENT_PATH")
           TARGET=x86_64-pc-windows-msvc
           NAME=mask-$VERSION_TAG-$TARGET
           mkdir $NAME
-          move ./target/$TARGET/release/mask.exe ./$NAME/mask.exe
+          mv ./target/$TARGET/release/mask.exe ./$NAME/mask.exe
           zip -r $NAME.zip $NAME
-          dir
+          ls -al
