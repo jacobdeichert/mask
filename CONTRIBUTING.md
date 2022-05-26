@@ -16,7 +16,7 @@ If you're logging a bug, please be as detailed as possible. It's highly recommen
 
 ## Running the test suite
 
-After you clone `mask` you will need to [install](https://github.com/jakedeichert/mask#installation) it to successfully run the test suite.
+After you clone `mask` you will need to [install](https://github.com/jacobdeichert/mask#installation) it to successfully run the test suite.
 
 Once you have `mask` installed, you can then run `mask link` and `mask test` to run the entire test suite. This will ensure all test cases are running against the latest modifications you've made to the `mask` source.
 

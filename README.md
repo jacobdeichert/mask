@@ -3,7 +3,7 @@
 </p>
 
 
-[![build status](https://github.com/jakedeichert/mask/workflows/CI/badge.svg?branch=master)][github_ci]
+[![build status](https://github.com/jacobdeichert/mask/workflows/CI/badge.svg?branch=master)][github_ci]
 [![mask version](https://img.shields.io/crates/v/mask.svg)][crate]
 [![mask crate downloads](https://img.shields.io/crates/d/mask.svg)][crate]
 
@@ -511,15 +511,13 @@ Jacob Deichert with the help of contributors.
 
 
 
-[github_ci]: https://github.com/jakedeichert/mask/actions?query=workflow%3ACI
+[github_ci]: https://github.com/jacobdeichert/mask/actions?query=workflow%3ACI
 [mask_parser]: https://crates.io/crates/mask-parser
 [homebrew]: https://formulae.brew.sh/formula/mask
 [crate]: https://crates.io/crates/mask
-[releases]: https://github.com/jakedeichert/mask/releases
-[new_issue]: https://github.com/jakedeichert/mask/issues/new
-[2]: https://github.com/jakedeichert/mask/issues/5
+[releases]: https://github.com/jacobdeichert/mask/releases
+[2]: https://github.com/jacobdeichert/mask/issues/5
 [maid]: https://github.com/egoist/maid
 [just]: https://github.com/casey/just
 [clap]: https://github.com/clap-rs/clap
 [cmark]: https://github.com/raphlinus/pulldown-cmark
-[windows_issue]: https://github.com/jakedeichert/mask/issues/10

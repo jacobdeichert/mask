@@ -2,8 +2,8 @@
 name = "mask-parser"
 version = "0.2.0"
 description = "A parser for the maskfile.md format"
-authors = ["Jake Deichert <git@jakedeichert.com>"]
-repository = "https://github.com/jakedeichert/mask"
+authors = ["Jacob Deichert <git@jakedeichert.com>"]
+repository = "https://github.com/jacobdeichert/mask"
 keywords = ["cli", "task", "command", "maskfile", "markdown"]
 categories = ["command-line-interface", "command-line-utilities", "development-tools::build-utils", "parser-implementations"]
 edition = "2018"
