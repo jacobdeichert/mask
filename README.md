@@ -21,9 +21,9 @@ To get started, follow the guide below or check out the more [advanced features]
 
 ## Installation
 
-### Precompiled binaries for linux and macOS
+### Precompiled binaries
 
-Head to the [Releases page][releases] and look for the latest published version. Under **Assets** you'll see zips available for download for linux and macOS. Once downloaded, you can unzip them and then move the `mask` binary to somewhere accessible in your `$PATH` like `mv mask /usr/local/bin`.
+Head to the [Releases page][releases] and look for the latest published version. Under **Assets** you'll see zips available for download for linux, macOS and Windows. Once downloaded, you can unzip them and then move the `mask` binary to somewhere accessible in your `$PATH` like `mv mask /usr/local/bin`.
 
 ### Homebrew
 
