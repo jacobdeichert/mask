@@ -124,7 +124,7 @@ jobs:
           7z a $NAME.zip $NAME
       # NOTE: cannot use the attach-release-assets action because windows doesn't support docker-based actions.
       # Luckily we can just run the bash script directly.
-      - name: TEST Attach the binary to the release
+      - name: Attach the binary to the release
         shell: bash
         run: ./.github/actions/attach-release-assets/run.sh ./*.zip
         env:
