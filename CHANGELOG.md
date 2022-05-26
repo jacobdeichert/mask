@@ -5,6 +5,14 @@
 
 
 
+## v0.11.2 (2022-05-25)
+
+### Added
+
+* Add Windows binary to releases [#89](https://github.com/jacobdeichert/mask/pull/89)
+
+
+
 ## v0.11.1 (2022-02-14)
 
 ### Added
