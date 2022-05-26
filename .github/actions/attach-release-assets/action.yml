@@ -1,6 +1,6 @@
 name: attach-release-assets
 description: Attaches files/assets/binaries to a GitHub Release
-author: Jake Deichert
+author: Jacob Deichert
 branding:
   icon: file-plus
   color: orange
