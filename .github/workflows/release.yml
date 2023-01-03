@@ -28,6 +28,32 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           assets: ./*.zip
+  
+  release-linux-musl:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Fetch dependencies
+        run: cargo fetch
+      - name: Build in release mode
+        run: |
+          rustup target add x86_64-unknown-linux-musl
+          cargo build --release --frozen --target x86_64-unknown-linux-musl
+      - name: Add the version tag to the binary name
+        run: |
+          VERSION_TAG=$(jq --raw-output '.release.tag_name' "$GITHUB_EVENT_PATH")
+          TARGET=x86_64-unknown-linux-musl
+          NAME=mask-$VERSION_TAG-$TARGET
+          mkdir $NAME
+          mv ./target/$TARGET/release/mask ./$NAME/mask
+          chmod +x ./$NAME/mask
+          zip -r $NAME.zip $NAME
+      - name: Attach the binary to the release
+        uses: ./.github/actions/attach-release-assets
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          assets: ./*.zip
 
   release-macos-aarch64:
     runs-on: macos-latest
