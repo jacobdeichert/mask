@@ -3,6 +3,10 @@
 
 ## UNRELEASED
 
+### Added
+
+* Add musl linux binary to releases [#95](https://github.com/jacobdeichert/mask/pull/95)
+
 
 
 ## v0.11.2 (2022-05-25)
