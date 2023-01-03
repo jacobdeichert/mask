@@ -5,7 +5,7 @@
 
 ### Added
 
-* Add musl linux binary to releases [#95](https://github.com/jacobdeichert/mask/pull/95)
+* Add musl linux binary to releases [#95](https://github.com/jacobdeichert/mask/pull/95) ([@8Mobius8](https://github.com/8Mobius8))
 
 
 
