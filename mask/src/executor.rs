@@ -18,7 +18,22 @@ pub fn execute_command(cmd: Command, maskfile_path: String) -> Result<ExitStatus
     child = add_utility_variables(child, maskfile_path);
     child = add_flag_variables(child, &cmd);
 
-    child.spawn()?.wait()
+    child
+        .spawn()
+        .map_err(|e| {
+            if e.kind() != ErrorKind::NotFound {
+                return e;
+            }
+            Error::new(
+                ErrorKind::NotFound,
+                format!(
+                    "program '{}' for executor '{}' not in PATH",
+                    child.get_program().to_string_lossy(),
+                    script.executor
+                ),
+            )
+        })?
+        .wait()
 }
 
 fn prepare_command(cmd: &Command) -> process::Command {
