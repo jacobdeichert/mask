@@ -26,6 +26,28 @@ echo "this won't do anything..."
         .failure();
 }
 
+#[test]
+fn custom_not_found_error_if_program_not_found() {
+    let (_temp, maskfile_path) = common::maskfile(
+        r#"
+## missing
+~~~notfound
+echo "this won't do anything..."
+~~~
+"#,
+    );
+
+    common::run_mask(&maskfile_path)
+        .command("missing")
+        .assert()
+        .code(1)
+        .stderr(contains(format!(
+            "{} program 'notfound' for executor 'notfound' not in PATH",
+            "ERROR:".red()
+        )))
+        .failure();
+}
+
 #[cfg(windows)]
 #[test]
 fn powershell() {
