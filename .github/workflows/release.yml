@@ -19,7 +19,7 @@ jobs:
           TARGET=x86_64-unknown-linux-gnu
           NAME=mask-$VERSION_TAG-$TARGET
           INCLUDE_NAME=mask-$TARGET
-          mkdir $NAME
+          mkdir $INCLUDE_NAME
           mv ./target/$TARGET/release/mask ./$INCLUDE_NAME/mask
           chmod +x ./$INCLUDE_NAME/mask
           zip -r $NAME.zip $INCLUDE_NAME
