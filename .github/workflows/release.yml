@@ -17,7 +17,7 @@ jobs:
         run: |
           VERSION_TAG=$(jq --raw-output '.release.tag_name' "$GITHUB_EVENT_PATH")
           TARGET=x86_64-unknown-linux-gnu
-          NAME=mask-$TARGET
+          NAME=mask-$VERSION_TAG-$TARGET
           mkdir $NAME
           mv ./target/$TARGET/release/mask ./$NAME/mask
           chmod +x ./$NAME/mask
@@ -144,7 +144,7 @@ jobs:
         run: |
           VERSION_TAG=$(jq --raw-output '.release.tag_name' "$GITHUB_EVENT_PATH")
           TARGET=x86_64-pc-windows-msvc
-          NAME=mask-$VERSION_TAG-$TARGET
+          NAME=mask-$TARGET
           mkdir $NAME
           mv ./target/$TARGET/release/mask.exe ./$NAME/mask.exe
           7z a $NAME.zip $NAME
