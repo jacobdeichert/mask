@@ -148,10 +148,16 @@ jobs:
           mkdir $NAME
           mv ./target/$TARGET/release/mask.exe ./$NAME/mask.exe
           7z a $NAME.zip $NAME
+          certutil -hashfile $NAME.zip sha256 | grep -E [A-Fa-f0-9]{64} > $NAME.zip.sha256
       # NOTE: cannot use the attach-release-assets action because windows doesn't support docker-based actions.
       # Luckily we can just run the bash script directly.
       - name: Attach the binary to the release
         shell: bash
         run: ./.github/actions/attach-release-assets/run.sh ./*.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Attach the binary to the release
+        shell: bash
+        run: ./.github/actions/attach-release-assets/run.sh ./*.sha256
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
