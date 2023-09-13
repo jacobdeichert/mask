@@ -30,7 +30,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           assets: ./*.zip
-      - name: Attach the binary to the release
+      - name: Attach the checksums to the release
         uses: ./.github/actions/attach-release-assets
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -64,7 +64,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           assets: ./*.zip
-      - name: Attach the binary to the release
+      - name: Attach the checksums to the release
         uses: ./.github/actions/attach-release-assets
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -105,7 +105,7 @@ jobs:
         run: ./.github/actions/attach-release-assets/run.sh ./*.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Attach the binary to the release
+      - name: Attach the checksums to the release
         shell: bash
         run: ./.github/actions/attach-release-assets/run.sh ./*.sha256
         env:
@@ -142,7 +142,7 @@ jobs:
         run: ./.github/actions/attach-release-assets/run.sh ./*.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Attach the binary to the release
+      - name: Attach the checksums to the release
         shell: bash
         run: ./.github/actions/attach-release-assets/run.sh ./*.sha256
         env:
@@ -187,7 +187,7 @@ jobs:
         run: ./.github/actions/attach-release-assets/run.sh ./*.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Attach the binary to the release
+      - name: Attach the checksums to the release
         shell: bash
         run: ./.github/actions/attach-release-assets/run.sh ./*.sha256
         env:
