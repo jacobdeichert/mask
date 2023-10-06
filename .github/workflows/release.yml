@@ -8,7 +8,7 @@ jobs:
   release-linux:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Fetch dependencies
         run: cargo fetch
       - name: Build in release mode
@@ -35,11 +35,11 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           assets: ./*.sha256
-  
+
   release-linux-musl:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Fetch dependencies
         run: cargo fetch
       - name: Build in release mode
@@ -72,7 +72,7 @@ jobs:
   release-macos-aarch64:
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - uses: actions-rs/toolchain@v1
         with:
           profile: minimal
@@ -111,7 +111,7 @@ jobs:
   release-macos-x86-64:
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - uses: actions-rs/toolchain@v1
         with:
           profile: minimal
@@ -160,7 +160,7 @@ jobs:
   release-windows:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Fetch dependencies
         run: cargo fetch
       - name: Build in release mode
