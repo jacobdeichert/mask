@@ -22,12 +22,19 @@ jobs:
           mv ./target/$TARGET/release/mask ./$NAME/mask
           chmod +x ./$NAME/mask
           zip -r $NAME.zip $NAME
+          shasum -a 256 $NAME.zip > $NAME.zip.sha256
       - name: Attach the binary to the release
         uses: ./.github/actions/attach-release-assets
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           assets: ./*.zip
+      - name: Attach the checksums to the release
+        uses: ./.github/actions/attach-release-assets
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          assets: ./*.sha256
   
   release-linux-musl:
     runs-on: ubuntu-latest
@@ -48,12 +55,19 @@ jobs:
           mv ./target/$TARGET/release/mask ./$NAME/mask
           chmod +x ./$NAME/mask
           zip -r $NAME.zip $NAME
+          shasum -a 256 $NAME.zip > $NAME.zip.sha256
       - name: Attach the binary to the release
         uses: ./.github/actions/attach-release-assets
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           assets: ./*.zip
+      - name: Attach the checksums to the release
+        uses: ./.github/actions/attach-release-assets
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          assets: ./*.sha256
 
   release-macos-aarch64:
     runs-on: macos-latest
@@ -81,10 +95,16 @@ jobs:
           mv ./target/$TARGET/release/mask ./$NAME/mask
           chmod +x ./$NAME/mask
           zip -r $NAME.zip $NAME
+          shasum -a 256 $NAME.zip > $NAME.zip.sha256
       # NOTE: cannot use the attach-release-assets action because macOS doesn't support docker-based actions.
       # Luckily we can just run the bash script directly.
       - name: Attach the binary to the release
         run: ./.github/actions/attach-release-assets/run.sh ./*.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Attach the checksums to the release
+        shell: bash
+        run: ./.github/actions/attach-release-assets/run.sh ./*.sha256
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -111,10 +131,16 @@ jobs:
           mv ./target/$TARGET/release/mask ./$NAME/mask
           chmod +x ./$NAME/mask
           zip -r $NAME.zip $NAME
+          shasum -a 256 $NAME.zip > $NAME.zip.sha256
       # NOTE: cannot use the attach-release-assets action because macOS doesn't support docker-based actions.
       # Luckily we can just run the bash script directly.
       - name: Attach the binary to the release
         run: ./.github/actions/attach-release-assets/run.sh ./*.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Attach the checksums to the release
+        shell: bash
+        run: ./.github/actions/attach-release-assets/run.sh ./*.sha256
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -148,10 +174,16 @@ jobs:
           mkdir $NAME
           mv ./target/$TARGET/release/mask.exe ./$NAME/mask.exe
           7z a $NAME.zip $NAME
+          certutil -hashfile $NAME.zip sha256 | grep -E [A-Fa-f0-9]{64} > $NAME.zip.sha256
       # NOTE: cannot use the attach-release-assets action because windows doesn't support docker-based actions.
       # Luckily we can just run the bash script directly.
       - name: Attach the binary to the release
         shell: bash
         run: ./.github/actions/attach-release-assets/run.sh ./*.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Attach the checksums to the release
+        shell: bash
+        run: ./.github/actions/attach-release-assets/run.sh ./*.sha256
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
