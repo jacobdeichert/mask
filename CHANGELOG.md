@@ -3,6 +3,12 @@
 
 ## UNRELEASED
 
+### Added
+
+* Improve error message for invalid executors [#99](https://github.com/jacobdeichert/mask/pull/99) ([@brumhard](https://github.com/brumhard))
+
+* Publish sha256 checksums with each release [#103](https://github.com/jacobdeichert/mask/pull/103) ([@simonsan](https://github.com/simonsan))
+
 
 
 ## v0.11.3 (2023-01-08)
