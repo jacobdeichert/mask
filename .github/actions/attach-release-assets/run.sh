@@ -5,12 +5,12 @@ if [[ -z "$GITHUB_TOKEN" ]]; then
 fi
 
 # A file glob of assets to upload. The docker entrypoint arg is "inputs.assets".
-ASSETS_GLOB=$1
+ASSET_GLOBS=($1)
 AUTH_HEADER="Authorization: token ${GITHUB_TOKEN}"
 RELEASE_ID=$(jq --raw-output '.release.id' "$GITHUB_EVENT_PATH")
 
 # Upload each asset file to the GitHub Release
-for asset_file in $ASSETS_GLOB; do
+for asset_file in "${ASSET_GLOBS[@]}"; do
     filename=$(basename "$asset_file")
     upload_url="https://uploads.github.com/repos/${GITHUB_REPOSITORY}/releases/${RELEASE_ID}/assets?name=${filename}"
 
@@ -33,5 +33,3 @@ for asset_file in $ASSETS_GLOB; do
         exit 1
     fi
 done
-
-
