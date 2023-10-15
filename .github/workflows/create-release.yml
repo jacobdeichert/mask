@@ -31,6 +31,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          # Must use a PAT to bypass the branch protection rule (allows pushing commits without requiring PRs)
+          token: ${{ secrets.GH_PAT_TO_TRIGGER_RELEASE_WORKFLOW }}
       - name: Validate version number input
         run: |
           if [[ ! "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
@@ -78,6 +81,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          # Must use a PAT to bypass the branch protection rule (allows pushing commits without requiring PRs)
+          token: ${{ secrets.GH_PAT_TO_TRIGGER_RELEASE_WORKFLOW }}
       - name: Validate version number input
         run: |
           if [[ ! "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
