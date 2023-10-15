@@ -1,0 +1,105 @@
+name: Create Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      crateName:
+        description: 'Crate to Release'
+        required: true
+        default: 'mask'
+        type: choice
+        options:
+          - mask
+          - mask-parser
+      releaseVersion:
+        description: 'Version'
+        required: true
+      changelogUpdated:
+        description: 'Is the CHANGELOG up to date?'
+        required: true
+        type: boolean
+
+permissions:
+  contents: write
+
+env:
+  VERSION: ${{ github.event.inputs.releaseVersion }}
+
+jobs:
+  release-mask:
+    if: ${{ github.event.inputs.crateName == 'mask' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate version number input
+        run: |
+          if [[ ! "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "ERROR: invalid version number supplied '$VERSION'"
+            exit 1
+          fi
+      - name: Verify CHANGELOG was updated
+        run: |
+          if [[ "${{ github.event.inputs.changelogUpdated }}" != "true" ]]; then
+            echo "ERROR: you must update CHANGELOG before creating a new release"
+            exit 1
+          fi
+
+          UNRELEASED_CHANGES=$(sed -n '/## UNRELEASED/,/## v/{//b;p}' CHANGELOG.md)
+          if [[ "$UNRELEASED_CHANGES" == "" ]]; then
+            echo "ERROR: CHANGELOG is missing release notes"
+            exit 1
+          fi
+          # Write the release notes to a temp file we'll use below
+          echo "$UNRELEASED_CHANGES" > ../RELEASE_NOTES.txt
+      - name: Set up git user
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+      - name: Commit version bumps
+        run: |
+          # Bump the version in the changelog
+          sed -i "s/## UNRELEASED/## UNRELEASED\\n\\n\\n## v$VERSION ($(date '+%Y-%m-%d'))/" "CHANGELOG.md"
+          # Bump the crate version
+          sed -i "3s/.*/version = \"$VERSION\"/" "mask/Cargo.toml"
+          # Let cargo bump the version in the lockfile
+          cargo check
+          git add -A && git commit -m "Publish mask v$VERSION"
+          git push
+      - name: Create a new Release
+        env:
+          # Must use a PAT to ensure the Release workflow is triggered
+          # https://docs.github.com/en/actions/using-workflows/triggering-a-workflow#triggering-a-workflow-from-a-workflow
+          GH_TOKEN: ${{ secrets.GH_PAT_TO_TRIGGER_RELEASE_WORKFLOW }}
+        run: |
+          gh release create "mask/$VERSION" --title "mask v$VERSION" --notes-file ../RELEASE_NOTES.txt
+
+  release-mask-parser:
+    if: ${{ github.event.inputs.crateName == 'mask-parser' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate version number input
+        run: |
+          if [[ ! "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "ERROR: invalid version number supplied '$VERSION'"
+            exit 1
+          fi
+      - name: Set up git user
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+      - name: Commit version bumps
+        run: |
+          # Bump the crate version
+          sed -i "3s/.*/version = \"$VERSION\"/" "mask-parser/Cargo.toml"
+          # Let cargo bump the version in the lockfile
+          cargo check
+          git add -A && git commit -m "Publish mask-parser v$VERSION"
+          git push
+      - name: Create a new Release
+        env:
+          # Must use a PAT to ensure the Release workflow is triggered
+          # https://docs.github.com/en/actions/using-workflows/triggering-a-workflow#triggering-a-workflow-from-a-workflow
+          GH_TOKEN: ${{ secrets.GH_PAT_TO_TRIGGER_RELEASE_WORKFLOW }}
+        run: |
+          gh release create "mask-parser/$VERSION" --title "mask-parser v$VERSION"
