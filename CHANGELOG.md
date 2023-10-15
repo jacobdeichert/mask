@@ -3,6 +3,9 @@
 
 ## UNRELEASED
 
+
+## v0.11.4 (2023-10-15)
+
 ### Added
 
 * Improve error message for invalid executors [#99](https://github.com/jacobdeichert/mask/pull/99) ([@brumhard](https://github.com/brumhard))

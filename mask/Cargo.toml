@@ -1,6 +1,6 @@
 [package]
 name = "mask"
-version = "0.11.3"
+version = "0.11.4"
 description = "A CLI task runner defined by a simple markdown file"
 authors = ["Jacob Deichert <git@jakedeichert.com>"]
 repository = "https://github.com/jacobdeichert/mask"
