@@ -9,6 +9,10 @@
 
 * Publish sha256 checksums with each release [#103](https://github.com/jacobdeichert/mask/pull/103) ([@simonsan](https://github.com/simonsan))
 
+* ci: Automate publishing of crates
+
+* ci: Add workflow for creating new releases
+
 
 
 ## v0.11.3 (2023-01-08)
