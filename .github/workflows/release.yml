@@ -2,10 +2,34 @@ name: New Release
 
 on:
   release:
-    types: [created]
+    types: [released]
+
+permissions:
+  contents: write
 
 jobs:
+  release-crate-mask:
+    if: ${{ startsWith(github.ref_name, 'mask/') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: "Publish crate"
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
+        run: cargo publish -p mask
+
+  release-crate-mask-parser:
+    if: ${{ startsWith(github.ref_name, 'mask-parser/') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: "Publish crate"
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
+        run: cargo publish -p mask-parser
+
   release-linux:
+    if: ${{ startsWith(github.ref_name, 'mask/') }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -15,7 +39,7 @@ jobs:
         run: cargo build --release --frozen --target x86_64-unknown-linux-gnu
       - name: Add the version tag to the binary name
         run: |
-          VERSION_TAG=$(jq --raw-output '.release.tag_name' "$GITHUB_EVENT_PATH")
+          VERSION_TAG="$(echo ${{ github.ref_name }} | cut -d/ -f2)"
           TARGET=x86_64-unknown-linux-gnu
           NAME=mask-$VERSION_TAG-$TARGET
           mkdir $NAME
@@ -31,6 +55,7 @@ jobs:
           assets: ./*.zip ./*.sha256
 
   release-linux-musl:
+    if: ${{ startsWith(github.ref_name, 'mask/') }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -42,7 +67,7 @@ jobs:
           cargo build --release --frozen --target x86_64-unknown-linux-musl
       - name: Add the version tag to the binary name
         run: |
-          VERSION_TAG=$(jq --raw-output '.release.tag_name' "$GITHUB_EVENT_PATH")
+          VERSION_TAG="$(echo ${{ github.ref_name }} | cut -d/ -f2)"
           TARGET=x86_64-unknown-linux-musl
           NAME=mask-$VERSION_TAG-$TARGET
           mkdir $NAME
@@ -58,6 +83,7 @@ jobs:
           assets: ./*.zip ./*.sha256
 
   release-macos-aarch64:
+    if: ${{ startsWith(github.ref_name, 'mask/') }}
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
@@ -76,7 +102,7 @@ jobs:
           cargo build --release --frozen --target aarch64-apple-darwin
       - name: Add the version tag to the binary name
         run: |
-          VERSION_TAG=$(jq --raw-output '.release.tag_name' "$GITHUB_EVENT_PATH")
+          VERSION_TAG="$(echo ${{ github.ref_name }} | cut -d/ -f2)"
           TARGET=aarch64-apple-darwin
           NAME=mask-$VERSION_TAG-$TARGET
           mkdir $NAME
@@ -92,6 +118,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   release-macos-x86-64:
+    if: ${{ startsWith(github.ref_name, 'mask/') }}
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
@@ -107,7 +134,7 @@ jobs:
         run: cargo build --release --frozen --target x86_64-apple-darwin
       - name: Add the version tag to the binary name
         run: |
-          VERSION_TAG=$(jq --raw-output '.release.tag_name' "$GITHUB_EVENT_PATH")
+          VERSION_TAG="$(echo ${{ github.ref_name }} | cut -d/ -f2)"
           TARGET=x86_64-apple-darwin
           NAME=mask-$VERSION_TAG-$TARGET
           mkdir $NAME
@@ -123,12 +150,12 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   release-homebrew:
+    if: ${{ startsWith(github.ref_name, 'mask/') }}
     needs: release-macos-x86-64
     runs-on: ubuntu-latest
     steps:
       - name: Bump homebrew-core formula
-        uses: mislav/bump-homebrew-formula-action@v1
-        if: "!contains(github.ref, '-')" # skip prereleases
+        uses: mislav/bump-homebrew-formula-action@v3
         env:
           COMMITTER_TOKEN: ${{ secrets.HOMEBREW_GITHUB_API_TOKEN }}
         with:
@@ -136,6 +163,7 @@ jobs:
           formula-name: mask
 
   release-windows:
+    if: ${{ startsWith(github.ref_name, 'mask/') }}
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
@@ -146,7 +174,7 @@ jobs:
       - name: Add the version tag to the binary name
         shell: bash
         run: |
-          VERSION_TAG=$(jq --raw-output '.release.tag_name' "$GITHUB_EVENT_PATH")
+          VERSION_TAG="$(echo ${{ github.ref_name }} | cut -d/ -f2)"
           TARGET=x86_64-pc-windows-msvc
           NAME=mask-$VERSION_TAG-$TARGET
           mkdir $NAME
