@@ -87,18 +87,13 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: stable
-          target: aarch64-apple-darwin
-          default: true
       - name: Fetch dependencies
         run: cargo fetch
       - name: Build in release mode
         run: |
           SDKROOT=$(xcrun -sdk macosx --show-sdk-path)
           MACOSX_DEPLOYMENT_TARGET=$(xcrun -sdk macosx --show-sdk-platform-version)
+          rustup target add aarch64-apple-darwin
           cargo build --release --frozen --target aarch64-apple-darwin
       - name: Add the version tag to the binary name
         run: |
@@ -122,12 +117,6 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: stable
-          target: x86_64-apple-darwin
-          default: true
       - name: Fetch dependencies
         run: cargo fetch
       - name: Build in release mode
