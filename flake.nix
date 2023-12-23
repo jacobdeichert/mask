@@ -1,5 +1,5 @@
 {
-  description = "Build a cargo project without extra checks";
+  description = "A CLI task runner defined by a simple markdown file";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
@@ -44,9 +44,6 @@
         };
 
         devShells.default = craneLib.devShell {
-          packages = [
-            # pkgs.ripgrep
-          ];
         };
       });
 }
