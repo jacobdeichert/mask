@@ -10,40 +10,67 @@
     };
 
     flake-utils.url = "github:numtide/flake-utils";
+
+    rust-overlay = {
+      url = "github:oxalica/rust-overlay";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        flake-utils.follows = "flake-utils";
+      };
+    };
+
   };
 
-  outputs = { self, nixpkgs, crane, flake-utils, ... }:
+  outputs = { self, nixpkgs, flake-utils, rust-overlay, crane }:
     flake-utils.lib.eachDefaultSystem (system:
       let
-        pkgs = nixpkgs.legacyPackages.${system};
+        pkgs = import nixpkgs {
+          inherit system;
+          overlays = [
+            rust-overlay.overlays.default
+          ];
+        };
 
-        craneLib = crane.lib.${system};
-        my-crate = craneLib.buildPackage {
-          src = craneLib.cleanCargoSource (craneLib.path ./.);
-          pname = "mask";
-          version = "0.11.4";
+        inherit (pkgs) lib;
+        
+        rust-toolchain = (pkgs.rust-bin.fromRustupToolchainFile ./rust-toolchain.toml);
+        craneLib = (crane.mkLib pkgs).overrideToolchain rust-toolchain;
+        binaryPackageMetadata = craneLib.crateNameFromCargoToml {
+          cargoToml = ./mask/Cargo.toml;
+        };
+
+        buildInputs = [
+            
+        ] ++ pkgs.lib.optionals pkgs.stdenv.isDarwin (with pkgs.darwin.apple_sdk.frameworks; [
+          pkgs.libiconv
+          CoreFoundation
+          Security
+          SystemConfiguration
+        ]);
+        src = craneLib.cleanCargoSource ./.;
+        
+        crate = craneLib.buildPackage {
+          inherit src;
+          pname = binaryPackageMetadata.pname;
+          version = binaryPackageMetadata.version;
+          nativeBuildInputs = buildInputs;
           strictDeps = true;
           doCheck = false;
-
-          buildInputs = [
-            # Add additional build inputs here
-          ] ++ pkgs.lib.optionals pkgs.stdenv.isDarwin [
-            # Additional darwin specific inputs can be set here
-            pkgs.libiconv
-          ];
-
-          # Additional environment variables can be set directly
-          # MY_CUSTOM_VAR = "some value";
         };
       in
       {
-        packages.default = my-crate;
+        checks = {
+          inherit crate;
+        };
+
+        packages.default = crate;
 
         apps.default = flake-utils.lib.mkApp {
-          drv = my-crate;
+          drv = crate;
         };
 
-        devShells.default = craneLib.devShell {
+        devShells.default = pkgs.mkShell {
+          buildInputs = [ rust-toolchain buildInputs pkgs.cargo-watch pkgs.rnix-lsp ];
         };
-      });
+    });
 }

@@ -3,3 +3,5 @@ members = [
     "mask",
     "mask-parser",
 ]
+
+resolver = "2"
