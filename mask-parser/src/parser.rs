@@ -1,4 +1,3 @@
-#![allow(clippy::all)]
 use crate::maskfile::*;
 use pulldown_cmark::Event::{Code, End, InlineHtml, Start, Text};
 use pulldown_cmark::{Options, Parser, Tag};
@@ -314,7 +313,6 @@ echo "This is required - $required"
 #[cfg(test)]
 mod parse {
     use super::*;
-    use pretty_assertions::assert_eq;
     use serde_json::json;
 
     #[test]
