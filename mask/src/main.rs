@@ -132,6 +132,12 @@ fn build_subcommands<'a, 'b>(
             subcmd = subcmd.arg(arg);
         }
 
+        // Add all optional arguments
+        for o in &c.optional_args {
+            let arg = Arg::with_name(&o.name);
+            subcmd = subcmd.arg(arg);
+        }
+
         // Add all named flags
         for f in &c.named_flags {
             let arg = Arg::with_name(&f.name)
@@ -172,6 +178,14 @@ fn get_command_options(mut cmd: Command, matches: &ArgMatches) -> Command {
     // Check all required args
     for arg in &mut cmd.required_args {
         arg.val = matches.value_of(arg.name.clone()).unwrap().to_string();
+    }
+
+    // Check optional args
+    for opt_arg in &mut cmd.optional_args {
+        opt_arg.val = matches
+            .value_of(opt_arg.name.clone())
+            .unwrap_or("")
+            .to_string();
     }
 
     // Check all named flags
