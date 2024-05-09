@@ -458,7 +458,7 @@ echo "$required" "$optional"
 
 ~~~powershell
 param(
-    $req = $env:required
+    $req = $env:required,
     $opt = $env:optional
 )
 
@@ -488,7 +488,7 @@ echo "$required" "$optional"
 
 ~~~powershell
 param(
-    $req = $env:required
+    $req = $env:required,
     $opt = $env:optional
 )
 

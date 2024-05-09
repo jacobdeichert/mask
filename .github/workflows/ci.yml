@@ -32,6 +32,10 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: 2.6
+      - name: Add PHP for a test that requires it
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
       - name: Fetch dependencies
         run: cargo fetch
       - name: Build in test mode
