@@ -43,6 +43,7 @@ echo something
                 },
                 "subcommands": [],
                 "required_args": [],
+                "optional_args": [],
                 "named_flags": [verbose_flag],
             }
         ]

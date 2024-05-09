@@ -440,3 +440,68 @@ Write-Output "This shouldn't render"
             .failure();
     }
 }
+
+mod optional_args {
+    use predicates::boolean::PredicateBooleanExt;
+
+    use super::*;
+
+    #[test]
+    fn runs_with_optional_args() {
+        let (_temp, maskfile_path) = common::maskfile(
+            r#"
+## with_opt (required) [optional]
+
+~~~bash
+echo "$required" "$optional"
+~~~
+
+~~~powershell
+param(
+    $req = $env:required
+    $opt = $env:optional
+)
+
+Write-Output "$req $opt"
+~~~
+"#,
+        );
+
+        common::run_mask(&maskfile_path)
+            .cli("with_opt")
+            .arg("I am required")
+            .arg("I am optional")
+            .assert()
+            .stdout(contains("I am required I am optional"))
+            .success();
+    }
+
+    #[test]
+    fn does_not_fail_when_optional_arg_is_not_present() {
+        let (_temp, maskfile_path) = common::maskfile(
+            r#"
+## with_opt (required) [optional]
+
+~~~bash
+echo "$required" "$optional"
+~~~
+
+~~~powershell
+param(
+    $req = $env:required
+    $opt = $env:optional
+)
+
+Write-Output "$req $opt"
+~~~
+"#,
+        );
+
+        common::run_mask(&maskfile_path)
+            .cli("with_opt")
+            .arg("I am required")
+            .assert()
+            .stdout(contains("I am optional").not())
+            .success();
+    }
+}
