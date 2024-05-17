@@ -56,7 +56,6 @@ pub fn parse(maskfile_contents: String) -> Maskfile {
             }
             End(tag) => match tag {
                 Tag::Header(_) => {
-                    // let (name, required_args) = parse_command_name_and_required_args(text.clone());
                     let (name, required_args, optional_args) =
                         parse_command_name_required_and_optional_args(text.clone());
                     current_command.name = name;
