@@ -3,6 +3,7 @@
 
 ## UNRELEASED
 
+* ci: Fix php tests on macos actions runner [#110](https://github.com/jacobdeichert/mask/pull/110)
 
 ## v0.11.4 (2023-10-15)
 
