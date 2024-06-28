@@ -117,6 +117,11 @@ pub fn parse(maskfile_contents: String) -> Maskfile {
                             if val == "number" {
                                 current_option_flag.validate_as_number = true;
                             }
+
+                            if val == "enum" {
+                                current_option_flag.validate_as_enum = true;
+                                current_option_flag.takes_value = true;
+                            }
                         }
                         // Parse out the short and long flag names
                         "flags" => {
@@ -134,6 +139,12 @@ pub fn parse(maskfile_contents: String) -> Maskfile {
                                     current_option_flag.short = name.to_string();
                                 }
                             }
+                        }
+                        "choices" => {
+                            current_option_flag.choices = val
+                                .split(',')
+                                .map(|choice| choice.trim().to_owned())
+                                .collect();
                         }
                         "required" => {
                             current_option_flag.required = true;
@@ -299,6 +310,8 @@ mod parse {
             "takes_value": false,
             "required": false,
             "validate_as_number": false,
+            "validate_as_enum": false,
+            "choices": [],
         });
 
         assert_eq!(

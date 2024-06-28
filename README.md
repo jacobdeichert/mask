@@ -154,6 +154,28 @@ echo "Total: $(($price * $TAX))"
 ~~~
 ```
 
+Set `type` to `enum`, and add a `choices` list, `mask` will validate if the flag value is one of the choices list.
+
+**Example:**
+
+`````markdown
+## print (text)
+
+> Print text with color
+
+**OPTIONS**
+* color
+    * flags: -c --color
+    * type: enum
+    * choices: RED, BLUE, GREEN
+    * desc: Color of the text.
+
+```sh
+COLOR=${color:RED} # Fallback to RED if not supplied
+echo "$COLOR: $text"
+```
+`````
+
 If you exclude the `type` field, `mask` will treat it as a `boolean` flag. If the flag is passed, its environment variable will be `"true"`, otherwise it will be unset/non-existent.
 
 Important to note that `mask` auto injects a very common `boolean` flag called `verbose` into every single command even if it's not used, which saves a bit of typing for you. This means every command implicitly has a `-v` and `--verbose` flag already.

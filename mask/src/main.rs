@@ -196,6 +196,18 @@ fn get_command_options(mut cmd: Command, matches: &ArgMatches) -> Command {
                 }
             }
 
+            if flag.validate_as_enum {
+                if !flag.choices.iter().any(|choice| choice == &raw_value) {
+                    eprintln!(
+                        "{} flag `{}` expects one of {:?}",
+                        "ERROR:".red(),
+                        flag.name,
+                        flag.choices,
+                    );
+                    std::process::exit(1);
+                }
+            }
+
             raw_value
         } else {
             // Check if the boolean flag is present and set to "true".
