@@ -177,11 +177,11 @@ Write-Output $sum
     }
 }
 
-mod enum_option_flag {
+mod choices {
     use super::*;
 
     #[test]
-    fn properly_validates_flag_with_type_enum() {
+    fn properly_validates_flag_with_choices() {
         let (_temp, maskfile_path) = common::maskfile(
             r#"
 ## color
@@ -189,19 +189,19 @@ mod enum_option_flag {
 **OPTIONS**
 * val
     * flags: --val
-    * type: enum
+    * type: string
     * choices: RED, BLUE, GREEN
 
-~~~bash
+```bash
 echo "Value: $val"
-~~~
+```
 
-~~~powershell
+```powershell
 param (
     $in = $env:val
 )
 Write-Output "Value: $in"
-~~~
+```
 "#,
         );
 
@@ -221,19 +221,19 @@ Write-Output "Value: $in"
 **OPTIONS**
 * val
     * flags: --val
-    * type: enum
+    * type: string
     * choices: RED, BLUE, GREEN
 
-~~~bash
+```bash
 echo "Value: $val"
-~~~
+```
 
-~~~powershell
+```powershell
 param (
     $in = $env:val
 )
 Write-Output "Value: $in"
-~~~
+```
 "#,
         );
 

@@ -154,7 +154,7 @@ echo "Total: $(($price * $TAX))"
 ~~~
 ```
 
-Set `type` to `enum`, and add a `choices` list, `mask` will validate if the flag value is one of the choices list.
+If you add a `choices` list, `mask` will validate if the flag value is one of them.
 
 **Example:**
 
@@ -166,7 +166,7 @@ Set `type` to `enum`, and add a `choices` list, `mask` will validate if the flag
 **OPTIONS**
 * color
     * flags: -c --color
-    * type: enum
+    * type: string
     * choices: RED, BLUE, GREEN
     * desc: Color of the text.
 

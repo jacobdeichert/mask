@@ -27,7 +27,6 @@ echo something
         "takes_value": false,
         "required": false,
         "validate_as_number": false,
-        "validate_as_enum": false,
         "choices": [],
     });
 

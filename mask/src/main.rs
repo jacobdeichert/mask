@@ -184,6 +184,18 @@ fn get_command_options(mut cmd: Command, matches: &ArgMatches) -> Command {
                 .unwrap()
                 .to_string();
 
+            if !flag.choices.is_empty() {
+                if !flag.choices.iter().any(|choice| choice == &raw_value) {
+                    eprintln!(
+                        "{} flag `{}` expects one of {:?}",
+                        "ERROR:".red(),
+                        flag.name,
+                        flag.choices,
+                    );
+                    std::process::exit(1);
+                }
+            }
+
             if flag.validate_as_number && raw_value != "" {
                 // Try converting to an integer or float to validate it
                 if raw_value.parse::<isize>().is_err() && raw_value.parse::<f32>().is_err() {
@@ -191,18 +203,6 @@ fn get_command_options(mut cmd: Command, matches: &ArgMatches) -> Command {
                         "{} flag `{}` expects a numerical value",
                         "ERROR:".red(),
                         flag.name
-                    );
-                    std::process::exit(1);
-                }
-            }
-
-            if flag.validate_as_enum {
-                if !flag.choices.iter().any(|choice| choice == &raw_value) {
-                    eprintln!(
-                        "{} flag `{}` expects one of {:?}",
-                        "ERROR:".red(),
-                        flag.name,
-                        flag.choices,
                     );
                     std::process::exit(1);
                 }
