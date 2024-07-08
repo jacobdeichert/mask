@@ -154,11 +154,11 @@ echo "Total: $(($price * $TAX))"
 ~~~
 ```
 
-If you add a `choices` list, `mask` will validate if the flag value is one of them.
+Coming in v0.11.5: If you add a `choices` list, `mask` will validate if the flag value is one of them.
 
 **Example:**
 
-`````markdown
+```markdown
 ## print (text)
 
 > Print text with color
@@ -170,11 +170,11 @@ If you add a `choices` list, `mask` will validate if the flag value is one of th
     * choices: RED, BLUE, GREEN
     * desc: Color of the text.
 
-```sh
+~~~sh
 COLOR=${color:RED} # Fallback to RED if not supplied
 echo "$COLOR: $text"
+~~~
 ```
-`````
 
 If you exclude the `type` field, `mask` will treat it as a `boolean` flag. If the flag is passed, its environment variable will be `"true"`, otherwise it will be unset/non-existent.
 
