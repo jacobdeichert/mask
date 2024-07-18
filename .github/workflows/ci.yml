@@ -9,7 +9,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        platform: [ubuntu-latest, windows-latest, macos-latest-large]
+        platform: [ubuntu-latest, windows-latest, macos-latest]
     steps:
       - uses: actions/checkout@v4
       - name: Fetch dependencies
