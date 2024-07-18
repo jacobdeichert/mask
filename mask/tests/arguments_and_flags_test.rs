@@ -177,6 +177,76 @@ Write-Output $sum
     }
 }
 
+mod choices {
+    use super::*;
+
+    #[test]
+    fn properly_validates_flag_with_choices() {
+        let (_temp, maskfile_path) = common::maskfile(
+            r#"
+## color
+
+**OPTIONS**
+* val
+    * flags: --val
+    * type: string
+    * choices: RED, BLUE, GREEN
+
+```bash
+echo "Value: $val"
+```
+
+```powershell
+param (
+    $in = $env:val
+)
+Write-Output "Value: $in"
+```
+"#,
+        );
+
+        common::run_mask(&maskfile_path)
+            .cli("color --val RED")
+            .assert()
+            .stdout(contains("Value: RED"))
+            .success();
+    }
+
+    #[test]
+    fn out_of_choices() {
+        let (_temp, maskfile_path) = common::maskfile(
+            r#"
+## color
+
+**OPTIONS**
+* val
+    * flags: --val
+    * type: string
+    * choices: RED, BLUE, GREEN
+
+```bash
+echo "Value: $val"
+```
+
+```powershell
+param (
+    $in = $env:val
+)
+Write-Output "Value: $in"
+```
+"#,
+        );
+
+        common::run_mask(&maskfile_path)
+            .cli("color --val YELLOW")
+            .assert()
+            .stderr(contains(
+                "flag `val` expects one of [\"RED\", \"BLUE\", \"GREEN\"]",
+            ))
+            .failure();
+    }
+}
+
 mod numerical_option_flag {
     use super::*;
 

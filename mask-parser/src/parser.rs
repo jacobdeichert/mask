@@ -137,6 +137,12 @@ pub fn parse(maskfile_contents: String) -> Maskfile {
                                 }
                             }
                         }
+                        "choices" => {
+                            current_option_flag.choices = val
+                                .split(',')
+                                .map(|choice| choice.trim().to_owned())
+                                .collect();
+                        }
                         "required" => {
                             current_option_flag.required = true;
                         }
@@ -327,6 +333,7 @@ mod parse {
             "takes_value": false,
             "required": false,
             "validate_as_number": false,
+            "choices": [],
         });
 
         assert_eq!(

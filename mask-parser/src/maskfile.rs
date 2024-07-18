@@ -59,6 +59,7 @@ impl Command {
                 takes_value: false,
                 required: false,
                 validate_as_number: false,
+                choices: vec![],
                 val: "".to_string(),
             });
         }
@@ -126,6 +127,7 @@ pub struct NamedFlag {
     pub multiple: bool,           // Can it have multiple values? (-vvv OR -i one -i two)
     pub takes_value: bool,        // Does it take a value? (-i value)
     pub validate_as_number: bool, // Should we validate it as a number?
+    pub choices: Vec<String>,     // Choices of flag value.
     pub required: bool,
     /// Used within mask. TODO: store in a different place within mask instead of here.
     #[serde(skip)]
@@ -143,6 +145,7 @@ impl NamedFlag {
             takes_value: false,
             required: false,
             validate_as_number: false,
+            choices: vec![],
             val: "".to_string(),
         }
     }
