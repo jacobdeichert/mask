@@ -3,7 +3,7 @@
 </p>
 
 
-[![build status](https://github.com/jacobdeichert/mask/workflows/CI/badge.svg?branch=master)][github_ci]
+[![build status](https://github.com/jacobdeichert/mask/actions/workflows/ci.yml/badge.svg?branch=master)][github_ci]
 [![mask version](https://img.shields.io/crates/v/mask.svg)][crate]
 [![mask crate downloads](https://img.shields.io/crates/d/mask.svg)][crate]
 
