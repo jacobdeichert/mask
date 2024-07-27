@@ -56,9 +56,11 @@ pub fn parse(maskfile_contents: String) -> Maskfile {
             }
             End(tag) => match tag {
                 Tag::Header(_) => {
-                    let (name, required_args) = parse_command_name_and_required_args(text.clone());
+                    let (name, required_args, optional_args) =
+                        parse_command_name_required_and_optional_args(text.clone());
                     current_command.name = name;
                     current_command.required_args = required_args;
+                    current_command.optional_args = optional_args;
                 }
                 Tag::BlockQuote => {
                     current_command.description = text.clone();
@@ -230,23 +232,37 @@ fn treeify_commands(commands: Vec<Command>) -> Vec<Command> {
     command_tree
 }
 
-fn parse_command_name_and_required_args(text: String) -> (String, Vec<RequiredArg>) {
-    // Find any required arguments. They look like this: (required_arg_name)
-    let name_and_args: Vec<&str> = text.split(|c| c == '(' || c == ')').collect();
-    let (name, args) = name_and_args.split_at(1);
-    let name = name.join(" ").trim().to_string();
-    let mut required_args: Vec<RequiredArg> = vec![];
+fn parse_command_name_required_and_optional_args(
+    text: String,
+) -> (String, Vec<RequiredArg>, Vec<OptionalArg>) {
+    // Checks if any args are present and if not, return early
+    let split_idx = match text.find(|c| c == '(' || c == '[') {
+        Some(idx) => idx,
+        None => return (text.trim().to_string(), vec![], vec![]),
+    };
 
-    if !args.is_empty() {
-        let args = args.join("");
-        let args: Vec<&str> = args.split(" ").collect();
-        required_args = args
-            .iter()
-            .map(|a| RequiredArg::new(a.to_string()))
-            .collect();
-    }
+    let (name, args) = text.split_at(split_idx);
+    let name = name.trim().to_string();
 
-    (name, required_args)
+    // Collects (required_args)
+    let required_args = args
+        .split(|c| c == '(' || c == ')')
+        .filter_map(|arg| match arg.trim() {
+            a if !a.is_empty() && !a.contains('[') => Some(RequiredArg::new(a.trim().to_string())),
+            _ => None,
+        })
+        .collect();
+
+    // Collects [optional_args]
+    let optional_args = args
+        .split(|c| c == '[' || c == ']')
+        .filter_map(|arg| match arg.trim() {
+            a if !a.is_empty() && !a.contains('(') => Some(OptionalArg::new(a.trim().to_string())),
+            _ => None,
+        })
+        .collect();
+
+    (name, required_args, optional_args)
 }
 
 #[cfg(test)]
@@ -285,6 +301,18 @@ echo hey
 ## no_script
 
 This command has no source/script.
+
+## multi (required) [optional]
+
+> Example with optional args
+
+~~~bash
+if ! [ -z "$optional" ]; then
+ echo "This is optional - $optional"
+fi
+
+echo "This is required - $required"
+~~~
 "#;
 
 #[cfg(test)]
@@ -327,6 +355,7 @@ mod parse {
                                 "name": "port"
                             }
                         ],
+                        "optional_args": [],
                         "named_flags": [verbose_flag],
                     },
                     {
@@ -343,6 +372,7 @@ mod parse {
                                 "name": "name"
                             }
                         ],
+                        "optional_args": [],
                         "named_flags": [verbose_flag],
                     },
                     {
@@ -360,12 +390,27 @@ mod parse {
                                     "source": "echo hey\n",
                                 },
                                 "subcommands": [],
+                                "optional_args": [],
                                 "required_args": [],
                                 "named_flags": [verbose_flag],
                             }
                         ],
                         "required_args": [],
+                        "optional_args": [],
                         "named_flags": [],
+                    },
+                    {
+                        "level": 2,
+                        "name": "multi",
+                        "description": "Example with optional args",
+                        "script": {
+                            "executor": "bash",
+                            "source": "if ! [ -z \"$optional\" ]; then\n echo \"This is optional - $optional\"\nfi\n\necho \"This is required - $required\"\n",
+                        },
+                        "subcommands": [],
+                        "required_args": [{ "name": "required" }],
+                        "optional_args": [{ "name": "optional" }],
+                        "named_flags": [verbose_flag],
                     }
                 ]
             }),

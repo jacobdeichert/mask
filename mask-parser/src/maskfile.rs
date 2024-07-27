@@ -22,6 +22,7 @@ pub struct Command {
     pub script: Option<Script>,
     pub subcommands: Vec<Command>,
     pub required_args: Vec<RequiredArg>,
+    pub optional_args: Vec<OptionalArg>,
     pub named_flags: Vec<NamedFlag>,
 }
 
@@ -34,6 +35,7 @@ impl Command {
             script: Some(Script::new()),
             subcommands: vec![],
             required_args: vec![],
+            optional_args: vec![],
             named_flags: vec![],
         }
     }
@@ -91,6 +93,23 @@ pub struct RequiredArg {
 }
 
 impl RequiredArg {
+    pub fn new(name: String) -> Self {
+        Self {
+            name,
+            val: "".to_string(),
+        }
+    }
+}
+
+#[derive(Debug, Serialize, Clone)]
+pub struct OptionalArg {
+    pub name: String,
+    /// Used within mask. TODO: store in a different place within mask instead of here.
+    #[serde(skip)]
+    pub val: String,
+}
+
+impl OptionalArg {
     pub fn new(name: String) -> Self {
         Self {
             name,
