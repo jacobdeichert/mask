@@ -3,6 +3,9 @@
 
 ## UNRELEASED
 
+
+## v0.11.5 (2024-10-13)
+
 * ci: Fix php tests on macos actions runner [#110](https://github.com/jacobdeichert/mask/pull/110)
 
 * Add choices list for flags [#111](https://github.com/jacobdeichert/mask/pull/111) ([@lovejia2022](https://github.com/lovejia2022))
