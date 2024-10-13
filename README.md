@@ -91,7 +91,7 @@ mask test
 
 ### Positional arguments
 
-These are defined beside the command name within `(round_brackets)`. They are required arguments that must be supplied for the command to run. [Optional args][2] are coming soon. The argument name is injected into the script's scope as an environment variable.
+These are defined beside the command name within `(round_brackets)`. They are required arguments that must be supplied for the command to run. The argument name is injected into the script's scope as an environment variable.
 
 **Example:**
 
@@ -102,6 +102,24 @@ These are defined beside the command name within `(round_brackets)`. They are re
 
 ~~~bash
 echo "Testing $test_case in $file"
+~~~
+```
+
+Optional arguments are defined within `[square_brackets]`.
+
+**Example:**
+
+```markdown
+## test [test_file]
+
+> Run tests
+
+~~~bash
+if [[ -n "$test_file" ]]; then
+    echo "Run tests in $test_file..."
+else
+    echo "Running all tests...."
+fi
 ~~~
 ```
 
@@ -154,25 +172,22 @@ echo "Total: $(($price * $TAX))"
 ~~~
 ```
 
-Coming in v0.11.5: If you add a `choices` list, `mask` will validate if the flag value is one of them.
+If you add a `choices` list, `mask` will validate if the flag value is one of them.
 
 **Example:**
 
 ```markdown
-## print (text)
-
-> Print text with color
+## color
 
 **OPTIONS**
 * color
     * flags: -c --color
     * type: string
     * choices: RED, BLUE, GREEN
-    * desc: Color of the text.
 
-~~~sh
-COLOR=${color:RED} # Fallback to RED if not supplied
-echo "$COLOR: $text"
+~~~bash
+COLOR=${color:-RED} # Fallback to RED if not supplied
+echo "Color selected = '$COLOR'"
 ~~~
 ```
 
