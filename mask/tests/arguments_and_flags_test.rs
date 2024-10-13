@@ -213,6 +213,38 @@ Write-Output "Value: $in"
     }
 
     #[test]
+    fn ignores_the_option_if_not_supplied() {
+        let (_temp, maskfile_path) = common::maskfile(
+            r#"
+## color
+
+**OPTIONS**
+* val
+    * flags: --val
+    * type: string
+    * choices: RED, BLUE, GREEN
+
+```bash
+echo "Value: $val;"
+```
+
+```powershell
+param (
+    $in = $env:val
+)
+Write-Output "Value: $in;"
+```
+"#,
+        );
+
+        common::run_mask(&maskfile_path)
+            .cli("color")
+            .assert()
+            .stdout(contains("Value: ;"))
+            .success();
+    }
+
+    #[test]
     fn out_of_choices() {
         let (_temp, maskfile_path) = common::maskfile(
             r#"

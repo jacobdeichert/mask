@@ -198,7 +198,7 @@ fn get_command_options(mut cmd: Command, matches: &ArgMatches) -> Command {
                 .unwrap()
                 .to_string();
 
-            if !flag.choices.is_empty() {
+            if !flag.choices.is_empty() && raw_value != "" {
                 if !flag.choices.iter().any(|choice| choice == &raw_value) {
                     eprintln!(
                         "{} flag `{}` expects one of {:?}",
