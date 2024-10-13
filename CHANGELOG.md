@@ -3,6 +3,9 @@
 
 ## UNRELEASED
 
+* ci: Fix apple x86_64 release process
+
+
 
 ## v0.11.5 (2024-10-13)
 
