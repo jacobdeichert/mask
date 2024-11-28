@@ -233,3 +233,38 @@ echo "Hello, " . $name . "!\n";
         .stdout(contains("Hello, World!"))
         .success();
 }
+
+#[test]
+fn go() {
+    //check if go-mask is installed
+    let output = std::process::Command::new("go-mask")
+        .arg("-h")
+        .output()
+        .expect("Failed to execute `go-mask -h`. Is Go installed?");
+    assert!(output.status.success(), "Go is not installed on the system.");
+
+    let (_temp, maskfile_path) = common::maskfile(
+        r#"
+## go
+```go
+package main
+
+import (
+    "fmt"
+    "os"
+)
+
+func main() {
+    fmt.Println("Hello, " + os.Getenv("name") + "!")
+}
+```
+"#,
+    );
+
+    common::run_mask(&maskfile_path)
+        .command("go")
+        .env("name", "World")
+        .assert()
+        .stdout(contains("Hello, World!"))
+        .success();
+}

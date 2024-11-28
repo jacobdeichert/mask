@@ -63,6 +63,11 @@ fn prepare_command(cmd: &Command) -> process::Command {
             child.arg("-r").arg(source);
             child
         }
+        "go" | "golang" => {
+            let mut child = process::Command::new("go-mask");
+            child.arg("-c").arg(source);
+            child
+        }
         #[cfg(windows)]
         "cmd" | "batch" => {
             let mut child = process::Command::new("cmd.exe");
