@@ -28,6 +28,7 @@ echo something
         "required": false,
         "validate_as_number": false,
         "choices": [],
+        "display_choices": false,
     });
 
     let expected_json = json!({

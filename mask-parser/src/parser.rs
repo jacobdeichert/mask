@@ -92,6 +92,19 @@ pub fn parse(maskfile_contents: String) -> Maskfile {
                         current_command
                             .named_flags
                             .push(current_option_flag.clone());
+                        if !current_option_flag.choices.is_empty()
+                            && current_option_flag.display_choices
+                        {
+                            current_command.description.push_str(
+                                format!(
+                                    "\n-{} or --{} choices: {}",
+                                    current_option_flag.short,
+                                    current_option_flag.long,
+                                    current_option_flag.choices.join(", ")
+                                )
+                                .as_str(),
+                            );
+                        }
                         current_option_flag = NamedFlag::new();
                     }
                 }
@@ -145,6 +158,9 @@ pub fn parse(maskfile_contents: String) -> Maskfile {
                         }
                         "required" => {
                             current_option_flag.required = true;
+                        }
+                        "display_choices" => {
+                            current_option_flag.display_choices = val == "true";
                         }
                         _ => (),
                     };
@@ -313,6 +329,30 @@ fi
 
 echo "This is required - $required"
 ~~~
+
+## display_choices
+
+> Example with display_choices
+
+**OPTIONS**
+- color
+    - flags: -c --color
+    - type: string
+    - choices: RED, BLUE, GREEN
+    - display_choices: true
+- test
+    - flags: -t --test
+    - type: string
+    - choices: ASDF, ASDFE, ZCXV
+    - display_choices: true
+- disabled
+    - flags: -d --disabled
+    - type: string
+    - choices: XXX, YYY, ZZZ
+    - display_choices: false
+~~~bash
+echo "Color selected = '$COLOR'"
+~~~
 "#;
 
 #[cfg(test)]
@@ -334,6 +374,7 @@ mod parse {
             "required": false,
             "validate_as_number": false,
             "choices": [],
+            "display_choices": false,
         });
 
         assert_eq!(
@@ -411,7 +452,58 @@ mod parse {
                         "required_args": [{ "name": "required" }],
                         "optional_args": [{ "name": "optional" }],
                         "named_flags": [verbose_flag],
-                    }
+                    },
+                    {
+                        "level": 2,
+                        "name": "display_choices",
+                        "description": "Example with display_choices\n-c or --color choices: RED, BLUE, GREEN\n-t or --test choices: ASDF, ASDFE, ZCXV",
+                        "script": {
+                            "executor": "bash",
+                            "source": "echo \"Color selected = '$COLOR'\"\n",
+                        },
+                        "subcommands": [],
+                        "required_args": [],
+                        "optional_args": [],
+                        "named_flags": [
+                            {
+                                "name": "color",
+                                "description": "",
+                                "short": "c",
+                                "long": "color",
+                                "multiple": false,
+                                "takes_value": true,
+                                "required": false,
+                                "validate_as_number": false,
+                                "choices": ["RED", "BLUE", "GREEN"],
+                                "display_choices": true
+                            },
+                            {
+                                "name": "test",
+                                "description": "",
+                                "short": "t",
+                                "long": "test",
+                                "multiple": false,
+                                "takes_value": true,
+                                "required": false,
+                                "validate_as_number": false,
+                                "choices": ["ASDF", "ASDFE", "ZCXV"],
+                                "display_choices": true
+                            },
+                            {
+                                "name": "disabled",
+                                "description": "",
+                                "short": "d",
+                                "long": "disabled",
+                                "multiple": false,
+                                "takes_value": true,
+                                "required": false,
+                                "validate_as_number": false,
+                                "choices": ["XXX", "YYY", "ZZZ"],
+                                "display_choices": false,
+                            },
+                            verbose_flag,
+                        ],
+                    },
                 ]
             }),
             maskfile.to_json().expect("should have serialized to json")
