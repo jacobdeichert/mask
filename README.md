@@ -45,7 +45,7 @@ If you prefer to build from source, clone this repo and then run `cargo build --
 
 First, define a simple `maskfile.md` in your project.
 
-```markdown
+````markdown
 # Tasks For My Project
 
 
@@ -56,9 +56,9 @@ First, define a simple `maskfile.md` in your project.
 > Builds my project
 
 <!-- A code block defines the script to be executed -->
-~~~sh
+```sh
 echo "building project..."
-~~~
+```
 
 
 ## test
@@ -71,17 +71,17 @@ are parsed to determine the command structure.
 This code block below is defined as js which means it will be ran with node. Mask also
 supports other scripting runtimes including python, ruby and php!
 
-~~~js
+```js
 console.log("running tests...")
-~~~
 ```
+````
 
 Then, try running one of your commands!
 
-~~~sh
+```sh
 mask build
 mask test
-~~~
+```
 
 
 
@@ -95,33 +95,33 @@ These are defined beside the command name within `(round_brackets)`. They are re
 
 **Example:**
 
-```markdown
+````markdown
 ## test (file) (test_case)
 
 > Run tests
 
-~~~bash
+```bash
 echo "Testing $test_case in $file"
-~~~
 ```
+````
 
 Optional arguments are defined within `[square_brackets]`.
 
 **Example:**
 
-```markdown
+````markdown
 ## test [test_file]
 
 > Run tests
 
-~~~bash
+```bash
 if [[ -n "$test_file" ]]; then
     echo "Run tests in $test_file..."
 else
     echo "Running all tests...."
 fi
-~~~
 ```
+````
 
 ### Named flags
 
@@ -129,7 +129,7 @@ You can define a list of named flags for your commands. The flag name is injecte
 
 **Example:**
 
-```markdown
+````markdown
 ## serve
 
 > Serve this directory
@@ -141,21 +141,21 @@ You can define a list of named flags for your commands. The flag name is injecte
     * type: string
     * desc: Which port to serve on
 
-~~~sh
+```sh
 PORT=${port:-8080} # Set a fallback port if not supplied
 
 if [[ "$verbose" == "true" ]]; then
     echo "Starting an http server on PORT: $PORT"
 fi
 python -m SimpleHTTPServer $PORT
-~~~
 ```
+````
 
 You can also make your flag expect a numerical value by setting its `type` to `number`. This means `mask` will automatically validate it as a number for you. If it fails to validate, `mask` will exit with a helpful error message.
 
 **Example:**
 
-```markdown
+````markdown
 ## purchase (price)
 
 > Calculate the total price of something.
@@ -166,17 +166,17 @@ You can also make your flag expect a numerical value by setting its `type` to `n
     * type: number
     * desc: What's the tax?
 
-~~~sh
+```sh
 TAX=${tax:-1} # Fallback to 1 if not supplied
 echo "Total: $(($price * $TAX))"
-~~~
 ```
+````
 
 If you add a `choices` list, `mask` will validate if the flag value is one of them.
 
 **Example:**
 
-```markdown
+````markdown
 ## color
 
 **OPTIONS**
@@ -185,11 +185,11 @@ If you add a `choices` list, `mask` will validate if the flag value is one of th
     * type: string
     * choices: RED, BLUE, GREEN
 
-~~~bash
+```bash
 COLOR=${color:-RED} # Fallback to RED if not supplied
 echo "Color selected = '$COLOR'"
-~~~
 ```
+````
 
 If you exclude the `type` field, `mask` will treat it as a `boolean` flag. If the flag is passed, its environment variable will be `"true"`, otherwise it will be unset/non-existent.
 
@@ -197,7 +197,7 @@ Important to note that `mask` auto injects a very common `boolean` flag called `
 
 **Example:**
 
-```markdown
+````markdown
 ## test
 
 > Run the test suite
@@ -207,17 +207,17 @@ Important to note that `mask` auto injects a very common `boolean` flag called `
     * flags: -w --watch
     * desc: Run tests on file change
 
-~~~bash
+```bash
 [[ "$watch" == "true" ]] && echo "Starting in watch mode..."
 [[ "$verbose" == "true" ]] && echo "Running with extra logs..."
-~~~
 ```
+````
 
 Flags are optional by default. If you add `required` to your flag definition, `mask` will error if it isn't supplied by the user.
 
 **Example:**
 
-```markdown
+````markdown
 ## ping
 
 **OPTIONS**
@@ -227,17 +227,17 @@ Flags are optional by default. If you add `required` to your flag definition, `m
     * desc: Which domain to ping
     * required
 
-~~~sh
+```sh
 ping $domain
-~~~
 ```
+````
 
 ### Subcommands
 
 Nested command structures can easily be created since they are simply defined by the level of markdown heading. H2 (`##`) is where you define your top-level commands. Every level after that is a subcommand.
 
 **Example:**
-```markdown
+````markdown
 ## services
 
 > Commands related to starting and stopping services
@@ -246,23 +246,23 @@ Nested command structures can easily be created since they are simply defined by
 
 > Start a service.
 
-~~~bash
+```bash
 echo "Starting service $service_name"
-~~~
+```
 
 ### services stop (service_name)
 
 > Stop a service.
 
-~~~bash
+```bash
 echo "Stopping service $service_name"
-~~~
 ```
+````
 
 You may notice above that the `start` and `stop` commands are prefixed with their parent command `services`. Prefixing subcommands with their ancestor commands may help readability in some cases, however, it is completely optional. The example below is the same as above, but without prefixing.
 
 **Example:**
-```markdown
+````markdown
 ## services
 
 > Commands related to starting and stopping services
@@ -271,18 +271,18 @@ You may notice above that the `start` and `stop` commands are prefixed with thei
 
 > Start a service.
 
-~~~bash
+```bash
 echo "Starting service $service_name"
-~~~
+```
 
 ### stop (service_name)
 
 > Stop a service.
 
-~~~bash
+```bash
 echo "Stopping service $service_name"
-~~~
 ```
+````
 
 ### Support for other scripting runtimes
 
@@ -290,16 +290,16 @@ On top of shell/bash scripts, `mask` also supports using node, python, ruby and 
 
 **Example:**
 
-```markdown
+````markdown
 ## shell (name)
 
 > An example shell script
 
 Valid lang codes: sh, bash, zsh, fish... any shell that supports -c
 
-~~~zsh
+```zsh
 echo "Hello, $name!"
-~~~
+```
 
 
 ## node (name)
@@ -308,10 +308,10 @@ echo "Hello, $name!"
 
 Valid lang codes: js, javascript
 
-~~~js
+```js
 const { name } = process.env;
 console.log(`Hello, ${name}!`);
-~~~
+```
 
 
 ## python (name)
@@ -320,11 +320,11 @@ console.log(`Hello, ${name}!`);
 
 Valid lang codes: py, python
 
-~~~python
+```python
 import os
 name = os.getenv("name", "WORLD")
 print("Hello, " + name + "!")
-~~~
+```
 
 
 ## ruby (name)
@@ -333,21 +333,21 @@ print("Hello, " + name + "!")
 
 Valid lang codes: rb, ruby
 
-~~~ruby
+```ruby
 name = ENV["name"] || "WORLD"
 puts "Hello, #{name}!"
-~~~
+```
 
 
 ## php (name)
 
 > An example php script
 
-~~~php
+```php
 $name = getenv("name") ?: "WORLD";
 echo "Hello, " . $name . "!\n";
-~~~
 ```
+````
 
 #### Windows support
 
@@ -355,35 +355,35 @@ You can even add powershell or batch code blocks alongside linux/macOS ones. Dep
 
 **Example:**
 
-```markdown
+````markdown
 ## link
 
 > Build and link the binary globally
 
-~~~bash
+```bash
 cargo install --force --path .
-~~~
-
-~~~powershell
-[Diagnostics.Process]::Start("cargo", "install --force --path .").WaitForExit()
-~~~
 ```
+
+```powershell
+[Diagnostics.Process]::Start("cargo", "install --force --path .").WaitForExit()
+```
+````
 
 ### Automatic help and usage output
 
 You don't have to spend time writing out help info manually. `mask` uses your command descriptions and options to automatically generate help output. For every command, it adds `-h, --help` flags and an alternative `help <name>` command.
 
 **Example:**
-~~~sh
+```sh
 mask services start -h
 mask services start --help
 mask services help start
 mask help services start
-~~~
+```
 
 All output the same help info:
 
-~~~txt
+```txt
 mask-services-start
 Start or restart a service.
 
@@ -399,7 +399,7 @@ FLAGS:
 
 ARGS:
     <service_name>
-~~~
+```
 
 ### Running mask from within a script
 
@@ -407,12 +407,12 @@ You can easily call `mask` within scripts if you need to chain commands together
 
 **Example:**
 
-```markdown
+````markdown
 ## bootstrap
 
 > Installs deps, builds, links, migrates the db and then starts the app
 
-~~~sh
+```sh
 mask install
 mask build
 mask link
@@ -421,8 +421,8 @@ mask link
 # another directory.
 $MASK db migrate
 $MASK start
-~~~
 ```
+````
 
 ### Inherits the script's exit code
 
@@ -430,17 +430,17 @@ If your command exits with an error, `mask` will exit with its status code. This
 
 **Example:**
 
-```markdown
+````markdown
 ## ci
 
 > Runs tests and checks for lint and formatting errors
 
-~~~sh
+```sh
 mask test \
     && mask lint \
     && mask format --check
-~~~
 ```
+````
 
 ### Running mask with a different maskfile
 
@@ -448,19 +448,19 @@ If you're in a directory that doesn't have a `maskfile.md` but you want to refer
 
 **Example:**
 
-~~~sh
+```sh
 mask --maskfile ~/maskfile.md <subcommand>
-~~~
+```
 
 **Tip:** Make a bash alias for this so you can call it anywhere easily
 
-~~~bash
+```bash
 # Call it something fun
 alias wask="mask --maskfile ~/maskfile.md"
 
 # You can run this from anywhere
 wask <subcommand>
-~~~
+```
 
 ### Environment variable utilities
 
@@ -480,12 +480,12 @@ If a heading doesn't have a code block, it will be treated as documentation and 
 
 **Example:**
 
-~~~markdown
+```markdown
 ## This is a heading with no script
 
 It's useful as a place to document things like a setup guide or required dependencies
 or tools that your commands may rely on.
-~~~
+```
 
 
 
