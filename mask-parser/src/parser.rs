@@ -313,6 +313,16 @@ fi
 
 echo "This is required - $required"
 ~~~
+
+# This is an invalid H1, so it will be ignored
+
+## invalid_cmd
+
+Everything below an invalid H1 will also be ignored.
+
+~~~bash
+echo hey
+~~~
 "#;
 
 #[cfg(test)]
