@@ -3,6 +3,8 @@
 
 ## UNRELEASED
 
+* ci: Fix tests under windows-latest CI runner [#129](https://github.com/jacobdeichert/mask/pull/129)
+
 
 ## v0.11.6 (2024-10-13)
 
