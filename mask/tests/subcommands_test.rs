@@ -120,6 +120,10 @@ mod when_subcommands_do_not_include_their_parent_command_prefix {
 ~~~bash
 echo "Start all services"
 ~~~
+
+~~~powershell
+Write-Output "Start all services"
+~~~
 "#,
         );
 
