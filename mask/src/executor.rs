@@ -63,6 +63,11 @@ fn prepare_command(cmd: &Command) -> process::Command {
             child.arg("-r").arg(source);
             child
         }
+        "swift" => {
+            let mut child = process::Command::new("swift");
+            child.arg("-e").arg(source);
+            child
+        }
         #[cfg(windows)]
         "cmd" | "batch" => {
             let mut child = process::Command::new("cmd.exe");

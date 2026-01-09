@@ -233,3 +233,24 @@ echo "Hello, " . $name . "!\n";
         .stdout(contains("Hello, World!"))
         .success();
 }
+
+#[test]
+fn swift() {
+    let (_temp, maskfile_path) = common::maskfile(
+        r#"
+## swift
+~~~swift
+import Foundation
+let name = ProcessInfo.processInfo.environment["name"] ?? "WORLD"
+print("Hello, \(name)!")
+~~~
+"#,
+    );
+
+    common::run_mask(&maskfile_path)
+        .command("swift")
+        .env("name", "World")
+        .assert()
+        .stdout(contains("Hello, World!"))
+        .success();
+}

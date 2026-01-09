@@ -301,7 +301,6 @@ Valid lang codes: sh, bash, zsh, fish... any shell that supports -c
 echo "Hello, $name!"
 ```
 
-
 ## node (name)
 
 > An example node script
@@ -312,7 +311,6 @@ Valid lang codes: js, javascript
 const { name } = process.env;
 console.log(`Hello, ${name}!`);
 ```
-
 
 ## python (name)
 
@@ -326,7 +324,6 @@ name = os.getenv("name", "WORLD")
 print("Hello, " + name + "!")
 ```
 
-
 ## ruby (name)
 
 > An example ruby script
@@ -338,7 +335,6 @@ name = ENV["name"] || "WORLD"
 puts "Hello, #{name}!"
 ```
 
-
 ## php (name)
 
 > An example php script
@@ -346,6 +342,16 @@ puts "Hello, #{name}!"
 ```php
 $name = getenv("name") ?: "WORLD";
 echo "Hello, " . $name . "!\n";
+```
+
+## swift (name)
+
+> An example swift script
+
+```swift
+import Foundation
+let name = ProcessInfo.processInfo.environment["name"] ?? "WORLD"
+print("Hello, \(name)!")
 ```
 ````
 
