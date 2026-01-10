@@ -29,6 +29,11 @@ jobs:
       CLICOLOR_FORCE: 1
     steps:
       - uses: actions/checkout@v4
+      - uses: leafo/gh-actions-lua@v12
+        if: matrix.platform == 'ubuntu-latest'
+      - name: test lua runtime
+        run: lua -e "print('Hello, World!')"
+        if: matrix.platform == 'ubuntu-latest'
       - name: Fetch dependencies
         run: cargo fetch
       - name: Build in test mode
