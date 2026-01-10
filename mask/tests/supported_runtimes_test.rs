@@ -112,6 +112,7 @@ echo "Hello, %name%!"
         .success();
 }
 
+#[cfg(not(windows))]
 #[test]
 fn sh() {
     let (_temp, maskfile_path) = common::maskfile(
@@ -131,6 +132,7 @@ echo Hello, $name!
         .success();
 }
 
+#[cfg(not(windows))]
 #[test]
 fn bash() {
     let (_temp, maskfile_path) = common::maskfile(
