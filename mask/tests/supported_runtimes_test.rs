@@ -193,6 +193,7 @@ print("Hello, " + name + "!")
         .success();
 }
 
+#[cfg(target_os = "linux")]
 #[test]
 fn lua() {
     let (_temp, maskfile_path) = common::maskfile(
