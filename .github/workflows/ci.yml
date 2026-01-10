@@ -29,10 +29,6 @@ jobs:
       CLICOLOR_FORCE: 1
     steps:
       - uses: actions/checkout@v4
-      - name: Add Ruby for a test that requires it
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: 2.6
       - name: Fetch dependencies
         run: cargo fetch
       - name: Build in test mode
