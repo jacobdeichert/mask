@@ -237,6 +237,8 @@ echo "Hello, " . $name . "!\n";
         .success();
 }
 
+// GH Actions ubuntu-latest is the only runtime with Swift pre-installed.
+#[cfg(target_os = "linux")]
 #[test]
 fn swift() {
     let (_temp, maskfile_path) = common::maskfile(
