@@ -53,6 +53,11 @@ fn prepare_command(cmd: &Command) -> process::Command {
             child.arg("-c").arg(source);
             child
         }
+        "lua" => {
+            let mut child = process::Command::new("lua");
+            child.arg("-e").arg(source);
+            child
+        }
         "rb" | "ruby" => {
             let mut child = process::Command::new("ruby");
             child.arg("-e").arg(source);

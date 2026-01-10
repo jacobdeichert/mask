@@ -324,6 +324,15 @@ name = os.getenv("name", "WORLD")
 print("Hello, " + name + "!")
 ```
 
+## lua (name)
+
+> An example lua script
+
+```lua
+name = os.getenv("name")
+print("Hello, " .. name .. "!")
+```
+
 ## ruby (name)
 
 > An example ruby script

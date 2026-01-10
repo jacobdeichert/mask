@@ -11,6 +11,8 @@
 
 * Remove unnecessary ruby action [#136](https://github.com/jacobdeichert/mask/pull/136)
 
+* Add support for Lua code blocks [#132](https://github.com/jacobdeichert/mask/pull/132) ([@yilisharcs](https://github.com/yilisharcs))
+
 
 ## v0.11.6 (2024-10-13)
 

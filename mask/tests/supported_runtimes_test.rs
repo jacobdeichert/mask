@@ -193,6 +193,27 @@ print("Hello, " + name + "!")
         .success();
 }
 
+#[cfg(target_os = "linux")]
+#[test]
+fn lua() {
+    let (_temp, maskfile_path) = common::maskfile(
+        r#"
+## lua
+~~~lua
+name = os.getenv("name")
+print("Hello, " .. name .. "!")
+~~~
+"#,
+    );
+
+    common::run_mask(&maskfile_path)
+        .command("lua")
+        .env("name", "World")
+        .assert()
+        .stdout(contains("Hello, World!"))
+        .success();
+}
+
 #[test]
 fn ruby() {
     let (_temp, maskfile_path) = common::maskfile(
