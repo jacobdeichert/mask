@@ -213,6 +213,9 @@ puts "Hello, #{name}!"
         .success();
 }
 
+// GH Actions macos-26 doesn't have php installed by default. Installing it with a
+// 3rd party script is overkill. Testing on linux+windows provides enough confidence.
+#[cfg(not(target_os = "macos"))]
 #[test]
 fn php() {
     let (_temp, maskfile_path) = common::maskfile(

@@ -7,6 +7,10 @@
 
 * Use triple backticks for markdown snippets in `README.md` [#128](https://github.com/jacobdeichert/mask/pull/128) ([@danielhenrymantilla](https://github.com/danielhenrymantilla))
 
+* Bump actions test runtime to macOS 26 [#135](https://github.com/jacobdeichert/mask/pull/135)
+
+* Remove unnecessary ruby action [#136](https://github.com/jacobdeichert/mask/pull/136)
+
 
 ## v0.11.6 (2024-10-13)
 
