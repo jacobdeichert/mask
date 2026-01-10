@@ -112,7 +112,6 @@ echo "Hello, %name%!"
         .success();
 }
 
-#[cfg(target_os = "linux")]
 #[test]
 fn sh() {
     let (_temp, maskfile_path) = common::maskfile(
@@ -132,7 +131,6 @@ echo Hello, $name!
         .success();
 }
 
-#[cfg(target_os = "linux")]
 #[test]
 fn bash() {
     let (_temp, maskfile_path) = common::maskfile(
@@ -152,7 +150,6 @@ echo Hello, $name!
         .success();
 }
 
-#[cfg(target_os = "linux")]
 #[test]
 fn node() {
     let (_temp, maskfile_path) = common::maskfile(
@@ -173,7 +170,6 @@ console.log(`Hello, ${name}!`);
         .success();
 }
 
-#[cfg(target_os = "linux")]
 #[test]
 fn python() {
     let (_temp, maskfile_path) = common::maskfile(
@@ -195,7 +191,6 @@ print("Hello, " + name + "!")
         .success();
 }
 
-#[cfg(target_os = "linux")]
 #[test]
 fn ruby() {
     let (_temp, maskfile_path) = common::maskfile(
@@ -216,7 +211,9 @@ puts "Hello, #{name}!"
         .success();
 }
 
-#[cfg(target_os = "linux")]
+// GH Actions macos-26 doesn't have php installed by default. Installing it with a
+// 3rd party script is overkill. Testing on linux+windows provides enough confidence.
+#[cfg(not(target_os = "macos"))]
 #[test]
 fn php() {
     let (_temp, maskfile_path) = common::maskfile(
