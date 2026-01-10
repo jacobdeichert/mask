@@ -112,7 +112,7 @@ echo "Hello, %name%!"
         .success();
 }
 
-#[cfg(not(windows))]
+#[cfg(target_os = "linux")]
 #[test]
 fn sh() {
     let (_temp, maskfile_path) = common::maskfile(
@@ -132,7 +132,7 @@ echo Hello, $name!
         .success();
 }
 
-#[cfg(not(windows))]
+#[cfg(target_os = "linux")]
 #[test]
 fn bash() {
     let (_temp, maskfile_path) = common::maskfile(
@@ -152,6 +152,7 @@ echo Hello, $name!
         .success();
 }
 
+#[cfg(target_os = "linux")]
 #[test]
 fn node() {
     let (_temp, maskfile_path) = common::maskfile(
@@ -172,6 +173,7 @@ console.log(`Hello, ${name}!`);
         .success();
 }
 
+#[cfg(target_os = "linux")]
 #[test]
 fn python() {
     let (_temp, maskfile_path) = common::maskfile(
@@ -193,6 +195,7 @@ print("Hello, " + name + "!")
         .success();
 }
 
+#[cfg(target_os = "linux")]
 #[test]
 fn ruby() {
     let (_temp, maskfile_path) = common::maskfile(
@@ -213,6 +216,7 @@ puts "Hello, #{name}!"
         .success();
 }
 
+#[cfg(target_os = "linux")]
 #[test]
 fn php() {
     let (_temp, maskfile_path) = common::maskfile(
