@@ -228,10 +228,11 @@ fn get_command_options(mut cmd: Command, matches: &ArgMatches) -> Command {
             // Check if the boolean flag is present and set to "true".
             // It's a string since it's set as an environment variable.
             if matches.is_present(flag.name.clone()) {
-                "true".to_string()
+                "true"
             } else {
-                "".to_string()
+                ""
             }
+            .to_string()
         };
     }
 
