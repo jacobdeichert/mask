@@ -4,17 +4,17 @@ use std::path::PathBuf;
 use std::process::Command;
 
 pub trait MaskCommandExt {
-    fn command(&mut self, c: &'static str) -> &mut Command;
-    fn cli(&mut self, arguments: &'static str) -> &mut Command;
+    fn command(&mut self, c: &str) -> &mut Command;
+    fn cli(&mut self, arguments: &str) -> &mut Command;
 }
 
 impl MaskCommandExt for Command {
-    fn command(&mut self, c: &'static str) -> &mut Command {
+    fn command(&mut self, c: &str) -> &mut Command {
         self.arg(c);
         self
     }
 
-    fn cli(&mut self, arguments: &'static str) -> &mut Command {
+    fn cli(&mut self, arguments: &str) -> &mut Command {
         let args: Vec<&str> = arguments.split(" ").collect();
         for arg in args {
             self.arg(arg);
@@ -23,7 +23,7 @@ impl MaskCommandExt for Command {
     }
 }
 
-pub fn maskfile(content: &'static str) -> (assert_fs::TempDir, PathBuf) {
+pub fn maskfile(content: &str) -> (assert_fs::TempDir, PathBuf) {
     let temp = assert_fs::TempDir::new().unwrap();
     let maskfile = temp.child("maskfile.md");
 
