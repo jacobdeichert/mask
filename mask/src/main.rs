@@ -37,10 +37,11 @@ fn main() {
         find_command(&matches, &root.commands).expect("SubcommandRequired failed to work");
 
     match execute_command(chosen_cmd, maskfile_path) {
-        Ok(status) => match status.code() {
-            Some(code) => std::process::exit(code),
-            None => return,
-        },
+        Ok(status) => {
+            if let Some(code) = status.code() {
+                std::process::exit(code)
+            }
+        }
         Err(err) => {
             eprintln!("{} {}", "ERROR:".red(), err);
             std::process::exit(1)
@@ -165,13 +166,13 @@ fn find_command<'a>(matches: &ArgMatches, subcommands: &Vec<Command>) -> Option<
                 if c.name == subcommand_name {
                     // Check if a subcommand was called, otherwise return this command
                     command = find_command(matches, &c.subcommands)
-                        .or(Some(c.clone()).map(|c| get_command_options(c, &matches)));
+                        .or(Some(c.clone()).map(|c| get_command_options(c, matches)));
                 }
             }
         }
     }
 
-    return command;
+    command
 }
 
 fn get_command_options(mut cmd: Command, matches: &ArgMatches) -> Command {
@@ -194,23 +195,23 @@ fn get_command_options(mut cmd: Command, matches: &ArgMatches) -> Command {
             // Extract the value
             let raw_value = matches
                 .value_of(flag.name.clone())
-                .or(Some(""))
-                .unwrap()
+                .unwrap_or("")
                 .to_string();
 
-            if !flag.choices.is_empty() && raw_value != "" {
-                if !flag.choices.iter().any(|choice| choice == &raw_value) {
-                    eprintln!(
-                        "{} flag `{}` expects one of {:?}",
-                        "ERROR:".red(),
-                        flag.name,
-                        flag.choices,
-                    );
-                    std::process::exit(1);
-                }
+            if !flag.choices.is_empty()
+                && !raw_value.is_empty()
+                && !flag.choices.iter().any(|choice| choice == &raw_value)
+            {
+                eprintln!(
+                    "{} flag `{}` expects one of {:?}",
+                    "ERROR:".red(),
+                    flag.name,
+                    flag.choices,
+                );
+                std::process::exit(1);
             }
 
-            if flag.validate_as_number && raw_value != "" {
+            if flag.validate_as_number && !raw_value.is_empty() {
                 // Try converting to an integer or float to validate it
                 if raw_value.parse::<isize>().is_err() && raw_value.parse::<f32>().is_err() {
                     eprintln!(
@@ -226,12 +227,11 @@ fn get_command_options(mut cmd: Command, matches: &ArgMatches) -> Command {
         } else {
             // Check if the boolean flag is present and set to "true".
             // It's a string since it's set as an environment variable.
-            let val = if matches.is_present(flag.name.clone()) {
+            if matches.is_present(flag.name.clone()) {
                 "true".to_string()
             } else {
                 "".to_string()
-            };
-            val
+            }
         };
     }
 

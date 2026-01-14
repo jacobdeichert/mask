@@ -19,7 +19,7 @@ pub fn parse(maskfile_contents: String) -> Maskfile {
                         // Don't add commands for level 1 heading blocks (the title).
                         if heading_level > 1 {
                             commands.push(current_command.build());
-                        } else if heading_level == 1 && commands.len() > 0 {
+                        } else if heading_level == 1 && !commands.is_empty() {
                             // Found another level 1 heading block, so quit parsing.
                             break;
                         }
@@ -98,7 +98,7 @@ pub fn parse(maskfile_contents: String) -> Maskfile {
                 _ => (),
             },
             Text(body) => {
-                text += &body.to_string();
+                text += body.as_ref();
 
                 // Options level 1 is the flag name
                 if list_level == 1 {
@@ -151,7 +151,7 @@ pub fn parse(maskfile_contents: String) -> Maskfile {
                 }
             }
             InlineHtml(html) => {
-                text += &html.to_string();
+                text += html.as_ref();
             }
             Code(inline_code) => {
                 text += &format!("`{}`", inline_code);
@@ -174,12 +174,12 @@ pub fn parse(maskfile_contents: String) -> Maskfile {
     }
 }
 
-fn create_markdown_parser<'a>(maskfile_contents: &'a String) -> Parser<'a> {
+fn create_markdown_parser<'a>(maskfile_contents: &'a str) -> Parser<'a> {
     // Set up options and parser. Strikethroughs are not part of the CommonMark standard
     // and we therefore must enable it explicitly.
     let mut options = Options::empty();
     options.insert(Options::ENABLE_STRIKETHROUGH);
-    let parser = Parser::new_ext(&maskfile_contents, options);
+    let parser = Parser::new_ext(maskfile_contents, options);
     parser
 }
 
@@ -188,8 +188,8 @@ fn treeify_commands(commands: Vec<Command>) -> Vec<Command> {
     let mut current_command = commands.first().expect("command should exist").clone();
     let num_commands = commands.len();
 
-    for i in 0..num_commands {
-        let mut c = commands[i].clone();
+    for (i, command) in commands.iter().enumerate().take(num_commands) {
+        let mut c = command.clone();
 
         // This must be a subcommand
         if c.level > current_command.level {
@@ -236,7 +236,7 @@ fn parse_command_name_required_and_optional_args(
     text: String,
 ) -> (String, Vec<RequiredArg>, Vec<OptionalArg>) {
     // Checks if any args are present and if not, return early
-    let split_idx = match text.find(|c| c == '(' || c == '[') {
+    let split_idx = match text.find(['(', '[']) {
         Some(idx) => idx,
         None => return (text.trim().to_string(), vec![], vec![]),
     };
@@ -246,7 +246,7 @@ fn parse_command_name_required_and_optional_args(
 
     // Collects (required_args)
     let required_args = args
-        .split(|c| c == '(' || c == ')')
+        .split(['(', ')'])
         .filter_map(|arg| match arg.trim() {
             a if !a.is_empty() && !a.contains('[') => Some(RequiredArg::new(a.trim().to_string())),
             _ => None,
@@ -255,7 +255,7 @@ fn parse_command_name_required_and_optional_args(
 
     // Collects [optional_args]
     let optional_args = args
-        .split(|c| c == '[' || c == ']')
+        .split(['[', ']'])
         .filter_map(|arg| match arg.trim() {
             a if !a.is_empty() && !a.contains('(') => Some(OptionalArg::new(a.trim().to_string())),
             _ => None,

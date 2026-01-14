@@ -10,7 +10,7 @@ pub struct Maskfile {
 
 impl Maskfile {
     pub fn to_json(&self) -> Result<Value, serde_json::Error> {
-        serde_json::to_value(&self)
+        serde_json::to_value(self)
     }
 }
 
