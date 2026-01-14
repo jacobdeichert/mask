@@ -109,6 +109,7 @@ cargo install --force --path ./mask
     * desc: Only run tests from a specific filename
 
 ~~~bash
+set -o errexit -o pipefail -o errtrace
 extra_args=""
 
 if [[ "$verbose" == "true" ]]; then
