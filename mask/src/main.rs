@@ -156,7 +156,7 @@ fn build_subcommands<'a, 'b>(
     cli_app
 }
 
-fn find_command<'a>(matches: &ArgMatches, subcommands: &Vec<Command>) -> Option<Command> {
+fn find_command(matches: &ArgMatches, subcommands: &Vec<Command>) -> Option<Command> {
     let mut command = None;
 
     // The child subcommand that was used
