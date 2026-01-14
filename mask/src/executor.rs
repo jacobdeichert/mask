@@ -11,7 +11,7 @@ pub fn execute_command(cmd: Command, maskfile_path: String) -> Result<ExitStatus
     let script = cmd.script.clone().expect("script should exist");
     if script.source.is_empty() || script.executor.is_empty() {
         let msg = "Command is missing script or lang code which determines which executor to use.";
-        return Err(Error::new(ErrorKind::Other, msg));
+        return Err(Error::other(msg));
     }
 
     let mut child = prepare_command(&cmd);
@@ -137,7 +137,7 @@ fn add_flag_variables(mut child: process::Command, cmd: &Command) -> process::Co
 
     // Add all named flags as environment variables if they have a value
     for flag in &cmd.named_flags {
-        if flag.val != "" {
+        if !flag.val.is_empty() {
             child.env(flag.name.clone(), flag.val.clone());
         }
     }

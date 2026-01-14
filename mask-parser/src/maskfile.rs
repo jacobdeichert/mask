@@ -10,7 +10,7 @@ pub struct Maskfile {
 
 impl Maskfile {
     pub fn to_json(&self) -> Result<Value, serde_json::Error> {
-        serde_json::to_value(&self)
+        serde_json::to_value(self)
     }
 }
 
@@ -84,6 +84,12 @@ impl Script {
     }
 }
 
+impl Default for Script {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 #[derive(Debug, Serialize, Clone)]
 pub struct RequiredArg {
     pub name: String,
@@ -148,5 +154,11 @@ impl NamedFlag {
             choices: vec![],
             val: "".to_string(),
         }
+    }
+}
+
+impl Default for NamedFlag {
+    fn default() -> Self {
+        Self::new()
     }
 }
