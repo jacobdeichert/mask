@@ -84,6 +84,12 @@ impl Script {
     }
 }
 
+impl Default for Script {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 #[derive(Debug, Serialize, Clone)]
 pub struct RequiredArg {
     pub name: String,
@@ -148,5 +154,11 @@ impl NamedFlag {
             choices: vec![],
             val: "".to_string(),
         }
+    }
+}
+
+impl Default for NamedFlag {
+    fn default() -> Self {
+        Self::new()
     }
 }
