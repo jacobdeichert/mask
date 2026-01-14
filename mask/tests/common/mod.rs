@@ -3,6 +3,9 @@ use assert_fs::prelude::*;
 use std::path::PathBuf;
 use std::process::Command;
 
+// clippy pretends that this trait and the cli method are not used
+// removing them make the build failing because they are actually used
+#[allow(dead_code)]
 pub trait MaskCommandExt {
     fn command(&mut self, c: &str) -> &mut Command;
     fn cli(&mut self, arguments: &str) -> &mut Command;
