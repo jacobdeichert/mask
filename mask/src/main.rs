@@ -1,4 +1,6 @@
 mod executor;
+#[cfg(feature = "interactive")]
+mod interactive;
 mod loader;
 use clap::{crate_name, crate_version, App, AppSettings, Arg, ArgMatches, SubCommand};
 use colored::*;
@@ -15,7 +17,8 @@ fn main() {
         .setting(AppSettings::ColoredHelp)
         .version(crate_version!())
         .arg(custom_maskfile_path_arg())
-        .arg(introspect_arg());
+        .arg(introspect_arg())
+        .arg(interactive_arg());
 
     let (maskfile, maskfile_path) = find_maskfile();
     if maskfile.is_err() {
@@ -30,6 +33,22 @@ fn main() {
         let json = root.to_json().expect("to_json failed");
         println!("{}", serde_json::to_string_pretty(&json).unwrap());
         return;
+    }
+
+    if is_interactive() {
+        #[cfg(feature = "interactive")]
+        {
+            interactive::run(&root, maskfile_path);
+            return;
+        }
+        #[cfg(not(feature = "interactive"))]
+        {
+            eprintln!(
+                "{} interactive mode requires the 'interactive' feature",
+                "ERROR:".red()
+            );
+            std::process::exit(1);
+        }
     }
 
     let matches = build_subcommands(cli_app, &root.commands).get_matches();
@@ -106,6 +125,25 @@ fn introspect_arg<'a, 'b>() -> Arg<'a, 'b> {
     Arg::with_name("introspect")
         .help("Print out the maskfile command structure in json")
         .long("introspect")
+        .multiple(false)
+}
+
+fn is_interactive() -> bool {
+    let args: Vec<String> = env::args().collect();
+    for a in &args {
+        if a == "-i" || a == "--interactive" {
+            return true;
+        }
+    }
+    false
+}
+
+/// Launch interactive command selector
+fn interactive_arg<'a, 'b>() -> Arg<'a, 'b> {
+    Arg::with_name("interactive")
+        .help("Launch interactive command selector with fuzzy search and preview")
+        .short("i")
+        .long("interactive")
         .multiple(false)
 }
 
