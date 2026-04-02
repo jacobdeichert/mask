@@ -3,6 +3,7 @@ use pulldown_cmark::Event::{Code, End, InlineHtml, Start, Text};
 use pulldown_cmark::{Options, Parser, Tag};
 
 pub fn parse(maskfile_contents: String) -> Maskfile {
+    let source = maskfile_contents.clone();
     let parser = create_markdown_parser(&maskfile_contents);
     let mut commands = vec![];
     let mut current_command = Command::new(1);
@@ -167,10 +168,148 @@ pub fn parse(maskfile_contents: String) -> Maskfile {
     let all = treeify_commands(commands);
     let root_command = all.first().expect("root command must exist");
 
-    Maskfile {
+    let mut maskfile = Maskfile {
         title: root_command.name.clone(),
         description: root_command.description.clone(),
         commands: root_command.subcommands.clone(),
+    };
+
+    // Extract body content from raw markdown source
+    let sections = extract_sections(&source);
+    fill_bodies(&mut maskfile.commands, &sections, &[]);
+
+    maskfile
+}
+
+use std::collections::HashMap;
+
+/// Extract raw markdown body for each heading section.
+/// Returns a map of "command name" -> body text (between description and code block).
+fn extract_sections(source: &str) -> HashMap<String, String> {
+    let mut sections: HashMap<String, String> = HashMap::new();
+    let mut current_name: Option<String> = None;
+    let mut current_body = String::new();
+
+    for line in source.lines() {
+        if let Some((_level, raw_name)) = parse_heading_line(line) {
+            if let Some(name) = current_name.take() {
+                let body = extract_body_from_section(&current_body);
+                if !body.is_empty() {
+                    sections.insert(name, body);
+                }
+            }
+            let cmd_name = raw_name
+                .split(|c: char| c == '(' || c == '[')
+                .next()
+                .unwrap_or(&raw_name)
+                .trim()
+                .to_string();
+            current_name = Some(cmd_name);
+            current_body = String::new();
+        } else {
+            current_body.push_str(line);
+            current_body.push('\n');
+        }
+    }
+
+    if let Some(name) = current_name {
+        let body = extract_body_from_section(&current_body);
+        if !body.is_empty() {
+            sections.insert(name, body);
+        }
+    }
+
+    sections
+}
+
+fn parse_heading_line(line: &str) -> Option<(u8, String)> {
+    let trimmed = line.trim_start();
+    if !trimmed.starts_with('#') {
+        return None;
+    }
+    let level = trimmed.chars().take_while(|&c| c == '#').count();
+    if level == 0 || level > 6 {
+        return None;
+    }
+    let rest = trimmed[level..].trim();
+    if rest.is_empty() {
+        return None;
+    }
+    Some((level as u8, rest.to_string()))
+}
+
+/// Extract the body content: everything between the blockquote description
+/// and the first code fence (or OPTIONS section), excluding both.
+fn extract_body_from_section(section: &str) -> String {
+    let lines: Vec<&str> = section.lines().collect();
+    let mut start = 0;
+    let mut end = lines.len();
+
+    // Skip leading empty lines and the blockquote (description)
+    let mut past_blockquote = false;
+    for (i, line) in lines.iter().enumerate() {
+        let trimmed = line.trim();
+        if trimmed.is_empty() && !past_blockquote {
+            start = i + 1;
+            continue;
+        }
+        if trimmed.starts_with('>') && !past_blockquote {
+            past_blockquote = true;
+            start = i + 1;
+            continue;
+        }
+        if past_blockquote || !trimmed.starts_with('>') {
+            start = i;
+            break;
+        }
+    }
+
+    // Find the first code fence or OPTIONS section to mark the end
+    for (i, line) in lines.iter().enumerate().skip(start) {
+        let trimmed = line.trim();
+        if trimmed.starts_with("```") || trimmed.starts_with("~~~") {
+            end = i;
+            break;
+        }
+        // Stop before OPTIONS (bold or plain) and everything after it
+        if trimmed == "OPTIONS" || trimmed == "**OPTIONS**" {
+            end = i;
+            break;
+        }
+    }
+
+    if start >= end {
+        return String::new();
+    }
+
+    let body: String = lines[start..end].join("\n");
+    let trimmed = body.trim();
+    if trimmed.is_empty() {
+        String::new()
+    } else {
+        trimmed.to_string()
+    }
+}
+
+/// Fill the `body` field of commands by matching against extracted sections.
+fn fill_bodies(commands: &mut Vec<Command>, sections: &HashMap<String, String>, breadcrumb: &[String]) {
+    for cmd in commands.iter_mut() {
+        // Try full name first (for subcommands that include parent prefix in the heading)
+        let mut key_parts: Vec<&str> = breadcrumb.iter().map(|s| s.as_str()).collect();
+        key_parts.push(&cmd.name);
+        let full_name = key_parts.join(" ");
+
+        if let Some(body) = sections.get(&full_name) {
+            cmd.body = body.clone();
+        } else if let Some(body) = sections.get(&cmd.name) {
+            cmd.body = body.clone();
+        }
+
+        if !cmd.subcommands.is_empty() {
+            let mut new_breadcrumb = breadcrumb.to_vec();
+            new_breadcrumb.push(cmd.name.clone());
+            fill_bodies(&mut cmd.subcommands, sections, &new_breadcrumb);
+        }
     }
 }
 
@@ -372,6 +511,7 @@ mod parse {
                         "level": 2,
                         "name": "node",
                         "description": "An example node script",
+                        "body": "Valid lang codes: js, javascript",
                         "script": {
                             "executor": "js",
                             "source": "const { name } = process.env;\nconsole.log(`Hello, ${name}!`);\n",

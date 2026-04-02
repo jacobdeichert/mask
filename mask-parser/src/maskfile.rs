@@ -19,6 +19,9 @@ pub struct Command {
     pub level: u8,
     pub name: String,
     pub description: String,
+    /// Raw markdown content between the description and the script code block.
+    #[serde(skip_serializing_if = "String::is_empty")]
+    pub body: String,
     pub script: Option<Script>,
     pub subcommands: Vec<Command>,
     pub required_args: Vec<RequiredArg>,
@@ -32,6 +35,7 @@ impl Command {
             level,
             name: "".to_string(),
             description: "".to_string(),
+            body: "".to_string(),
             script: Some(Script::new()),
             subcommands: vec![],
             required_args: vec![],
