@@ -2,20 +2,38 @@ use crate::maskfile::*;
 use pulldown_cmark::Event::{Code, End, InlineHtml, Start, Text};
 use pulldown_cmark::{Options, Parser, Tag};
 
+fn is_options_header(s: &str) -> bool {
+    s == "OPTIONS" || s == "**OPTIONS**"
+}
+
+fn markdown_marker(tag: &Tag) -> &'static str {
+    match tag {
+        Tag::Strong => "**",
+        Tag::Emphasis => "*",
+        Tag::Strikethrough => "~~",
+        _ => "",
+    }
+}
+
 pub fn parse(maskfile_contents: String) -> Maskfile {
-    let source = maskfile_contents.clone();
     let parser = create_markdown_parser(&maskfile_contents);
     let mut commands = vec![];
     let mut current_command = Command::new(1);
     let mut current_option_flag = NamedFlag::new();
     let mut text = "".to_string();
     let mut list_level = 0;
+    let mut is_in_body = false;
 
     for event in parser {
         match event {
             Start(tag) => {
+                let is_inline = matches!(&tag, Tag::Strong | Tag::Emphasis | Tag::Strikethrough);
+                if is_in_body {
+                    text += markdown_marker(&tag);
+                }
                 match tag {
                     Tag::Header(heading_level) => {
+                        is_in_body = false;
                         // Add the last command before starting a new one.
                         // Don't add commands for level 1 heading blocks (the title).
                         if heading_level > 1 {
@@ -28,6 +46,7 @@ pub fn parse(maskfile_contents: String) -> Maskfile {
                     }
                     #[cfg(not(windows))]
                     Tag::CodeBlock(lang_code) => {
+                        is_in_body = false;
                         if lang_code.to_string() != "powershell"
                             && lang_code.to_string() != "batch"
                             && lang_code.to_string() != "cmd"
@@ -39,65 +58,85 @@ pub fn parse(maskfile_contents: String) -> Maskfile {
                     }
                     #[cfg(windows)]
                     Tag::CodeBlock(lang_code) => {
+                        is_in_body = false;
                         if let Some(s) = &mut current_command.script {
                             s.executor = lang_code.to_string();
                         }
                     }
                     Tag::List(_) => {
-                        // We're in an options list if the current text above it is "OPTIONS"
-                        if text == "OPTIONS" || list_level > 0 {
+                        if is_options_header(&text) || list_level > 0 {
                             list_level += 1;
                         }
                     }
                     _ => (),
                 };
 
-                // Reset all state
-                text = "".to_string();
+                if !is_inline {
+                    text = "".to_string();
+                }
             }
-            End(tag) => match tag {
-                Tag::Header(_) => {
-                    let (name, required_args, optional_args) =
-                        parse_command_name_required_and_optional_args(text.clone());
-                    current_command.name = name;
-                    current_command.required_args = required_args;
-                    current_command.optional_args = optional_args;
+            End(tag) => {
+                if is_in_body {
+                    text += markdown_marker(&tag);
                 }
-                Tag::BlockQuote => {
-                    current_command.description = text.clone();
-                }
-                #[cfg(not(windows))]
-                Tag::CodeBlock(lang_code) => {
-                    if lang_code.to_string() != "powershell"
-                        && lang_code.to_string() != "batch"
-                        && lang_code.to_string() != "cmd"
-                    {
+                match tag {
+                    Tag::Header(_) => {
+                        let (name, required_args, optional_args) =
+                            parse_command_name_required_and_optional_args(text.clone());
+                        current_command.name = name;
+                        current_command.required_args = required_args;
+                        current_command.optional_args = optional_args;
+                    }
+                    Tag::BlockQuote => {
+                        current_command.description = text.clone();
+                        is_in_body = true;
+                    }
+                    Tag::Paragraph => {
+                        if is_in_body && list_level == 0 {
+                            let trimmed = text.trim();
+                            if is_options_header(trimmed) {
+                                is_in_body = false;
+                            } else if !trimmed.is_empty() {
+                                if !current_command.body.is_empty() {
+                                    current_command.body.push_str("\n\n");
+                                }
+                                current_command.body.push_str(trimmed);
+                            }
+                        }
+                    }
+                    #[cfg(not(windows))]
+                    Tag::CodeBlock(lang_code) => {
+                        if lang_code.to_string() != "powershell"
+                            && lang_code.to_string() != "batch"
+                            && lang_code.to_string() != "cmd"
+                        {
+                            if let Some(s) = &mut current_command.script {
+                                s.source = text.to_string();
+                            }
+                        }
+                    }
+                    #[cfg(windows)]
+                    Tag::CodeBlock(_) => {
                         if let Some(s) = &mut current_command.script {
                             s.source = text.to_string();
                         }
                     }
-                }
-                #[cfg(windows)]
-                Tag::CodeBlock(_) => {
-                    if let Some(s) = &mut current_command.script {
-                        s.source = text.to_string();
-                    }
-                }
-                Tag::List(_) => {
-                    // Don't go lower than zero (for cases where it's a non-OPTIONS list)
-                    list_level = std::cmp::max(list_level - 1, 0);
+                    Tag::List(_) => {
+                        // Don't go lower than zero (for cases where it's a non-OPTIONS list)
+                        list_level = std::cmp::max(list_level - 1, 0);
 
-                    // Must be finished parsing the current option
-                    if list_level == 1 {
-                        // Add the current one to the list and start a new one
-                        current_command
-                            .named_flags
-                            .push(current_option_flag.clone());
-                        current_option_flag = NamedFlag::new();
+                        // Must be finished parsing the current option
+                        if list_level == 1 {
+                            // Add the current one to the list and start a new one
+                            current_command
+                                .named_flags
+                                .push(current_option_flag.clone());
+                            current_option_flag = NamedFlag::new();
+                        }
                     }
+                    _ => (),
                 }
-                _ => (),
-            },
+            }
             Text(body) => {
                 text += &body.to_string();
 
@@ -168,150 +207,13 @@ pub fn parse(maskfile_contents: String) -> Maskfile {
     let all = treeify_commands(commands);
     let root_command = all.first().expect("root command must exist");
 
-    let mut maskfile = Maskfile {
+    Maskfile {
         title: root_command.name.clone(),
         description: root_command.description.clone(),
         commands: root_command.subcommands.clone(),
-    };
-
-    // Extract body content from raw markdown source
-    let sections = extract_sections(&source);
-    fill_bodies(&mut maskfile.commands, &sections, &[]);
-
-    maskfile
-}
-
-use std::collections::HashMap;
-
-/// Extract raw markdown body for each heading section.
-/// Returns a map of "command name" -> body text (between description and code block).
-fn extract_sections(source: &str) -> HashMap<String, String> {
-    let mut sections: HashMap<String, String> = HashMap::new();
-    let mut current_name: Option<String> = None;
-    let mut current_body = String::new();
-
-    for line in source.lines() {
-        if let Some((_level, raw_name)) = parse_heading_line(line) {
-            if let Some(name) = current_name.take() {
-                let body = extract_body_from_section(&current_body);
-                if !body.is_empty() {
-                    sections.insert(name, body);
-                }
-            }
-            let cmd_name = raw_name
-                .split(|c: char| c == '(' || c == '[')
-                .next()
-                .unwrap_or(&raw_name)
-                .trim()
-                .to_string();
-            current_name = Some(cmd_name);
-            current_body = String::new();
-        } else {
-            current_body.push_str(line);
-            current_body.push('\n');
-        }
-    }
-
-    if let Some(name) = current_name {
-        let body = extract_body_from_section(&current_body);
-        if !body.is_empty() {
-            sections.insert(name, body);
-        }
-    }
-
-    sections
-}
-
-fn parse_heading_line(line: &str) -> Option<(u8, String)> {
-    let trimmed = line.trim_start();
-    if !trimmed.starts_with('#') {
-        return None;
-    }
-    let level = trimmed.chars().take_while(|&c| c == '#').count();
-    if level == 0 || level > 6 {
-        return None;
-    }
-    let rest = trimmed[level..].trim();
-    if rest.is_empty() {
-        return None;
-    }
-    Some((level as u8, rest.to_string()))
-}
-
-/// Extract the body content: everything between the blockquote description
-/// and the first code fence (or OPTIONS section), excluding both.
-fn extract_body_from_section(section: &str) -> String {
-    let lines: Vec<&str> = section.lines().collect();
-    let mut start = 0;
-    let mut end = lines.len();
-
-    // Skip leading empty lines and the blockquote (description)
-    let mut past_blockquote = false;
-    for (i, line) in lines.iter().enumerate() {
-        let trimmed = line.trim();
-        if trimmed.is_empty() && !past_blockquote {
-            start = i + 1;
-            continue;
-        }
-        if trimmed.starts_with('>') && !past_blockquote {
-            past_blockquote = true;
-            start = i + 1;
-            continue;
-        }
-        if past_blockquote || !trimmed.starts_with('>') {
-            start = i;
-            break;
-        }
-    }
-
-    // Find the first code fence or OPTIONS section to mark the end
-    for (i, line) in lines.iter().enumerate().skip(start) {
-        let trimmed = line.trim();
-        if trimmed.starts_with("```") || trimmed.starts_with("~~~") {
-            end = i;
-            break;
-        }
-        // Stop before OPTIONS (bold or plain) and everything after it
-        if trimmed == "OPTIONS" || trimmed == "**OPTIONS**" {
-            end = i;
-            break;
-        }
-    }
-
-    if start >= end {
-        return String::new();
-    }
-
-    let body: String = lines[start..end].join("\n");
-    let trimmed = body.trim();
-    if trimmed.is_empty() {
-        String::new()
-    } else {
-        trimmed.to_string()
     }
 }
 
-/// Fill the `body` field of commands by matching against extracted sections.
-fn fill_bodies(commands: &mut Vec<Command>, sections: &HashMap<String, String>, breadcrumb: &[String]) {
-    for cmd in commands.iter_mut() {
-        // Try full name first (for subcommands that include parent prefix in the heading)
-        let mut key_parts: Vec<&str> = breadcrumb.iter().map(|s| s.as_str()).collect();
-        key_parts.push(&cmd.name);
-        let full_name = key_parts.join(" ");
-
-        if let Some(body) = sections.get(&full_name) {
-            cmd.body = body.clone();
-        } else if let Some(body) = sections.get(&cmd.name) {
-            cmd.body = body.clone();
-        }
-
-        if !cmd.subcommands.is_empty() {
-            let mut new_breadcrumb = breadcrumb.to_vec();
-            new_breadcrumb.push(cmd.name.clone());
-            fill_bodies(&mut cmd.subcommands, sections, &new_breadcrumb);
-        }
-    }
-}
 
 fn create_markdown_parser<'a>(maskfile_contents: &'a String) -> Parser<'a> {
     // Set up options and parser. Strikethroughs are not part of the CommonMark standard
