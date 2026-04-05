@@ -2,6 +2,19 @@ use crate::maskfile::*;
 use pulldown_cmark::Event::{Code, End, InlineHtml, Start, Text};
 use pulldown_cmark::{Options, Parser, Tag};
 
+fn is_options_header(s: &str) -> bool {
+    s == "OPTIONS" || s == "**OPTIONS**"
+}
+
+fn markdown_marker(tag: &Tag) -> &'static str {
+    match tag {
+        Tag::Strong => "**",
+        Tag::Emphasis => "*",
+        Tag::Strikethrough => "~~",
+        _ => "",
+    }
+}
+
 pub fn parse(maskfile_contents: String) -> Maskfile {
     let parser = create_markdown_parser(&maskfile_contents);
     let mut commands = vec![];
@@ -9,12 +22,18 @@ pub fn parse(maskfile_contents: String) -> Maskfile {
     let mut current_option_flag = NamedFlag::new();
     let mut text = "".to_string();
     let mut list_level = 0;
+    let mut is_in_body = false;
 
     for event in parser {
         match event {
             Start(tag) => {
+                let is_inline = matches!(&tag, Tag::Strong | Tag::Emphasis | Tag::Strikethrough);
+                if is_in_body {
+                    text += markdown_marker(&tag);
+                }
                 match tag {
                     Tag::Header(heading_level) => {
+                        is_in_body = false;
                         // Add the last command before starting a new one.
                         // Don't add commands for level 1 heading blocks (the title).
                         if heading_level > 1 {
@@ -27,6 +46,7 @@ pub fn parse(maskfile_contents: String) -> Maskfile {
                     }
                     #[cfg(not(windows))]
                     Tag::CodeBlock(lang_code) => {
+                        is_in_body = false;
                         if lang_code.to_string() != "powershell"
                             && lang_code.to_string() != "batch"
                             && lang_code.to_string() != "cmd"
@@ -38,65 +58,85 @@ pub fn parse(maskfile_contents: String) -> Maskfile {
                     }
                     #[cfg(windows)]
                     Tag::CodeBlock(lang_code) => {
+                        is_in_body = false;
                         if let Some(s) = &mut current_command.script {
                             s.executor = lang_code.to_string();
                         }
                     }
                     Tag::List(_) => {
-                        // We're in an options list if the current text above it is "OPTIONS"
-                        if text == "OPTIONS" || list_level > 0 {
+                        if is_options_header(&text) || list_level > 0 {
                             list_level += 1;
                         }
                     }
                     _ => (),
                 };
 
-                // Reset all state
-                text = "".to_string();
+                if !is_inline {
+                    text = "".to_string();
+                }
             }
-            End(tag) => match tag {
-                Tag::Header(_) => {
-                    let (name, required_args, optional_args) =
-                        parse_command_name_required_and_optional_args(text.clone());
-                    current_command.name = name;
-                    current_command.required_args = required_args;
-                    current_command.optional_args = optional_args;
+            End(tag) => {
+                if is_in_body {
+                    text += markdown_marker(&tag);
                 }
-                Tag::BlockQuote => {
-                    current_command.description = text.clone();
-                }
-                #[cfg(not(windows))]
-                Tag::CodeBlock(lang_code) => {
-                    if lang_code.to_string() != "powershell"
-                        && lang_code.to_string() != "batch"
-                        && lang_code.to_string() != "cmd"
-                    {
+                match tag {
+                    Tag::Header(_) => {
+                        let (name, required_args, optional_args) =
+                            parse_command_name_required_and_optional_args(text.clone());
+                        current_command.name = name;
+                        current_command.required_args = required_args;
+                        current_command.optional_args = optional_args;
+                    }
+                    Tag::BlockQuote => {
+                        current_command.description = text.clone();
+                        is_in_body = true;
+                    }
+                    Tag::Paragraph => {
+                        if is_in_body && list_level == 0 {
+                            let trimmed = text.trim();
+                            if is_options_header(trimmed) {
+                                is_in_body = false;
+                            } else if !trimmed.is_empty() {
+                                if !current_command.body.is_empty() {
+                                    current_command.body.push_str("\n\n");
+                                }
+                                current_command.body.push_str(trimmed);
+                            }
+                        }
+                    }
+                    #[cfg(not(windows))]
+                    Tag::CodeBlock(lang_code) => {
+                        if lang_code.to_string() != "powershell"
+                            && lang_code.to_string() != "batch"
+                            && lang_code.to_string() != "cmd"
+                        {
+                            if let Some(s) = &mut current_command.script {
+                                s.source = text.to_string();
+                            }
+                        }
+                    }
+                    #[cfg(windows)]
+                    Tag::CodeBlock(_) => {
                         if let Some(s) = &mut current_command.script {
                             s.source = text.to_string();
                         }
                     }
-                }
-                #[cfg(windows)]
-                Tag::CodeBlock(_) => {
-                    if let Some(s) = &mut current_command.script {
-                        s.source = text.to_string();
-                    }
-                }
-                Tag::List(_) => {
-                    // Don't go lower than zero (for cases where it's a non-OPTIONS list)
-                    list_level = std::cmp::max(list_level - 1, 0);
+                    Tag::List(_) => {
+                        // Don't go lower than zero (for cases where it's a non-OPTIONS list)
+                        list_level = std::cmp::max(list_level - 1, 0);
 
-                    // Must be finished parsing the current option
-                    if list_level == 1 {
-                        // Add the current one to the list and start a new one
-                        current_command
-                            .named_flags
-                            .push(current_option_flag.clone());
-                        current_option_flag = NamedFlag::new();
+                        // Must be finished parsing the current option
+                        if list_level == 1 {
+                            // Add the current one to the list and start a new one
+                            current_command
+                                .named_flags
+                                .push(current_option_flag.clone());
+                            current_option_flag = NamedFlag::new();
+                        }
                     }
+                    _ => (),
                 }
-                _ => (),
-            },
+            }
             Text(body) => {
                 text += &body.to_string();
 
@@ -173,6 +213,7 @@ pub fn parse(maskfile_contents: String) -> Maskfile {
         commands: root_command.subcommands.clone(),
     }
 }
+
 
 fn create_markdown_parser<'a>(maskfile_contents: &'a String) -> Parser<'a> {
     // Set up options and parser. Strikethroughs are not part of the CommonMark standard
@@ -372,6 +413,7 @@ mod parse {
                         "level": 2,
                         "name": "node",
                         "description": "An example node script",
+                        "body": "Valid lang codes: js, javascript",
                         "script": {
                             "executor": "js",
                             "source": "const { name } = process.env;\nconsole.log(`Hello, ${name}!`);\n",
